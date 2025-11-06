@@ -20,10 +20,10 @@ jobs:
       - name: 📂 Sync files to /asn
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: da23.host-ww.net
+          server: 70.32.23.41
           username: ${{ secrets.ftp_username }}
           password: ${{ secrets.ftp_password }}
-          server-dir: /asn/
+          server-dir: /public_html/
           exclude: |
             # Exclude git metadata completely (prevents uploading large pack files)
             .git/**

@@ -37,7 +37,7 @@ jobs:
             .env
             # Choose ONE of the following, depending on your server setup:
             # If server runs Composer on deploy:
-            **/vendor/**
+            vendor/**
             storage/**
             # If server cannot run Composer (include vendor, but exclude dev cache/logs instead):
             # storage/logs/**

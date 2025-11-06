@@ -23,7 +23,7 @@ jobs:
           server: 70.32.23.41
           username: ${{ secrets.ftp_username }}
           password: ${{ secrets.ftp_password }}
-          server-dir: /public_html/
+          server-dir: /sip/
           exclude: |
             # Exclude git metadata completely (prevents uploading large pack files)
             .git/**

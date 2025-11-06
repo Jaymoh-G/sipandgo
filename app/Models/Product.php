@@ -119,4 +119,21 @@ class Product extends Model
 
         return round((($this->compare_price - $this->price) / $this->compare_price) * 100);
     }
+
+    public function getPrimaryImageUrlAttribute(): ?string
+    {
+        if (!$this->images || empty($this->images)) {
+            return null;
+        }
+
+        $firstImage = is_array($this->images) ? $this->images[0] : $this->images;
+
+        // If it's already a full URL (from seeder), return as is
+        if (filter_var($firstImage, FILTER_VALIDATE_URL)) {
+            return $firstImage;
+        }
+
+        // If it's a relative path, convert to full URL
+        return asset('storage/' . ltrim($firstImage, '/'));
+    }
 }

@@ -113,9 +113,13 @@
                         @foreach($products as $product)
                         <div class="col-12 col-md-6 col-lg-3 product-col">
                             <div class="product-card h-100 p-16 border border-gray-100 hover-border-main-600 rounded-16 position-relative transition-2">
-                                <a href="{{ route('products.show', $product) }}" class="product-card__thumb flex-center rounded-8 bg-gray-50 position-relative">
+                                <a href="{{ route('products.show', $product) }}" class="product-card__thumb flex-center rounded-8 bg-gray-50 position-relative overflow-hidden">
                                     <span class="product-card__badge bg-main-600 px-8 py-4 text-sm text-white position-absolute inset-inline-start-0 inset-block-start-0" style="display: {{ $product->is_on_sale ? 'inline-block' : 'none' }}">{{ $product->is_on_sale ? ($product->discount_percentage . '% OFF') : '' }}</span>
-                                    <i class="fas fa-wine-bottle text-6xl text-gray-400"></i>
+                                    @if($product->primary_image_url)
+                                        <img src="{{ $product->primary_image_url }}" alt="{{ $product->name }}">
+                                    @else
+                                        <i class="fas fa-wine-bottle text-6xl text-gray-400"></i>
+                                    @endif
                                 </a>
                                 <div class="product-card__content mt-16">
                                     <h6 class="title text-lg fw-semibold mt-12 mb-8">

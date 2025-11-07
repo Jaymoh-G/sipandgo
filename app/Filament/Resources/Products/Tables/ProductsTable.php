@@ -32,14 +32,10 @@ class ProductsTable
 
                         $firstImage = is_array($record->images) ? $record->images[0] : $record->images;
 
-                        // If it's already a full URL (from seeder), return as is
                         if (filter_var($firstImage, FILTER_VALIDATE_URL)) {
                             return $firstImage;
                         }
 
-                        // If it's a relative path, convert to full URL
-                        // Use asset() which will use the current request's host/port automatically
-                        // This ensures it works with http://127.0.0.1:8000 or any other URL
                         return asset('storage/' . ltrim($firstImage, '/'));
                     })
                     ->placeholder('No image'),
@@ -92,8 +88,8 @@ class ProductsTable
                         if (!$record->track_inventory) {
                             return 'N/A';
                         }
-                        // You can add inventory logic here if you have inventory table
-                        return 'In Stock'; // Placeholder
+                        // Add inventory logic here if you have inventory table
+                        return 'In Stock';
                     })
                     ->badge()
                     ->color('success')
@@ -128,6 +124,15 @@ class ProductsTable
                     ->relationship('category', 'name')
                     ->searchable()
                     ->preload(),
+                SelectFilter::make('brand')
+                    ->label('Brand')
+                    ->options(fn () => \App\Models\Product::query()
+                        ->whereNotNull('brand')
+                        ->where('brand', '!=', '')
+                        ->distinct()
+                        ->pluck('brand', 'brand')
+                        ->toArray())
+                    ->searchable(),
                 TernaryFilter::make('is_active')
                     ->label('Active Status')
                     ->placeholder('All products')

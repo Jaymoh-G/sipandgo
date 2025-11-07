@@ -64,7 +64,7 @@ class ProductController extends Controller
             ->orderBy('brand')
             ->pluck('brand');
 
-        return view('store.products.index', compact('products', 'categories', 'brands'));
+        return view('storefront.products.index', compact('products', 'categories', 'brands'));
     }
 
     public function show(Product $product)
@@ -79,6 +79,6 @@ class ProductController extends Controller
             ->limit(4)
             ->get();
 
-        return view('store.products.show', compact('product', 'relatedProducts'));
+        return view('storefront.products.show', compact('product', 'relatedProducts'));
     }
 }

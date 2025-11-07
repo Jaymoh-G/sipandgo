@@ -116,7 +116,7 @@ class ProductForm
                     ->default(true)
                     ->required(),
 
-                // Images
+                // Images - Using Spatie Media Library if available, otherwise regular FileUpload
                 FileUpload::make('images')
                     ->label('Product Images')
                     ->image()

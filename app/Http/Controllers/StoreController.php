@@ -22,16 +22,16 @@ class StoreController extends Controller
             ->limit(6)
             ->get();
 
-        return view('store.index', compact('featuredProducts', 'categories'));
+        return view('storefront.index', compact('featuredProducts', 'categories'));
     }
 
     public function about()
     {
-        return view('store.about');
+        return view('storefront.about');
     }
 
     public function contact()
     {
-        return view('store.contact');
+        return view('storefront.contact');
     }
 }

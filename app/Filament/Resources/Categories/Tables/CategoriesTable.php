@@ -9,6 +9,8 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
 class CategoriesTable
@@ -17,30 +19,66 @@ class CategoriesTable
     {
         return $table
             ->columns([
+                ImageColumn::make('image')
+                    ->circular()
+                    ->size(50)
+                    ->placeholder('No image'),
                 TextColumn::make('name')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable()
+                    ->weight('bold'),
                 TextColumn::make('slug')
-                    ->searchable(),
-                ImageColumn::make('image'),
+                    ->searchable()
+                    ->sortable()
+                    ->copyable()
+                    ->fontFamily('mono')
+                    ->toggleable(),
+                TextColumn::make('parent.name')
+                    ->label('Parent Category')
+                    ->searchable()
+                    ->sortable()
+                    ->badge()
+                    ->color('gray')
+                    ->toggleable(),
+                TextColumn::make('products_count')
+                    ->label('Products')
+                    ->counts('products')
+                    ->sortable()
+                    ->badge()
+                    ->color('info'),
                 IconColumn::make('is_active')
-                    ->boolean(),
-                TextColumn::make('sort_order')
-                    ->numeric()
+                    ->label('Active')
+                    ->boolean()
                     ->sortable(),
-                TextColumn::make('meta_title')
-                    ->searchable(),
+                TextColumn::make('sort_order')
+                    ->label('Order')
+                    ->numeric()
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('created_at')
+                    ->label('Created')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
+                    ->label('Updated')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('parent_id')
+                    ->label('Parent Category')
+                    ->relationship('parent', 'name')
+                    ->searchable()
+                    ->preload(),
+                TernaryFilter::make('is_active')
+                    ->label('Active Status')
+                    ->placeholder('All categories')
+                    ->trueLabel('Active only')
+                    ->falseLabel('Inactive only'),
             ])
+            ->defaultSort('sort_order', 'asc')
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),

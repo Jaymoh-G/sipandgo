@@ -11,10 +11,13 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::where('is_active', true)
+            ->withCount(['products' => function ($query) {
+                $query->where('is_active', true);
+            }])
             ->orderBy('sort_order')
             ->get();
 
-        return view('store.categories.index', compact('categories'));
+        return view('storefront.categories.index', compact('categories'));
     }
 
     public function show(Category $category)
@@ -29,6 +32,14 @@ class CategoryController extends Controller
             ->orderBy('sort_order')
             ->paginate(12);
 
-        return view('store.categories.show', compact('category', 'products'));
+        $categories = Category::where('is_active', true)
+            ->withCount(['products' => function ($query) {
+                $query->where('is_active', true);
+            }])
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get();
+
+        return view('storefront.categories.show', compact('category', 'products', 'categories'));
     }
 }

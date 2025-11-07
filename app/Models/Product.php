@@ -5,11 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
 class Product extends Model
 {
+    use SoftDeletes;
+
+    // Uncomment if Spatie Media Library is installed
+    // use \Spatie\MediaLibrary\HasMedia;
+    // use \Spatie\MediaLibrary\InteractsWithMedia;
     protected $fillable = [
+        'store_id',
         'category_id',
         'name',
         'slug',
@@ -71,6 +78,11 @@ class Product extends Model
         });
     }
 
+    public function store(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\Store::class);
+    }
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
@@ -84,6 +96,26 @@ class Product extends Model
     public function inventory(): HasMany
     {
         return $this->hasMany(Inventory::class);
+    }
+
+    public function getCurrentStockAttribute(): int
+    {
+        $inventory = $this->inventory()->first();
+        return $inventory ? $inventory->quantity_available : 0;
+    }
+
+    public function getIsLowStockAttribute(): bool
+    {
+        if (!$this->track_inventory) {
+            return false;
+        }
+
+        $inventory = $this->inventory()->first();
+        if (!$inventory) {
+            return false;
+        }
+
+        return $inventory->quantity_available <= $inventory->low_stock_threshold;
     }
 
     public function orderItems(): HasMany
@@ -122,6 +154,15 @@ class Product extends Model
 
     public function getPrimaryImageUrlAttribute(): ?string
     {
+        // Check if Spatie Media Library is available and has media
+        if (method_exists($this, 'getFirstMediaUrl')) {
+            $mediaUrl = $this->getFirstMediaUrl('product-images');
+            if ($mediaUrl) {
+                return $mediaUrl;
+            }
+        }
+
+        // Fallback to JSON images field
         if (!$this->images || empty($this->images)) {
             return null;
         }
@@ -135,5 +176,21 @@ class Product extends Model
 
         // If it's a relative path, convert to full URL
         return asset('storage/' . ltrim($firstImage, '/'));
+    }
+
+    /**
+     * Get product image with fallback
+     */
+    public function getImageUrl(?string $size = null): ?string
+    {
+        // Check if Spatie Media Library is available
+        if (method_exists($this, 'getFirstMediaUrl')) {
+            $mediaUrl = $this->getFirstMediaUrl('product-images', $size);
+            if ($mediaUrl) {
+                return $mediaUrl;
+            }
+        }
+
+        return $this->primary_image_url;
     }
 }

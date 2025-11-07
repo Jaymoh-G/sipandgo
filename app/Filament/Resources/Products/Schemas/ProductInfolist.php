@@ -47,16 +47,16 @@ class ProductInfolist
                     ->schema([
                         TextEntry::make('price')
                             ->label('Price')
-                            ->money('USD')
+                            ->formatStateUsing(fn ($state) => 'Ksh ' . number_format($state, 2))
                             ->size('lg')
                             ->weight('bold'),
                         TextEntry::make('compare_price')
                             ->label('Compare at Price')
-                            ->money('USD')
+                            ->formatStateUsing(fn ($state) => $state ? 'Ksh ' . number_format($state, 2) : null)
                             ->placeholder('-'),
                         TextEntry::make('cost_price')
                             ->label('Cost Price')
-                            ->money('USD')
+                            ->formatStateUsing(fn ($state) => $state ? 'Ksh ' . number_format($state, 2) : null)
                             ->placeholder('-'),
                         TextEntry::make('discount_percentage')
                             ->label('Discount')

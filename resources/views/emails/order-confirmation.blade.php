@@ -107,7 +107,7 @@
 
         <div style="background: #fef3c7; border: 1px solid #fbbf24; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
             <p style="margin: 0; color: #92400e; font-size: 14px;">
-                <strong>⚠️ Age Verification Required:</strong> You must be 21+ to receive alcohol products.
+                <strong>⚠️ Age Verification Required:</strong> You must be 18+ to receive alcohol products.
                 Valid ID will be required upon delivery.
             </p>
         </div>
@@ -124,7 +124,7 @@
 
     <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb; color: #6b7280; font-size: 12px;">
         <p style="margin: 0;">© {{ date('Y') }} Sip & Go. All rights reserved.</p>
-        <p style="margin: 5px 0 0 0;">Must be 21+ to purchase alcohol products.</p>
+        <p style="margin: 5px 0 0 0;">Must be 18+ to purchase alcohol products.</p>
     </div>
 </body>
 </html>

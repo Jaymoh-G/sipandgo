@@ -30,7 +30,7 @@ class DashboardStatsWidget extends BaseWidget
         });
 
         return [
-            Stat::make('Total Sales', '$' . number_format($totalSales, 2))
+            Stat::make('Total Sales', 'Ksh ' . number_format($totalSales, 2))
                 ->description('All time sales')
                 ->descriptionIcon('heroicon-o-currency-dollar')
                 ->color('success')

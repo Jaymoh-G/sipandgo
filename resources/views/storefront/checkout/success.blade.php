@@ -4,122 +4,192 @@
 @section('description', 'Your order has been placed successfully')
 
 @section('content')
-<div class="bg-white py-16">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+
+<!-- ========================= Breadcrumb Start =============================== -->
+<div class="breadcrumb mb-0 py-26 bg-color-one">
+    <div class="container container-lg">
+        <div class="breadcrumb-wrapper flex-between flex-wrap gap-16">
+            <h6 class="mb-0">Order Confirmation</h6>
+            <ul class="flex-align gap-8 flex-wrap">
+                <li class="text-sm">
+                    <a href="{{ route('home') }}" class="text-main-600 flex-align gap-8">
+                        <i class="ph ph-house"></i>
+                        Home
+                    </a>
+                </li>
+                <li class="flex-align text-gray-500">
+                    <i class="ph ph-caret-right"></i>
+                </li>
+                <li class="text-sm text-neutral-600">
+                    Order Confirmation
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- ========================= Breadcrumb End =============================== -->
+
+<!-- ================================= Order Success Page Start ===================================== -->
+<section class="checkout py-80">
+    <div class="container container-lg">
         @if(session('success'))
-        <div class="mb-6 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg">
-            <i class="fas fa-check-circle mr-2"></i>{{ session('success') }}
+        <div class="alert alert-success mb-32 bg-success-50 border border-success-200 text-success-800 px-24 py-16 rounded-8">
+            <i class="ph ph-check-circle me-8"></i>{{ session('success') }}
         </div>
         @endif
 
         <!-- Success Header -->
-        <div class="text-center mb-12">
-            <div class="inline-block bg-green-100 rounded-full p-4 mb-4">
-                <i class="fas fa-check-circle text-6xl text-green-600"></i>
+        <div class="text-center mb-48" data-aos="fade-up" data-aos-duration="400">
+            <div class="inline-block bg-success-50 rounded-circle p-32 mb-24">
+                <i class="ph ph-check-circle text-6xl text-success-600"></i>
             </div>
-            <h1 class="text-4xl font-bold text-gray-900 mb-2">Order Confirmed!</h1>
-            <p class="text-lg text-gray-600">Thank you for your order. We've sent a confirmation email to {{ $order->customer->email }}</p>
+            <h1 class="text-heading-two mb-16">Order Confirmed!</h1>
+            <p class="text-lg text-gray-600">Thank you for your order. We've sent a confirmation email to <span class="fw-semibold text-gray-900">{{ $order->customer->email }}</span></p>
         </div>
 
-        <!-- Order Details -->
-        <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6">Order Details</h2>
+        <div class="row gy-4">
+            <!-- Order Details -->
+            <div class="col-xl-8 col-lg-7">
+                <div class="border border-gray-100 rounded-8 px-40 py-48 mb-32" data-aos="fade-up" data-aos-duration="400">
+                    <h2 class="text-heading mb-32">Order Details</h2>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div>
-                    <p class="text-sm text-gray-600 mb-1">Order Number</p>
-                    <p class="text-lg font-bold text-gray-900">{{ $order->order_number }}</p>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-600 mb-1">Order Date</p>
-                    <p class="text-lg font-semibold text-gray-900">{{ $order->created_at->format('F j, Y g:i A') }}</p>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-600 mb-1">Status</p>
-                    <p class="text-lg font-semibold text-gray-900 capitalize">{{ $order->status }}</p>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-600 mb-1">Payment Status</p>
-                    <p class="text-lg font-semibold text-gray-900 capitalize">{{ $order->payment_status }}</p>
-                </div>
-            </div>
-
-            <!-- Order Items -->
-            <div class="border-t border-gray-200 pt-6">
-                <h3 class="text-xl font-bold text-gray-900 mb-4">Order Items</h3>
-                <div class="space-y-4">
-                    @foreach($order->items as $item)
-                    <div class="flex justify-between items-start pb-4 border-b border-gray-100">
-                        <div class="flex-1">
-                            <p class="font-semibold text-gray-900">{{ $item->product_name }}</p>
-                            <p class="text-sm text-gray-600">SKU: {{ $item->product_sku }}</p>
-                            <p class="text-sm text-gray-600">Quantity: {{ $item->quantity }}</p>
+                    <div class="row gy-3 mb-32">
+                        <div class="col-sm-6">
+                            <p class="text-sm text-gray-600 mb-8">Order Number</p>
+                            <p class="text-lg fw-bold text-gray-900">{{ $order->order_number }}</p>
                         </div>
-                        <p class="font-semibold text-gray-900">${{ number_format($item->total_price, 2) }}</p>
-                    </div>
-                    @endforeach
-                </div>
-            </div>
-
-            <!-- Order Summary -->
-            <div class="border-t border-gray-200 pt-6 mt-6">
-                <div class="space-y-2">
-                    <div class="flex justify-between text-gray-600">
-                        <span>Subtotal</span>
-                        <span>${{ number_format($order->subtotal, 2) }}</span>
-                    </div>
-                    <div class="flex justify-between text-gray-600">
-                        <span>Tax</span>
-                        <span>${{ number_format($order->tax_amount, 2) }}</span>
-                    </div>
-                    <div class="flex justify-between text-gray-600">
-                        <span>Shipping</span>
-                        <span>${{ number_format($order->shipping_amount, 2) }}</span>
-                    </div>
-                    <div class="border-t border-gray-300 pt-2 mt-2">
-                        <div class="flex justify-between text-xl font-bold text-gray-900">
-                            <span>Total</span>
-                            <span class="text-amber-600">${{ number_format($order->total_amount, 2) }}</span>
+                        <div class="col-sm-6">
+                            <p class="text-sm text-gray-600 mb-8">Order Date</p>
+                            <p class="text-lg fw-semibold text-gray-900">{{ $order->created_at->format('F j, Y g:i A') }}</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <p class="text-sm text-gray-600 mb-8">Status</p>
+                            <span class="badge bg-main-50 text-main-600 px-16 py-8 rounded-pill fw-semibold text-sm capitalize">{{ $order->status }}</span>
+                        </div>
+                        <div class="col-sm-6">
+                            <p class="text-sm text-gray-600 mb-8">Payment Status</p>
+                            <span class="badge bg-warning-50 text-warning-600 px-16 py-8 rounded-pill fw-semibold text-sm capitalize">{{ $order->payment_status }}</span>
                         </div>
                     </div>
+
+                    <!-- Order Items -->
+                    <div class="border-top border-gray-100 pt-32 mt-32">
+                        <h3 class="text-xl fw-bold text-gray-900 mb-24">Order Items</h3>
+                        <div class="space-y-24">
+                            @foreach($order->items as $item)
+                            <div class="flex-between align-items-start pb-24 border-bottom border-gray-100">
+                                <div class="flex-1">
+                                    <p class="fw-semibold text-gray-900 mb-8">{{ $item->product_name }}</p>
+                                    <div class="flex-align gap-16 mb-8">
+                                        <span class="text-sm text-gray-600">SKU: {{ $item->product_sku }}</span>
+                                        <span class="text-sm text-gray-600">|</span>
+                                        <span class="text-sm text-gray-600">Quantity: {{ $item->quantity }}</span>
+                                    </div>
+                                </div>
+                                <p class="fw-bold text-gray-900 text-lg">Ksh {{ number_format($item->total_price, 2) }}</p>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <!-- Order Summary -->
+                    <div class="border-top border-gray-100 pt-32 mt-32">
+                        <h3 class="text-xl fw-bold text-gray-900 mb-24">Order Summary</h3>
+                        <div class="bg-color-three rounded-8 p-24">
+                            <div class="mb-24 flex-between gap-8">
+                                <span class="text-gray-900 font-heading-two">Subtotal</span>
+                                <span class="text-gray-900 fw-semibold">Ksh {{ number_format($order->subtotal, 2) }}</span>
+                            </div>
+                            <div class="mb-24 flex-between gap-8">
+                                <span class="text-gray-900 font-heading-two">Tax (10%)</span>
+                                <span class="text-gray-900 fw-semibold">Ksh {{ number_format($order->tax_amount, 2) }}</span>
+                            </div>
+                            <div class="mb-24 flex-between gap-8">
+                                <span class="text-gray-900 font-heading-two">Shipping</span>
+                                <span class="text-gray-900 fw-semibold">Ksh {{ number_format($order->shipping_amount, 2) }}</span>
+                            </div>
+                            <div class="border-top border-gray-200 pt-24 mt-24">
+                                <div class="flex-between gap-8">
+                                    <span class="text-gray-900 text-xl fw-semibold">Total</span>
+                                    <span class="text-gray-900 text-xl fw-bold text-main-600">Ksh {{ number_format($order->total_amount, 2) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shipping Address -->
+                <div class="border border-gray-100 rounded-8 px-40 py-48 mb-32" data-aos="fade-up" data-aos-duration="600">
+                    <h2 class="text-heading mb-24">Shipping Address</h2>
+                    <div class="bg-color-three rounded-8 p-24">
+                        <p class="text-gray-700 mb-0">
+                            <span class="fw-semibold text-gray-900">{{ $order->shipping_address['name'] }}</span><br>
+                            {{ $order->shipping_address['address_line_1'] }}<br>
+                            @if($order->shipping_address['address_line_2'])
+                                {{ $order->shipping_address['address_line_2'] }}<br>
+                            @endif
+                            {{ $order->shipping_address['city'] }}, {{ $order->shipping_address['state'] }} {{ $order->shipping_address['postal_code'] }}<br>
+                            {{ $order->shipping_address['country'] }}
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Shipping Address -->
-        <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4">Shipping Address</h2>
-            <p class="text-gray-700">
-                {{ $order->shipping_address['name'] }}<br>
-                {{ $order->shipping_address['address_line_1'] }}<br>
-                @if($order->shipping_address['address_line_2'])
-                    {{ $order->shipping_address['address_line_2'] }}<br>
-                @endif
-                {{ $order->shipping_address['city'] }}, {{ $order->shipping_address['state'] }} {{ $order->shipping_address['postal_code'] }}<br>
-                {{ $order->shipping_address['country'] }}
-            </p>
-        </div>
+            <!-- Sidebar -->
+            <div class="col-xl-4 col-lg-5">
+                <!-- Next Steps -->
+                <div class="border border-gray-100 rounded-8 px-24 py-40 mb-32" data-aos="fade-up" data-aos-duration="400">
+                    <h3 class="text-lg fw-bold text-gray-900 mb-24">What's Next?</h3>
+                    <div class="space-y-16">
+                        <div class="flex-align gap-12">
+                            <span class="w-32 h-32 flex-center rounded-circle bg-success-50 text-success-600 flex-shrink-0">
+                                <i class="ph ph-check-circle text-xl"></i>
+                            </span>
+                            <p class="text-gray-700 mb-0">You'll receive an order confirmation email shortly</p>
+                        </div>
+                        <div class="flex-align gap-12">
+                            <span class="w-32 h-32 flex-center rounded-circle bg-main-50 text-main-600 flex-shrink-0">
+                                <i class="ph ph-truck text-xl"></i>
+                            </span>
+                            <p class="text-gray-700 mb-0">We'll send you tracking information once your order ships</p>
+                        </div>
+                        <div class="flex-align gap-12">
+                            <span class="w-32 h-32 flex-center rounded-circle bg-warning-50 text-warning-600 flex-shrink-0">
+                                <i class="ph ph-identification-card text-xl"></i>
+                            </span>
+                            <p class="text-gray-700 mb-0">Valid ID will be required upon delivery (18+ only)</p>
+                        </div>
+                    </div>
+                </div>
 
-        <!-- Next Steps -->
-        <div class="bg-amber-50 border border-amber-200 rounded-lg p-6 mb-6">
-            <h3 class="text-lg font-bold text-amber-900 mb-2">What's Next?</h3>
-            <ul class="space-y-2 text-amber-800">
-                <li><i class="fas fa-check-circle mr-2"></i>You'll receive an order confirmation email shortly</li>
-                <li><i class="fas fa-check-circle mr-2"></i>We'll send you tracking information once your order ships</li>
-                <li><i class="fas fa-check-circle mr-2"></i>Valid ID will be required upon delivery (21+ only)</li>
-            </ul>
-        </div>
+                <!-- Payment Information -->
+                <div class="border border-gray-100 rounded-8 px-24 py-40 mb-32" data-aos="fade-up" data-aos-duration="600">
+                    <h3 class="text-lg fw-bold text-gray-900 mb-24">Payment Information</h3>
+                    <div class="bg-color-three rounded-8 p-24">
+                        <div class="mb-16">
+                            <p class="text-sm text-gray-600 mb-4">Payment Method</p>
+                            <p class="fw-semibold text-gray-900 capitalize">{{ str_replace('_', ' ', $order->payment_method) }}</p>
+                        </div>
+                        <div class="mb-0">
+                            <p class="text-sm text-gray-600 mb-4">Payment Status</p>
+                            <span class="badge bg-warning-50 text-warning-600 px-16 py-8 rounded-pill fw-semibold text-sm capitalize">{{ $order->payment_status }}</span>
+                        </div>
+                    </div>
+                </div>
 
-        <!-- Actions -->
-        <div class="text-center space-x-4">
-            <a href="{{ route('shop') }}" class="inline-block bg-amber-600 hover:bg-amber-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors">
-                <i class="fas fa-shopping-bag mr-2"></i>Continue Shopping
-            </a>
-            <a href="{{ route('home') }}" class="inline-block bg-gray-200 hover:bg-gray-300 text-gray-800 px-8 py-3 rounded-lg font-semibold transition-colors">
-                <i class="fas fa-home mr-2"></i>Back to Home
-            </a>
+                <!-- Actions -->
+                <div class="d-flex flex-column gap-16" data-aos="fade-up" data-aos-duration="800">
+                    <a href="{{ route('products.index') }}" class="btn btn-main w-100 py-18 rounded-8 d-flex align-items-center justify-content-center gap-8">
+                        <i class="ph ph-shopping-bag"></i> Continue Shopping
+                    </a>
+                    <a href="{{ route('home') }}" class="btn bg-gray-100 text-gray-900 hover-bg-gray-200 w-100 py-18 rounded-8 d-flex align-items-center justify-content-center gap-8">
+                        <i class="ph ph-house"></i> Back to Home
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-@endsection
+</section>
+<!-- ================================= Order Success Page End ===================================== -->
 
+@endsection

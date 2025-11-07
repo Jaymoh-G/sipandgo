@@ -81,7 +81,7 @@ class CheckoutController extends Controller
             'shipping_country' => 'required|string|max:255',
 
             // Payment Information
-            'payment_method' => 'required|string|in:credit_card,debit_card,paypal',
+            'payment_method' => 'required|string|in:bank_transfer,mpesa,cash_on_delivery',
 
             // Terms and Conditions
             'terms_accepted' => 'required|accepted',
@@ -175,10 +175,19 @@ class CheckoutController extends Controller
                 ],
             ]);
 
-            // Create order items
+            // Create order items and deduct quantity from products
             foreach ($items as $item) {
                 $product = $item['product'];
+                $quantity = $item['quantity'];
 
+                // Check stock availability before creating order item
+                if ($product->track_inventory && $product->quantity < $quantity) {
+                    DB::rollBack();
+                    return back()->withInput()
+                        ->with('error', "Insufficient stock for {$product->name}. Available: {$product->quantity}, Requested: {$quantity}");
+                }
+
+                // Create order item
                 OrderItem::create([
                     'store_id' => null, // Set to default store or get from session
                     'order_id' => $order->id,
@@ -186,11 +195,16 @@ class CheckoutController extends Controller
                     'product_variant_id' => null,
                     'product_name' => $product->name,
                     'product_sku' => $product->sku,
-                    'quantity' => $item['quantity'],
+                    'quantity' => $quantity,
                     'unit_price' => $item['unit_price'],
                     'total_price' => $item['total'],
                     'product_attributes' => null,
                 ]);
+
+                // Deduct quantity from product if inventory tracking is enabled
+                if ($product->track_inventory) {
+                    $product->decrement('quantity', $quantity);
+                }
             }
 
             // Clear cart session

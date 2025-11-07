@@ -58,20 +58,20 @@ class ProductForm
                     ->label('Price')
                     ->required()
                     ->numeric()
-                    ->prefix('$')
+                    ->prefix('Ksh')
                     ->step(0.01)
                     ->minValue(0),
                 TextInput::make('compare_price')
                     ->label('Compare at Price')
                     ->numeric()
-                    ->prefix('$')
+                    ->prefix('Ksh')
                     ->step(0.01)
                     ->minValue(0)
                     ->helperText('Original price before discount'),
                 TextInput::make('cost_price')
                     ->label('Cost Price')
                     ->numeric()
-                    ->prefix('$')
+                    ->prefix('Ksh')
                     ->step(0.01)
                     ->minValue(0)
                     ->helperText('Wholesale/cost price for profit calculation'),
@@ -167,6 +167,13 @@ class ProductForm
                     ->label('Track Inventory')
                     ->default(true)
                     ->required(),
+                TextInput::make('quantity')
+                    ->label('Quantity')
+                    ->numeric()
+                    ->default(0)
+                    ->required()
+                    ->minValue(0)
+                    ->helperText('Current stock quantity'),
                 TextInput::make('sort_order')
                     ->label('Sort Order')
                     ->numeric()

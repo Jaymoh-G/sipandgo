@@ -51,7 +51,7 @@ class DeliveryForm
                 TextInput::make('shipping_cost')
                     ->label('Shipping Cost')
                     ->numeric()
-                    ->prefix('$')
+                    ->prefix('Ksh')
                     ->step(0.01)
                     ->default(0),
                 TextInput::make('recipient_name')

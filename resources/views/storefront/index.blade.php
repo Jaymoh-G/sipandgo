@@ -33,7 +33,7 @@
                                 </a>
                                 <div class="d-flex align-items-end gap-8">
                                     <span class="text-heading fst-italic text-sm">Starting at</span>
-                                    <h6 class="text-danger-600 mb-0">$29.99</h6>
+                                    <h6 class="text-danger-600 mb-0">Ksh 29.99</h6>
                                 </div>
                             </div>
                         </div>
@@ -53,7 +53,7 @@
                                 </a>
                                 <div class="d-flex align-items-end gap-8">
                                     <span class="text-heading fst-italic text-sm">Starting at</span>
-                                    <h6 class="text-danger-600 mb-0">$49.99</h6>
+                                    <h6 class="text-danger-600 mb-0">Ksh 49.99</h6>
                                 </div>
                             </div>
                         </div>
@@ -175,278 +175,370 @@
 </div>
 <!-- ============================ Feature Section End =============================== -->
 
-<!-- Featured Categories Grid -->
-<section class="py-16 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold text-gray-900 mb-4">
-                Shop by Category
-            </h2>
-            <p class="text-lg text-gray-600">
-                Explore our premium collection organized by spirit type
-            </p>
+<!-- ============================ Category Section Start =============================== -->
+<section class="category py-80 bg-gray-50">
+    <div class="container container-lg">
+        <div class="section-heading text-center mb-56">
+            <h2 class="text-heading-two mb-16">Shop by Category</h2>
+            <p class="text-gray-600">Explore our premium collection organized by spirit type</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            @foreach($categories->take(8) as $category)
-            <div class="product-card bg-white rounded-lg shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300">
-                <div class="h-48 bg-gradient-to-br from-amber-100 to-amber-200 flex items-center justify-center relative">
-                    <i class="fas fa-wine-glass-alt text-6xl text-amber-600"></i>
-                    <div class="absolute top-3 right-3 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
-                        New
-                    </div>
-                </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">
-                        {{ $category->name }}
-                    </h3>
-                    <p class="text-gray-600 text-sm mb-4">
-                        {{ Str::limit($category->description, 80) }}
-                    </p>
-                    <a href="{{ route('categories.show', $category) }}" class="inline-flex items-center text-amber-600 hover:text-amber-700 font-semibold group">
-                        Shop {{ $category->name }}
-                        <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+        <div class="row gy-4">
+            @foreach($categories as $category)
+            <div class="col-lg-3 col-md-4 col-sm-6" data-aos="fade-up" data-aos-duration="400">
+                <div class="product-card h-100 p-24 border border-gray-100 hover-border-main-600 rounded-16 position-relative transition-2 bg-white hover-shadow-lg">
+                    <a href="{{ route('categories.show', $category->slug ?? $category) }}" class="product-card__thumb flex-center overflow-hidden rounded-16 mb-24 position-relative">
+                        @if($category->image)
+                            <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}" class="w-100 h-100 object-fit-cover transition-2 hover-scale-110">
+                        @else
+                            <div class="w-100 h-200 bg-main-50 flex-center rounded-16 position-relative overflow-hidden">
+                                <img src="{{ asset('assets/images/icon/category-5.png') }}" alt="{{ $category->name }}" class="w-80 transition-2 hover-scale-110">
+                            </div>
+                        @endif
+                        <div class="position-absolute inset-0 bg-main-600 opacity-0 hover-opacity-10 transition-2 rounded-16"></div>
                     </a>
-                </div>
-            </div>
-            @endforeach
-        </div>
-
-        <div class="text-center mt-8">
-            <a href="{{ route('categories.index') }}" class="bg-gray-900 hover:bg-gray-800 text-white px-8 py-3 rounded-lg font-semibold transition-colors">
-                View All Categories
-            </a>
-        </div>
-    </div>
-</section>
-
-<!-- Deal of the Week Section -->
-<section class="py-16 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold text-gray-900 mb-4">
-                Deal of The Week
-            </h2>
-            <p class="text-lg text-gray-600">
-                Limited time offers on premium spirits
-            </p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            @foreach($featuredProducts->take(3) as $product)
-            <div class="product-card bg-white rounded-lg shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300">
-                <a href="{{ route('products.show', $product->slug) }}" class="block h-64 bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
-                    @if($product->primary_image_url)
-                        <img src="{{ $product->primary_image_url }}" alt="{{ $product->name }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
-                    @else
-                        <div class="w-full h-full flex items-center justify-center">
-                            <i class="fas fa-wine-bottle text-8xl text-gray-400"></i>
-                        </div>
-                    @endif
-                    @if($product->is_on_sale)
-                    <div class="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                        {{ $product->discount_percentage }}% OFF
-                    </div>
-                    @endif
-                    @if($product->is_featured)
-                    <div class="absolute top-3 left-3 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
-                        Best Seller
-                    </div>
-                    @endif
-                </a>
-                <div class="p-6">
-                    <div class="text-sm text-gray-500 mb-1">
-                        {{ $product->category->name ?? 'Uncategorized' }}
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">
-                        <a href="{{ route('products.show', $product->slug) }}" class="hover:text-amber-600 transition-colors">
-                            {{ $product->name }}
-                        </a>
-                    </h3>
-                    @if($product->short_description)
-                    <p class="text-gray-600 text-sm mb-4">
-                        {{ Str::limit($product->short_description, 80) }}
-                    </p>
-                    @endif
-
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex items-center space-x-2">
-                            <span class="text-2xl font-bold text-gray-900">{{ $product->formatted_price }}</span>
-                            @if($product->compare_price && $product->is_on_sale)
-                            <span class="text-lg text-gray-500 line-through">{{ '$' . number_format($product->compare_price, 2) }}</span>
-                            @endif
-                        </div>
-                        @if($product->alcohol_content)
-                        <div class="text-sm text-gray-500">
-                            {{ $product->alcohol_content }}
+                    <div class="product-card__content text-center">
+                        <h6 class="title text-lg fw-semibold mb-8">
+                            <a href="{{ route('categories.show', $category->slug ?? $category) }}" class="link text-heading hover-text-main-600">
+                                {{ $category->name }}
+                            </a>
+                        </h6>
+                        @if($category->products_count > 0)
+                        <div class="mb-12">
+                            <span class="text-main-600 fw-semibold text-sm">{{ $category->products_count }}</span>
+                            <span class="text-gray-500 text-sm"> Products Available</span>
                         </div>
                         @endif
+                        @if($category->description)
+                        <p class="text-gray-600 text-sm mb-24">
+                            {{ Str::limit($category->description, 80) }}
+                        </p>
+                        @endif
+                        <a href="{{ route('categories.show', $category->slug ?? $category) }}" class="btn bg-main-50 text-main-600 hover-bg-main-600 hover-text-white py-11 px-24 rounded-pill flex-align gap-8 w-100 justify-content-center transition-2">
+                            Shop Now <i class="ph ph-arrow-right"></i>
+                        </a>
                     </div>
-
-                    <form action="{{ route('cart.add') }}" method="POST" class="w-full">
-                        @csrf
-                        <input type="hidden" name="product_id" value="{{ $product->id }}">
-                        <input type="hidden" name="quantity" value="1">
-                        <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-3 px-4 rounded-lg font-semibold transition-colors">
-                            <i class="fas fa-shopping-cart mr-2"></i>Add to Cart
-                        </button>
-                    </form>
                 </div>
             </div>
             @endforeach
         </div>
 
-        <div class="text-center mt-8">
-            <a href="{{ route('products.index') }}" class="bg-gray-900 hover:bg-gray-800 text-white px-8 py-3 rounded-lg font-semibold transition-colors">
-                View All Deals
+        @if($categories->isEmpty())
+        <div class="text-center py-80">
+            <div class="mb-24">
+                <i class="ph ph-folder-open text-6xl text-gray-400"></i>
+            </div>
+            <h4 class="text-heading mb-16">No Categories Available</h4>
+            <p class="text-gray-600 mb-32">Check back soon for our premium collection!</p>
+        </div>
+        @else
+        <div class="text-center mt-56">
+            <a href="{{ route('categories.index') }}" class="btn btn-main rounded-pill d-inline-flex align-items-center gap-8 px-40 py-16">
+                View All Categories <i class="ph ph-arrow-right"></i>
+            </a>
+        </div>
+        @endif
+    </div>
+</section>
+<!-- ============================ Category Section End =============================== -->
+
+<!-- ============================ Deal of the Week Section Start =============================== -->
+<section class="deal py-80 bg-gray-50">
+    <div class="container container-lg">
+        <div class="section-heading text-center mb-56">
+            <h2 class="text-heading-two mb-16">Deal of The Week</h2>
+            <p class="text-gray-600">Limited time offers on premium spirits</p>
+        </div>
+
+        <div class="row gy-4">
+            @foreach($featuredProducts->take(4) as $product)
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-duration="400">
+                <div class="product-card h-100 p-16 border border-gray-100 hover-border-main-600 rounded-16 position-relative transition-2 bg-white">
+                    <a href="{{ route('products.show', $product->slug) }}" class="product-card__thumb flex-center rounded-8 bg-gray-50 position-relative overflow-hidden">
+                        @if($product->is_on_sale)
+                        <span class="product-card__badge bg-main-600 px-8 py-4 text-sm text-white position-absolute inset-inline-start-0 inset-block-start-0 z-1">
+                            {{ $product->discount_percentage }}% OFF
+                        </span>
+                        @endif
+                        @if($product->is_featured)
+                        <span class="product-card__badge bg-success-600 px-8 py-4 text-sm text-white position-absolute inset-inline-end-0 inset-block-start-0 z-1">
+                            Best Seller
+                        </span>
+                        @endif
+                        @if($product->primary_image_url)
+                            <img src="{{ $product->primary_image_url }}" alt="{{ $product->name }}" class="w-100 h-100 object-fit-cover">
+                        @else
+                            <div class="w-100 h-100 flex-center">
+                                <i class="ph ph-wine-bottle text-6xl text-gray-400"></i>
+                            </div>
+                        @endif
+                    </a>
+                    <div class="product-card__content mt-16">
+                        <div class="flex-align mb-12 gap-6">
+                            <span class="text-xs fw-medium text-gray-500">{{ $product->category->name ?? 'Uncategorized' }}</span>
+                        </div>
+                        <h6 class="title text-lg fw-semibold mt-12 mb-8">
+                            <a href="{{ route('products.show', $product->slug) }}" class="link text-line-2 hover-text-main-600">{{ $product->name }} <span class="text-gray-500">({{ $product->quantity ?? 0 }})</span></a>
+                        </h6>
+                        @if($product->short_description)
+                        <p class="text-gray-600 text-sm mb-12">
+                            {{ Str::limit($product->short_description, 80) }}
+                        </p>
+                        @endif
+                        <div class="product-card__price my-12 d-flex align-items-center gap-8">
+                            <span class="text-heading text-md fw-semibold">{{ $product->formatted_price }}</span>
+                            @if($product->compare_price && $product->is_on_sale)
+                                <span class="text-gray-400 text-md fw-semibold text-decoration-line-through">Ksh {{ number_format($product->compare_price, 2) }}</span>
+                            @endif
+                        </div>
+                        <div class="flex-align gap-8">
+                            @if($product->isInStock())
+                            <form action="{{ route('cart.add') }}" method="POST" class="flex-grow-1">
+                                @csrf
+                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="product-card__cart btn bg-gray-50 text-heading hover-bg-main-600 hover-text-white py-11 px-24 rounded-8 flex-center gap-8 fw-medium w-100">
+                                    <i class="ph ph-shopping-cart-simple"></i> Add to Cart
+                                </button>
+                            </form>
+                            @if(in_array($product->id, $wishlistItems ?? []))
+                            <form action="{{ route('wishlist.remove', $product->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="w-48 h-48 bg-main-600 text-white hover-bg-main-800 hover-text-white flex-center rounded-8 border-0" title="Remove from Wishlist">
+                                    <i class="ph ph-heart-fill" style="color: #ffffff !important; fill: #ffffff !important;"></i>
+                                </button>
+                            </form>
+                            @else
+                            <form action="{{ route('wishlist.add') }}" method="POST" class="d-inline">
+                                @csrf
+                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                <button type="submit" class="w-48 h-48 bg-gray-50 text-heading hover-bg-main-600 hover-text-white flex-center rounded-8 border-0" title="Add to Wishlist">
+                                    <i class="ph ph-heart"></i>
+                                </button>
+                            </form>
+                            @endif
+                            @else
+                            <button type="button" class="product-card__cart btn bg-gray-100 text-gray-400 py-11 px-24 rounded-8 flex-center gap-8 fw-medium w-100 cursor-not-allowed" disabled>
+                                Out of Stock
+                            </button>
+                            <button type="button" class="w-48 h-48 bg-gray-100 text-gray-400 flex-center rounded-8 border-0 cursor-not-allowed" title="Out of Stock" disabled>
+                                <i class="ph ph-heart"></i>
+                            </button>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+
+        <div class="text-center mt-40">
+            <a href="{{ route('products.index') }}" class="btn btn-main rounded-pill d-inline-flex align-items-center gap-8">
+                View All Deals <i class="ph ph-arrow-right"></i>
             </a>
         </div>
     </div>
 </section>
+<!-- ============================ Deal of the Week Section End =============================== -->
 
-<!-- Featured Products Grid -->
-<section class="py-16 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold text-gray-900 mb-4">
-                Featured Products
-            </h2>
-            <p class="text-lg text-gray-600">
-                Handpicked premium selections from our collection
-            </p>
+<!-- ============================ Featured Products Section Start =============================== -->
+<section class="featured-products py-80">
+    <div class="container container-lg">
+        <div class="section-heading text-center mb-56">
+            <h2 class="text-heading-two mb-16">Featured Products</h2>
+            <p class="text-gray-600">Handpicked premium selections from our collection</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="row gy-4">
             @foreach($featuredProducts as $product)
-            <div class="product-card bg-white rounded-lg shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300">
-                <a href="{{ route('products.show', $product->slug) }}" class="block h-64 bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
-                    @if($product->primary_image_url)
-                        <img src="{{ $product->primary_image_url }}" alt="{{ $product->name }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
-                    @else
-                        <div class="w-full h-full flex items-center justify-center">
-                            <i class="fas fa-wine-bottle text-6xl text-gray-400"></i>
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-duration="400">
+                <div class="product-card h-100 p-16 border border-gray-100 hover-border-main-600 rounded-16 position-relative transition-2 d-flex flex-column">
+                    <a href="{{ route('products.show', $product->slug) }}" class="product-card__thumb flex-center rounded-8 bg-gray-50 position-relative overflow-hidden mb-16" style="height: 250px; width: 100%;">
+                        @if($product->is_on_sale)
+                        <span class="product-card__badge bg-main-600 px-8 py-4 text-sm text-white position-absolute inset-inline-start-0 inset-block-start-0 z-1">
+                            {{ $product->discount_percentage }}% OFF
+                        </span>
+                        @endif
+                        @if($product->primary_image_url)
+                            <img src="{{ $product->primary_image_url }}" alt="{{ $product->name }}" class="w-100 h-100 object-fit-cover">
+                        @else
+                            <div class="w-100 h-100 flex-center">
+                                <i class="ph ph-wine-bottle text-6xl text-gray-400"></i>
+                            </div>
+                        @endif
+                    </a>
+                    <div class="product-card__content flex-grow-1 d-flex flex-column">
+                        <div class="flex-align mb-12 gap-6">
+                            <span class="text-xs fw-medium text-gray-500">{{ $product->category->name ?? 'Uncategorized' }}</span>
                         </div>
-                    @endif
-                    @if($product->is_on_sale)
-                    <div class="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-sm font-semibold">
-                        {{ $product->discount_percentage }}% OFF
-                    </div>
-                    @endif
-                </a>
-                <div class="p-6">
-                    <div class="text-sm text-gray-500 mb-1">
-                        {{ $product->category->name ?? 'Uncategorized' }}
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">
-                        <a href="{{ route('products.show', $product->slug) }}" class="hover:text-amber-600 transition-colors">
-                            {{ $product->name }}
-                        </a>
-                    </h3>
-                    @if($product->short_description)
-                    <p class="text-gray-600 text-sm mb-4">
-                        {{ Str::limit($product->short_description, 80) }}
-                    </p>
-                    @endif
-
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex items-center space-x-2">
-                            <span class="text-2xl font-bold text-gray-900">{{ $product->formatted_price }}</span>
+                        <h6 class="title text-lg fw-semibold mt-12 mb-8">
+                            <a href="{{ route('products.show', $product->slug) }}" class="link text-line-2 hover-text-main-600">{{ $product->name }} <span class="text-gray-500">({{ $product->quantity ?? 0 }})</span></a>
+                        </h6>
+                        @if($product->short_description)
+                        <p class="text-gray-600 text-sm mb-12">
+                            {{ Str::limit($product->short_description, 80) }}
+                        </p>
+                        @endif
+                        <div class="product-card__price my-12 d-flex align-items-center gap-8">
+                            <span class="text-heading text-md fw-semibold">{{ $product->formatted_price }}</span>
                             @if($product->compare_price && $product->is_on_sale)
-                            <span class="text-lg text-gray-500 line-through">{{ '$' . number_format($product->compare_price, 2) }}</span>
+                                <span class="text-gray-400 text-md fw-semibold text-decoration-line-through">Ksh {{ number_format($product->compare_price, 2) }}</span>
                             @endif
                         </div>
-                        @if($product->alcohol_content)
-                        <div class="text-sm text-gray-500">
-                            {{ $product->alcohol_content }}
+                        <div class="flex-align gap-8">
+                            @if($product->isInStock())
+                            <form action="{{ route('cart.add') }}" method="POST" class="flex-grow-1">
+                                @csrf
+                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="product-card__cart btn bg-gray-50 text-heading hover-bg-main-600 hover-text-white py-11 px-24 rounded-8 flex-center gap-8 fw-medium w-100">
+                                    <i class="ph ph-shopping-cart-simple"></i> Add to Cart
+                                </button>
+                            </form>
+                            @if(in_array($product->id, $wishlistItems ?? []))
+                            <form action="{{ route('wishlist.remove', $product->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="w-48 h-48 bg-main-600 text-white hover-bg-main-800 hover-text-white flex-center rounded-8 border-0" title="Remove from Wishlist">
+                                    <i class="ph ph-heart-fill" style="color: #ffffff !important; fill: #ffffff !important;"></i>
+                                </button>
+                            </form>
+                            @else
+                            <form action="{{ route('wishlist.add') }}" method="POST" class="d-inline">
+                                @csrf
+                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                <button type="submit" class="w-48 h-48 bg-gray-50 text-heading hover-bg-main-600 hover-text-white flex-center rounded-8 border-0" title="Add to Wishlist">
+                                    <i class="ph ph-heart"></i>
+                                </button>
+                            </form>
+                            @endif
+                            @else
+                            <button type="button" class="product-card__cart btn bg-gray-100 text-gray-400 py-11 px-24 rounded-8 flex-center gap-8 fw-medium w-100 cursor-not-allowed" disabled>
+                                Out of Stock
+                            </button>
+                            <button type="button" class="w-48 h-48 bg-gray-100 text-gray-400 flex-center rounded-8 border-0 cursor-not-allowed" title="Out of Stock" disabled>
+                                <i class="ph ph-heart"></i>
+                            </button>
+                            @endif
                         </div>
-                        @endif
                     </div>
-
-                    <form action="{{ route('cart.add') }}" method="POST" class="w-full">
-                        @csrf
-                        <input type="hidden" name="product_id" value="{{ $product->id }}">
-                        <input type="hidden" name="quantity" value="1">
-                        <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-2 px-4 rounded-lg font-semibold transition-colors">
-                            <i class="fas fa-shopping-cart mr-2"></i>Add to Cart
-                        </button>
-                    </form>
                 </div>
             </div>
             @endforeach
         </div>
 
-        <div class="text-center mt-8">
-            <a href="{{ route('products.index') }}" class="bg-gray-900 hover:bg-gray-800 text-white px-8 py-3 rounded-lg font-semibold transition-colors">
-                View All Products
+        <div class="text-center mt-40">
+            <a href="{{ route('products.index') }}" class="btn btn-main rounded-pill d-inline-flex align-items-center gap-8">
+                View All Products <i class="ph ph-arrow-right"></i>
             </a>
         </div>
     </div>
 </section>
+<!-- ============================ Featured Products Section End =============================== -->
 
-<!-- Newsletter Section -->
-<section class="py-16 bg-gradient-to-r from-amber-600 to-amber-700 text-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 class="text-3xl font-bold mb-4">
-            Join Our Newsletter, Get 10% Off
-        </h2>
-        <p class="text-xl mb-8 text-amber-100">
-            Stay updated with our latest premium spirits and exclusive offers
-        </p>
-        <div class="max-w-md mx-auto flex">
-            <input type="email" placeholder="Enter your email address" class="flex-1 px-4 py-3 rounded-l-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-300" />
-            <button class="bg-gray-900 hover:bg-gray-800 text-white px-6 py-3 rounded-r-lg font-semibold transition-colors">
-                Subscribe Now
-            </button>
-        </div>
-    </div>
-</section>
-
-<!-- Features Section -->
-<section class="py-16 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div class="text-center">
-                <div class="bg-amber-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-shipping-fast text-2xl text-amber-600"></i>
+<!-- ============================ Newsletter Section Start =============================== -->
+<section class="newsletter py-80 bg-main-600">
+    <div class="container container-lg">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-32 mb-lg-0" data-aos="fade-right" data-aos-duration="400">
+                <div class="d-flex align-items-center gap-16 mb-24">
+                    <div class="w-80 h-80 bg-white bg-opacity-20 rounded-circle flex-center flex-shrink-0">
+                        <i class="ph ph-envelope-simple text-4xl text-white"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h2 class="text-heading-two text-white mb-8">Join Our Newsletter</h2>
+                        <p class="text-white text-lg mb-24">Get 10% off your first order</p>
+                        <div class="d-flex flex-column gap-16">
+                            <div class="d-flex align-items-center gap-12">
+                                <i class="ph ph-check-circle text-2xl text-white"></i>
+                                <span class="text-white">Exclusive deals and discounts</span>
+                            </div>
+                            <div class="d-flex align-items-center gap-12">
+                                <i class="ph ph-check-circle text-2xl text-white"></i>
+                                <span class="text-white">New product announcements</span>
+                            </div>
+                            <div class="d-flex align-items-center gap-12">
+                                <i class="ph ph-check-circle text-2xl text-white"></i>
+                                <span class="text-white">Premium spirits recommendations</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <h3 class="text-xl font-semibold text-gray-900 mb-2">
-                    Free Shipping
-                </h3>
-                <p class="text-gray-600">Free shipping all over the US</p>
             </div>
-
-            <div class="text-center">
-                <div class="bg-amber-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-check-circle text-2xl text-amber-600"></i>
+            <div class="col-lg-6" data-aos="fade-left" data-aos-duration="400">
+                <div class="bg-white rounded-24 p-40 box-shadow-lg">
+                    <h3 class="text-heading mb-16 text-center">Subscribe Now</h3>
+                    <p class="text-gray-600 text-center mb-32">
+                        Stay updated with our latest premium spirits and exclusive offers
+                    </p>
+                    <form action="#" method="POST" class="d-flex flex-column gap-16">
+                        @csrf
+                        <div class="position-relative">
+                            <i class="ph ph-envelope position-absolute start-0 top-50 translate-middle-y ms-24 text-gray-400 text-xl"></i>
+                            <input type="email" name="email" placeholder="Enter your email address" required class="form-control common-input ps-64 pe-24 py-16 rounded-pill border border-gray-200 focus-border-main-600 w-100" />
+                        </div>
+                        <button type="submit" class="btn btn-main rounded-pill w-100 py-16 fw-semibold d-flex align-items-center justify-content-center gap-8">
+                            <i class="ph ph-paper-plane-tilt"></i> Subscribe Now
+                        </button>
+                        <p class="text-sm text-gray-500 text-center mb-0">
+                            <i class="ph ph-lock-key"></i> We respect your privacy. Unsubscribe at any time.
+                        </p>
+                    </form>
                 </div>
-                <h3 class="text-xl font-semibold text-gray-900 mb-2">
-                    100% Satisfaction
-                </h3>
-                <p class="text-gray-600">Quality guarantee on all products</p>
-            </div>
-
-            <div class="text-center">
-                <div class="bg-amber-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-shield-alt text-2xl text-amber-600"></i>
-                </div>
-                <h3 class="text-xl font-semibold text-gray-900 mb-2">
-                    Secure Payments
-                </h3>
-                <p class="text-gray-600">Safe and encrypted transactions</p>
-            </div>
-
-            <div class="text-center">
-                <div class="bg-amber-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-headset text-2xl text-amber-600"></i>
-                </div>
-                <h3 class="text-xl font-semibold text-gray-900 mb-2">
-                    24/7 Support
-                </h3>
-                <p class="text-gray-600">Round-the-clock customer service</p>
             </div>
         </div>
     </div>
 </section>
+<!-- ============================ Newsletter Section End =============================== -->
+
+<!-- ============================ Features Section Start =============================== -->
+<section class="features py-80 bg-white">
+    <div class="container container-lg">
+        <div class="row gy-4">
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-duration="400">
+                <div class="text-center">
+                    <div class="w-80 h-80 bg-main-50 rounded-circle flex-center mx-auto mb-24">
+                        <i class="ph ph-truck text-3xl text-main-600"></i>
+                    </div>
+                    <h4 class="text-heading mb-12">Free Shipping</h4>
+                    <p class="text-gray-600 mb-0">Free shipping all over the US</p>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-duration="600">
+                <div class="text-center">
+                    <div class="w-80 h-80 bg-main-50 rounded-circle flex-center mx-auto mb-24">
+                        <i class="ph ph-check-circle text-3xl text-main-600"></i>
+                    </div>
+                    <h4 class="text-heading mb-12">100% Satisfaction</h4>
+                    <p class="text-gray-600 mb-0">Quality guarantee on all products</p>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-duration="800">
+                <div class="text-center">
+                    <div class="w-80 h-80 bg-main-50 rounded-circle flex-center mx-auto mb-24">
+                        <i class="ph ph-shield-check text-3xl text-main-600"></i>
+                    </div>
+                    <h4 class="text-heading mb-12">Secure Payments</h4>
+                    <p class="text-gray-600 mb-0">Safe and encrypted transactions</p>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-duration="1000">
+                <div class="text-center">
+                    <div class="w-80 h-80 bg-main-50 rounded-circle flex-center mx-auto mb-24">
+                        <i class="ph ph-headphones text-3xl text-main-600"></i>
+                    </div>
+                    <h4 class="text-heading mb-12">24/7 Support</h4>
+                    <p class="text-gray-600 mb-0">Round-the-clock customer service</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ============================ Features Section End =============================== -->
 
 @push('scripts')
 <script>
@@ -489,4 +581,3 @@
 </script>
 @endpush
 @endsection
-

@@ -50,7 +50,7 @@ class LatestOrdersWidget extends BaseWidget
 
                 Tables\Columns\TextColumn::make('total_amount')
                     ->label('Total')
-                    ->money('USD')
+                    ->formatStateUsing(fn ($state) => 'Ksh ' . number_format($state, 2))
                     ->sortable()
                     ->alignEnd(),
 

@@ -31,12 +31,12 @@ class OrderItemsRelationManager extends RelationManager
                     ->alignCenter(),
                 TextColumn::make('unit_price')
                     ->label('Unit Price')
-                    ->money('USD')
+                    ->formatStateUsing(fn ($state) => 'Ksh ' . number_format($state, 2))
                     ->sortable()
                     ->alignEnd(),
                 TextColumn::make('total_price')
                     ->label('Total')
-                    ->money('USD')
+                    ->formatStateUsing(fn ($state) => 'Ksh ' . number_format($state, 2))
                     ->sortable()
                     ->alignEnd()
                     ->weight('bold'),

@@ -23,7 +23,7 @@
                             </li>
                             @foreach($categories as $category)
                             <li class="mb-24">
-                                <a href="{{ route('products.index', ['category' => $category->slug] + request()->except('page')) }}" class="{{ request('category') === $category->slug ? 'text-main-600' : 'text-gray-900 hover-text-main-600' }}">{{ $category->name }}</a>
+                                <a href="{{ route('products.index', ['category' => $category->slug] + request()->except('page')) }}" class="{{ request('category') === $category->slug ? 'text-main-600' : 'text-gray-900 hover-text-main-600' }}">{{ $category->name }} <span class="text-gray-500">({{ $category->products_count ?? 0 }})</span></a>
                             </li>
                             @endforeach
                         </ul>
@@ -68,9 +68,9 @@
                             <li class="mb-24">
                                 <a href="{{ route('products.index', array_merge(request()->except(['page','brand']), [])) }}" class="{{ !request('brand') ? 'text-main-600' : 'text-gray-900 hover-text-main-600' }}">All Brands</a>
                             </li>
-                            @foreach($brands as $brand)
+                            @foreach($brands as $brand => $count)
                             <li class="mb-24">
-                                <a href="{{ route('products.index', array_merge(request()->except('page'), ['brand' => $brand])) }}" class="{{ request('brand') === $brand ? 'text-main-600' : 'text-gray-900 hover-text-main-600' }}">{{ $brand }}</a>
+                                <a href="{{ route('products.index', array_merge(request()->except('page'), ['brand' => $brand])) }}" class="{{ request('brand') === $brand ? 'text-main-600' : 'text-gray-900 hover-text-main-600' }}">{{ $brand }} <span class="text-gray-500">({{ $count }})</span></a>
                             </li>
                             @endforeach
                         </ul>
@@ -129,7 +129,7 @@
                                 </a>
                                 <div class="product-card__content mt-16">
                                     <h6 class="title text-lg fw-semibold mt-12 mb-8">
-                                        <a href="{{ route('products.show', $product->slug) }}" class="link text-line-2 hover-text-main-600">{{ $product->name }}</a>
+                                        <a href="{{ route('products.show', $product->slug) }}" class="link text-line-2 hover-text-main-600">{{ $product->name }} <span class="text-gray-500">({{ $product->quantity ?? 0 }})</span></a>
                                     </h6>
                                     <div class="flex-align mb-12 gap-6">
                                         <span class="text-xs fw-medium text-gray-500">{{ $product->category->name ?? 'Uncategorized' }}</span>
@@ -137,17 +137,45 @@
                                     <div class="product-card__price my-12 d-flex align-items-center gap-8">
                                         <span class="text-heading text-md fw-semibold">{{ $product->formatted_price }}</span>
                                         @if($product->compare_price && $product->is_on_sale)
-                                            <span class="text-gray-400 text-md fw-semibold text-decoration-line-through">${{ number_format($product->compare_price, 2) }}</span>
+                                            <span class="text-gray-400 text-md fw-semibold text-decoration-line-through">Ksh {{ number_format($product->compare_price, 2) }}</span>
                                         @endif
                                     </div>
-                                    <form action="{{ route('cart.add') }}" method="POST" class="w-100">
-                                        @csrf
-                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                        <input type="hidden" name="quantity" value="1">
-                                        <button type="submit" class="product-card__cart btn bg-gray-50 text-heading hover-bg-main-600 hover-text-white py-11 px-24 rounded-8 flex-center gap-8 fw-medium w-100">
-                                            <i class="ph ph-shopping-cart-simple"></i> Add to Cart
+                                    <div class="flex-align gap-8">
+                                        @if($product->isInStock())
+                                        <form action="{{ route('cart.add') }}" method="POST" class="flex-grow-1">
+                                            @csrf
+                                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                            <input type="hidden" name="quantity" value="1">
+                                            <button type="submit" class="product-card__cart btn bg-gray-50 text-heading hover-bg-main-600 hover-text-white py-11 px-24 rounded-8 flex-center gap-8 fw-medium w-100">
+                                                <i class="ph ph-shopping-cart-simple"></i> Add to Cart
+                                            </button>
+                                        </form>
+                                        @if(in_array($product->id, $wishlistItems ?? []))
+                                        <form action="{{ route('wishlist.remove', $product->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="w-48 h-48 bg-main-600 text-white hover-bg-main-800 flex-center rounded-8 border-0" title="Remove from Wishlist">
+                                                <i class="ph ph-heart-fill text-white"></i>
+                                            </button>
+                                        </form>
+                                        @else
+                                        <form action="{{ route('wishlist.add') }}" method="POST" class="d-inline">
+                                            @csrf
+                                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                            <button type="submit" class="w-48 h-48 bg-gray-50 text-heading hover-bg-main-600 hover-text-white flex-center rounded-8 border-0" title="Add to Wishlist">
+                                                <i class="ph ph-heart"></i>
+                                            </button>
+                                        </form>
+                                        @endif
+                                        @else
+                                        <button type="button" class="product-card__cart btn bg-gray-100 text-gray-400 py-11 px-24 rounded-8 flex-center gap-8 fw-medium w-100 cursor-not-allowed" disabled>
+                                            Out of Stock
                                         </button>
-                                    </form>
+                                        <button type="button" class="w-48 h-48 bg-gray-100 text-gray-400 flex-center rounded-8 border-0 cursor-not-allowed" title="Out of Stock" disabled>
+                                            <i class="ph ph-heart"></i>
+                                        </button>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         </div>

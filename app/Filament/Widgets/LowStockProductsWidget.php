@@ -70,7 +70,7 @@ class LowStockProductsWidget extends BaseWidget
 
                 Tables\Columns\TextColumn::make('price')
                     ->label('Price')
-                    ->money('USD')
+                    ->formatStateUsing(fn ($state) => 'Ksh ' . number_format($state, 2))
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])

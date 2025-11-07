@@ -134,7 +134,7 @@
                                 <div class="product-card__price mb-16">
                                     <span class="text-heading text-md fw-semibold">{{ $product->formatted_price }}</span>
                                     @if($product->compare_price && $product->is_on_sale)
-                                    <span class="text-gray-400 text-md fw-semibold text-decoration-line-through ms-8">${{ number_format($product->compare_price, 2) }}</span>
+                                    <span class="text-gray-400 text-md fw-semibold text-decoration-line-through ms-8">Ksh {{ number_format($product->compare_price, 2) }}</span>
                                     @endif
                                 </div>
                                 <div class="flex-align gap-6 mb-16">
@@ -142,14 +142,42 @@
                                     <span class="text-15 fw-bold text-warning-600 d-flex"><i class="ph-fill ph-star"></i></span>
                                     <span class="text-xs fw-bold text-gray-600">({{ rand(10, 100) }}k)</span>
                                 </div>
-                                <form action="{{ route('cart.add') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                    <input type="hidden" name="quantity" value="1">
-                                    <button type="submit" class="product-card__cart btn bg-main-50 text-main-600 hover-bg-main-600 hover-text-white py-11 px-24 rounded-pill flex-align gap-8 w-100 justify-content-center">
-                                        Add To Cart <i class="ph ph-shopping-cart"></i>
+                                <div class="flex-align gap-8">
+                                    @if($product->isInStock())
+                                    <form action="{{ route('cart.add') }}" method="POST" class="flex-grow-1">
+                                        @csrf
+                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                        <input type="hidden" name="quantity" value="1">
+                                        <button type="submit" class="product-card__cart btn bg-main-50 text-main-600 hover-bg-main-600 hover-text-white py-11 px-24 rounded-pill flex-align gap-8 w-100 justify-content-center">
+                                            Add To Cart <i class="ph ph-shopping-cart"></i>
+                                        </button>
+                                    </form>
+                                    @if(in_array($product->id, $wishlistItems ?? []))
+                                    <form action="{{ route('wishlist.remove', $product->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="w-48 h-48 bg-main-600 text-white hover-bg-main-800 flex-center rounded-pill border-0" title="Remove from Wishlist">
+                                            <i class="ph ph-heart-fill text-white"></i>
+                                        </button>
+                                    </form>
+                                    @else
+                                    <form action="{{ route('wishlist.add') }}" method="POST" class="d-inline">
+                                        @csrf
+                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                        <button type="submit" class="w-48 h-48 bg-main-50 text-main-600 hover-bg-main-600 hover-text-white flex-center rounded-pill border-0" title="Add to Wishlist">
+                                            <i class="ph ph-heart"></i>
+                                        </button>
+                                    </form>
+                                    @endif
+                                    @else
+                                    <button type="button" class="product-card__cart btn bg-gray-100 text-gray-400 py-11 px-24 rounded-pill flex-align gap-8 w-100 justify-content-center cursor-not-allowed" disabled>
+                                        Out of Stock
                                     </button>
-                                </form>
+                                    <button type="button" class="w-48 h-48 bg-gray-100 text-gray-400 flex-center rounded-pill border-0 cursor-not-allowed" title="Out of Stock" disabled>
+                                        <i class="ph ph-heart"></i>
+                                    </button>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>

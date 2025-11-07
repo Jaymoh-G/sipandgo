@@ -40,6 +40,7 @@ class Product extends Model
         'is_active',
         'is_featured',
         'track_inventory',
+        'quantity',
         'sort_order',
         'meta_title',
         'meta_description',
@@ -56,6 +57,7 @@ class Product extends Model
         'is_active' => 'boolean',
         'is_featured' => 'boolean',
         'track_inventory' => 'boolean',
+        'quantity' => 'integer',
         'sort_order' => 'integer',
         'images' => 'array',
         'attributes' => 'array',
@@ -118,6 +120,20 @@ class Product extends Model
         return $inventory->quantity_available <= $inventory->low_stock_threshold;
     }
 
+    /**
+     * Check if product is in stock
+     */
+    public function isInStock(): bool
+    {
+        // If inventory tracking is disabled, always allow
+        if (!$this->track_inventory) {
+            return true;
+        }
+
+        // Check if quantity is greater than 0
+        return ($this->quantity ?? 0) > 0;
+    }
+
     public function orderItems(): HasMany
     {
         return $this->hasMany(OrderItem::class);
@@ -135,7 +151,7 @@ class Product extends Model
 
     public function getFormattedPriceAttribute(): string
     {
-        return '$' . number_format($this->price, 2);
+        return 'Ksh ' . number_format($this->price, 2);
     }
 
     public function getIsOnSaleAttribute(): bool

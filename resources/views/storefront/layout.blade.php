@@ -53,7 +53,7 @@
     </button>
     <div class="container">
         <div class="position-relative">
-            <input type="text" name="search" class="form-control py-16 px-24 text-xl rounded-pill pe-64" placeholder="Search for a product or brand" value="{{ request('search') }}">
+            <input type="text" name="search" class="form-control py-16 px-24 text-xl rounded-pill pe-64" placeholder="Search for products or brands" value="{{ request('search') }}">
             <button type="submit" class="w-48 h-48 bg-main-600 rounded-circle flex-center text-xl text-white position-absolute top-50 translate-middle-y inset-inline-end-0 me-8">
                 <i class="ph ph-magnifying-glass"></i>
             </button>

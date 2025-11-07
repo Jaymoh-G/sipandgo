@@ -62,12 +62,12 @@ class ProductsTable
                     ->toggleable(),
                 TextColumn::make('price')
                     ->label('Price')
-                    ->money('USD')
+                    ->formatStateUsing(fn ($state) => 'Ksh ' . number_format($state, 2))
                     ->sortable()
                     ->alignEnd(),
                 TextColumn::make('compare_price')
                     ->label('Compare Price')
-                    ->money('USD')
+                    ->formatStateUsing(fn ($state) => $state ? 'Ksh ' . number_format($state, 2) : null)
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->alignEnd(),
@@ -82,17 +82,29 @@ class ProductsTable
                     ->badge()
                     ->color('success')
                     ->toggleable(),
-                TextColumn::make('stock_status')
-                    ->label('Stock')
+                TextColumn::make('quantity')
+                    ->label('Quantity')
                     ->getStateUsing(function ($record) {
                         if (!$record->track_inventory) {
                             return 'N/A';
                         }
-                        // Add inventory logic here if you have inventory table
-                        return 'In Stock';
+                        $inventory = $record->inventory()->first();
+                        return $inventory ? $inventory->quantity_available : 0;
                     })
+                    ->numeric()
+                    ->sortable()
                     ->badge()
-                    ->color('success')
+                    ->color(function ($state, $record) {
+                        if (!$record->track_inventory) {
+                            return 'gray';
+                        }
+                        $inventory = $record->inventory()->first();
+                        if (!$inventory) {
+                            return 'danger';
+                        }
+                        $threshold = $inventory->low_stock_threshold ?? 10;
+                        return $state <= $threshold ? 'danger' : ($state <= ($threshold * 2) ? 'warning' : 'success');
+                    })
                     ->toggleable(),
                 IconColumn::make('is_active')
                     ->label('Active')

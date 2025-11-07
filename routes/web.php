@@ -35,6 +35,14 @@ Route::prefix('checkout')->group(function () {
     Route::get('/success/{orderNumber}', [\App\Http\Controllers\CheckoutController::class, 'success'])->name('checkout.success');
 });
 
+// Wishlist routes
+Route::prefix('wishlist')->group(function () {
+    Route::get('/', [\App\Http\Controllers\WishlistController::class, 'index'])->name('wishlist.index');
+    Route::post('/add', [\App\Http\Controllers\WishlistController::class, 'add'])->name('wishlist.add');
+    Route::delete('/remove/{productId}', [\App\Http\Controllers\WishlistController::class, 'remove'])->name('wishlist.remove');
+    Route::post('/clear', [\App\Http\Controllers\WishlistController::class, 'clear'])->name('wishlist.clear');
+});
+
 // Static pages
 Route::get('/about', [StoreController::class, 'about'])->name('about');
 Route::get('/contact', [StoreController::class, 'contact'])->name('contact');

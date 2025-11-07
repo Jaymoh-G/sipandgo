@@ -27,14 +27,21 @@
 
             <ul class="flex-align flex-wrap d-none d-xl-flex">
                 <li class="border-right-item pe-12 me-12">
-                    <span class="text-white text-sm">
-                    Buy one get one free on
-                    <span class="text-yellow">first order</span> </span>
+                    <a href="mailto:info@sipandgo.com" class="text-white text-sm d-flex align-items-center gap-4 hover-text-decoration-underline">
+                        <i class="ph ph-envelope text-md"></i>
+                        <span class="">info@sipandgo.com</span>
+                    </a>
                 </li>
                 <li class="border-right-item pe-12 me-12">
-                    <a href="javascript:void(0)" class="text-white text-sm d-flex align-items-center gap-4 hover-text-decoration-underline">
-                        <img src="{{ asset('assets/images/icon/track-icon.png') }}" alt="Track Icon">
-                        <span class="">Track Your Order</span>
+                    <a href="https://wa.me/254712345678" target="_blank" class="text-white text-sm d-flex align-items-center gap-4 hover-text-decoration-underline">
+                        <i class="ph ph-whatsapp-logo text-md"></i>
+                        <span class="">WhatsApp</span>
+                    </a>
+                </li>
+                <li class="border-right-item pe-12 me-12">
+                    <a href="https://maps.google.com" target="_blank" class="text-white text-sm d-flex align-items-center gap-4 hover-text-decoration-underline">
+                        <i class="ph ph-map-pin text-md"></i>
+                        <span class="">Nairobi, Kenya</span>
                     </a>
                 </li>
             </ul>
@@ -86,24 +93,70 @@
             </div>
             <!-- Logo End  -->
 
-            <!-- form location Start -->
-            <form action="{{ route('products.index') }}" class="flex-align flex-wrap form-location-wrapper max-w-840 w-100" method="GET">
-                <div class="search-category select-style-one d-flex select-border-end-0 search-form d-sm-flex d-none text-heading-two text-sm w-100">
-                    <select class="js-example-basic-single border border-neutral-40 border-end-0" name="category">
-                        <option value="" selected disabled>All categories</option>
-                        <option value="whisky-whiskey">Whisky & Whiskey</option>
-                        <option value="vodka">Vodka</option>
-                        <option value="rum">Rum</option>
-                        <option value="gin">Gin</option>
-                        <option value="tequila-mezcal">Tequila & Mezcal</option>
-                        <option value="wine">Wine</option>
-                        <option value="beer">Beer</option>
-                        <option value="ready-to-drink">Ready-to-Drink</option>
-                    </select>
+            <!-- Menu Start  -->
+            <div class="header-menu d-lg-block d-none" style="flex: 1; margin-right: 20px;">
+                <!-- Nav Menu Start -->
+                <ul class="nav-menu flex-align" style="gap: 24px;">
+                    <li class="nav-menu__item">
+                        <a href="{{ route('home') }}" class="nav-menu__link text-heading-two {{ request()->routeIs('home') ? 'activePage' : '' }}">Home</a>
+                    </li>
+                    <li class="on-hover-item nav-menu__item has-submenu {{ request()->routeIs('products.index') || request()->routeIs('categories.index') ? 'activePage' : '' }}">
+                        <a href="{{ route('products.index') }}" class="nav-menu__link text-heading-two">Shop</a>
+                        <ul class="on-hover-dropdown common-dropdown nav-submenu scroll-sm">
+                            <li class="common-dropdown__item nav-submenu__item {{ request()->routeIs('products.index') ? 'activePage' : '' }}">
+                                <a href="{{ route('products.index') }}" class="common-dropdown__link nav-submenu__link text-heading-two hover-bg-neutral-100">All Products</a>
+                            </li>
+                            <li class="common-dropdown__item nav-submenu__item {{ request()->routeIs('categories.index') ? 'activePage' : '' }}">
+                                <a href="{{ route('categories.index') }}" class="common-dropdown__link nav-submenu__link text-heading-two hover-bg-neutral-100">Categories</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-menu__item">
+                        <a href="{{ route('about') }}" class="nav-menu__link text-heading-two {{ request()->routeIs('about') ? 'activePage' : '' }}">About</a>
+                    </li>
+                    <li class="nav-menu__item">
+                        <a href="{{ route('contact') }}" class="nav-menu__link text-heading-two {{ request()->routeIs('contact') ? 'activePage' : '' }}">Contact Us</a>
+                    </li>
+                    <li class="on-hover-item nav-menu__item has-submenu position-relative">
+                        <button type="button" class="category-button d-flex align-items-center gap-12 text-white bg-main-600 px-20 py-16 rounded-6 hover-bg-main-700 transition-2">
+                            <span class="text-xl line-height-1"><i class="ph ph-squares-four"></i></span>
+                            <span class="">Browse Categories</span>
+                            <span class="line-height-1 icon transition-2"><i class="ph-bold ph-caret-down"></i></span>
+                        </button>
+                        <!-- Category Dropdown Start -->
+                        <div class="category-dropdown border border-main-200 shadow bg-white p-16 rounded-16 w-100 max-w-472 position-absolute inset-block-start-100 inset-inline-start-0 z-99 transition-2">
+                            <div class="d-grid grid-cols-3-repeat gap-4 max-h-350 overflow-y-auto">
+                                @forelse($headerCategories ?? [] as $category)
+                                    <a href="{{ route('categories.show', $category->slug) }}" class="py-16 px-8 rounded-8 hover-bg-main-50 d-flex flex-column align-items-center text-center border border-white hover-border-main-100">
+                                        <span class="">
+                                            @if($category->image)
+                                                <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}" class="w-40">
+                                            @else
+                                                <img src="{{ asset('assets/images/icon/category-5.png') }}" alt="{{ $category->name }}" class="w-40">
+                                            @endif
+                                        </span>
+                                        <span class="fw-semibold text-heading mt-16 text-sm">{{ $category->name }}</span>
+                                    </a>
+                                @empty
+                                    <div class="col-span-3 text-center py-16">
+                                        <p class="text-gray-500 text-sm">No categories available</p>
+                                    </div>
+                                @endforelse
+                            </div>
+                        </div>
+                        <!-- Category Dropdown End -->
+                    </li>
+                </ul>
+                <!-- Nav Menu End -->
+            </div>
+            <!-- Menu End  -->
 
-                    <div class="search-form__wrapper position-relative border-half-start flex-grow-1">
-                        <input type="text" name="search" class="common-input border-neutral-40 py-18 ps-16 pe-76 rounded-0 rounded-end pe-44 placeholder-italic placeholder-text-sm border-start-0" placeholder="Search for products, categories or brands..." value="{{ request('search') }}">
-                        <button type="submit" class="w-64 h-44 bg-main-600 hover-bg-main-800 rounded-4 flex-center text-xl text-white position-absolute top-50 translate-middle-y inset-inline-end-0 me-6"><i class="ph ph-magnifying-glass"></i></button>
+            <!-- form location Start -->
+            <form action="{{ route('products.index') }}" class="flex-align flex-wrap form-location-wrapper" method="GET" style="flex: 0 0 auto; margin-right: 20px;">
+                <div class="search-form d-sm-flex d-none text-heading-two text-sm" style="width: 300px;">
+                    <div class="search-form__wrapper position-relative flex-grow-1">
+                        <input type="text" name="search" class="common-input border border-neutral-40 py-18 ps-16 pe-76 rounded-pill pe-44 placeholder-italic placeholder-text-sm" placeholder="Search for products or brands..." value="{{ request('search') }}">
+                        <button type="submit" class="w-64 h-44 bg-main-600 hover-bg-main-800 rounded-pill flex-center text-xl text-white position-absolute top-50 translate-middle-y inset-inline-end-0 me-6"><i class="ph ph-magnifying-glass"></i></button>
                     </div>
                 </div>
             </form>
@@ -123,10 +176,10 @@
                         </span>
                         <span class="text-md text-heading-three item-hover__text d-none d-lg-flex">Profile</span>
                     </a>
-                    <a href="#" class="flex-align gap-4 item-hover">
+                    <a href="{{ route('wishlist.index') }}" class="flex-align gap-4 item-hover">
                         <span class="text-xl text-gray-700 d-flex position-relative me-6 mt-6 item-hover__text">
                             <i class="ph ph-heart"></i>
-                            <span class="w-16 h-16 flex-center rounded-circle bg-main-600 text-white text-xs position-absolute top-n6 end-n4">2</span>
+                            <span class="w-16 h-16 flex-center rounded-circle bg-main-600 text-white text-xs position-absolute top-n6 end-n4 wishlist-count">{{ $wishlistCount ?? 0 }}</span>
                         </span>
                         <span class="text-md text-heading-three item-hover__text d-none d-lg-flex">Wishlist</span>
                     </a>
@@ -136,6 +189,15 @@
                             <span class="w-16 h-16 flex-center rounded-circle bg-main-600 text-white text-xs position-absolute top-n6 end-n4 cart-count">{{ $cartCount ?? 0 }}</span>
                         </span>
                         <span class="text-md text-heading-three item-hover__text d-none d-lg-flex">Cart</span>
+                    </a>
+                    <a href="tel:+1234567890" class="d-lg-flex align-items-center gap-12 d-none item-hover" style="border-left: 1px solid #e5e7eb; padding-left: 20px; margin-left: 8px;">
+                        <span class="d-flex text-2xl text-gray-700">
+                            <i class="ph ph-phone"></i>
+                        </span>
+                        <span class="">
+                            <span class="d-block text-heading text-sm fw-medium">Need any Help! call Us</span>
+                            <span class="d-block fw-bold text-main-600 hover-text-decoration-underline text-sm">+1 234 567 890</span>
+                        </span>
                     </a>
                 </div>
             </div>

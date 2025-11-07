@@ -56,7 +56,7 @@ class ProductVariant extends Model
 
     public function getFormattedPriceAttribute(): string
     {
-        return '$' . number_format($this->price, 2);
+        return 'Ksh ' . number_format($this->price, 2);
     }
 
     public function getIsOnSaleAttribute(): bool

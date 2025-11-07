@@ -184,7 +184,7 @@
 <div class="bottom-footer py-8" style="background-color: #e1a743;">
     <div class="container container-lg">
         <div class="bottom-footer__inner flex-between flex-wrap gap-16 py-16">
-            <p class="bottom-footer__text wow fadeInLeftBig text-gray-900">Sip & Go eCommerce &copy; {{ date('Y') }}. All Rights Reserved. Must be 21+ to purchase alcohol.</p>
+            <p class="bottom-footer__text wow fadeInLeftBig text-gray-900">Sip & Go eCommerce &copy; {{ date('Y') }}. All Rights Reserved. Must be 18+ to purchase alcohol.</p>
             <div class="flex-align gap-8 flex-wrap wow fadeInRightBig">
                 <span class="text-heading text-sm text-gray-900">We Are Accepting</span>
                 <img src="{{ asset('assets/images/thumbs/payment-method.png') }}" alt="Payment Methods">

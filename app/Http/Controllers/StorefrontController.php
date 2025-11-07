@@ -21,8 +21,11 @@ class StorefrontController extends Controller
             ->get();
 
         $categories = Category::where('is_active', true)
+            ->withCount(['products' => function ($query) {
+                $query->where('is_active', true);
+            }])
             ->orderBy('sort_order')
-            ->limit(6)
+            ->limit(8)
             ->get();
 
         return view('storefront.index', compact('featuredProducts', 'categories'));
@@ -85,6 +88,9 @@ class StorefrontController extends Controller
         $products = $query->paginate(12)->withQueryString();
 
         $categories = Category::where('is_active', true)
+            ->withCount(['products' => function ($query) {
+                $query->where('is_active', true);
+            }])
             ->orderBy('sort_order')
             ->orderBy('name')
             ->get();
@@ -92,9 +98,13 @@ class StorefrontController extends Controller
         $brands = Product::where('is_active', true)
             ->whereNotNull('brand')
             ->where('brand', '!=', '')
-            ->distinct()
+            ->selectRaw('brand, COUNT(*) as products_count')
+            ->groupBy('brand')
             ->orderBy('brand')
-            ->pluck('brand');
+            ->get()
+            ->mapWithKeys(function ($item) {
+                return [$item->brand => $item->products_count];
+            });
 
         return view('storefront.products.index', compact('products', 'categories', 'brands'));
     }

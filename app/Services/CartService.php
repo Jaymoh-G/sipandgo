@@ -39,11 +39,28 @@ class CartService
             return false;
         }
 
+        // Check if product is in stock
+        if (!$product->isInStock()) {
+            return false;
+        }
+
+        // Check if requested quantity is available
+        if ($product->track_inventory && $quantity > ($product->quantity ?? 0)) {
+            return false;
+        }
+
         $cart = $this->getItems();
 
         if (isset($cart[$productId])) {
             // Update quantity if item already exists
-            $cart[$productId]['quantity'] += $quantity;
+            $newQuantity = $cart[$productId]['quantity'] + $quantity;
+
+            // Check if new total quantity exceeds stock
+            if ($product->track_inventory && $newQuantity > ($product->quantity ?? 0)) {
+                return false;
+            }
+
+            $cart[$productId]['quantity'] = $newQuantity;
         } else {
             // Add new item
             $cart[$productId] = [
@@ -69,6 +86,24 @@ class CartService
         $cart = $this->getItems();
 
         if (!isset($cart[$productId])) {
+            return false;
+        }
+
+        $product = Product::where('id', $productId)
+            ->where('is_active', true)
+            ->first();
+
+        if (!$product) {
+            return false;
+        }
+
+        // Check if product is in stock
+        if (!$product->isInStock()) {
+            return false;
+        }
+
+        // Check if requested quantity exceeds available stock
+        if ($product->track_inventory && $quantity > ($product->quantity ?? 0)) {
             return false;
         }
 

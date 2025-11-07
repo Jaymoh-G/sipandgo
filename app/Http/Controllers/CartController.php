@@ -43,7 +43,18 @@ class CartController extends Controller
             return back()->with('error', 'Product is not available.');
         }
 
+        // Check if product is in stock
+        if (!$product->isInStock()) {
+            return back()->with('error', 'This product is currently out of stock.');
+        }
+
         $quantity = $validated['quantity'] ?? 1;
+
+        // Check if requested quantity is available
+        if ($product->track_inventory && $quantity > $product->current_stock) {
+            return back()->with('error', 'Requested quantity exceeds available stock. Only ' . $product->current_stock . ' items available.');
+        }
+
         $success = $this->cartService->add($validated['product_id'], $quantity);
 
         if ($success) {
@@ -62,13 +73,19 @@ class CartController extends Controller
             'quantity' => 'required|integer|min:1|max:99',
         ]);
 
+        $product = Product::find($productId);
+
+        if ($product && $product->track_inventory && $validated['quantity'] > $product->current_stock) {
+            return back()->with('error', 'Requested quantity exceeds available stock. Only ' . $product->current_stock . ' items available.');
+        }
+
         $success = $this->cartService->update($productId, $validated['quantity']);
 
         if ($success) {
             return back()->with('success', 'Cart updated successfully!');
         }
 
-        return back()->with('error', 'Failed to update cart item.');
+        return back()->with('error', 'Failed to update cart item. Product may be out of stock.');
     }
 
     /**

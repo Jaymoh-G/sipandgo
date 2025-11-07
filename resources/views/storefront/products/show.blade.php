@@ -96,7 +96,7 @@
                     </div>
                     <div class="col-xl-6">
                         <div class="product-details__content">
-                            <h5 class="mb-12">{{ $product->name }}</h5>
+                            <h5 class="mb-12">{{ $product->name }} <span class="text-gray-500">({{ $product->quantity ?? 0 }})</span></h5>
                             <div class="flex-align flex-wrap gap-12">
                                 <div class="flex-align gap-12 flex-wrap">
                                     <div class="flex-align gap-8">
@@ -116,7 +116,7 @@
                                 <div class="flex-align gap-8">
                                     <h4 class="mb-0">{{ $product->formatted_price }}</h4>
                                     @if($product->compare_price)
-                                    <span class="text-md text-gray-500">${{ number_format($product->compare_price, 2) }}</span>
+                                    <span class="text-md text-gray-500">Ksh {{ number_format($product->compare_price, 2) }}</span>
                                     @endif
                                 </div>
                             </div>
@@ -139,47 +139,75 @@
                             </div>
                             @endif
 
-                            @if($product->current_stock && $product->current_stock < 50)
+                            @if($product->track_inventory && ($product->quantity ?? 0) > 0 && ($product->quantity ?? 0) < 50)
                             <div class="mb-24">
                                 <div class="mt-32 flex-align gap-12 mb-16">
                                     <span class="w-32 h-32 bg-white flex-center rounded-circle text-main-600 box-shadow-xl"><i class="ph-fill ph-lightning"></i></span>
                                     <h6 class="text-md mb-0 fw-bold text-gray-900">Products are almost sold out</h6>
                                 </div>
                                 @php
-                                    $stockPercentage = ($product->current_stock / 100) * 100;
+                                    $stockPercentage = min(100, (($product->quantity ?? 0) / 50) * 100);
                                 @endphp
                                 <div class="progress w-100 bg-gray-100 rounded-pill h-8" role="progressbar" aria-label="Stock" aria-valuenow="{{ $stockPercentage }}" aria-valuemin="0" aria-valuemax="100">
                                     <div class="progress-bar bg-main-two-600 rounded-pill" style="width: {{ $stockPercentage }}%"></div>
                                 </div>
-                                <span class="text-sm text-gray-700 mt-8">Available only: {{ $product->current_stock }}</span>
+                                <span class="text-sm text-gray-700 mt-8">Available only: {{ $product->quantity ?? 0 }}</span>
+                            </div>
+                            @endif
+
+                            @if(!$product->isInStock())
+                            <div class="alert alert-warning mb-24 bg-warning-50 border border-warning-200 text-warning-800 px-24 py-16 rounded-8">
+                                <i class="ph ph-warning-circle me-8"></i>This product is currently out of stock.
                             </div>
                             @endif
 
                             <span class="text-gray-900 d-block mb-8">Quantity:</span>
-                            <form action="{{ route('cart.add') }}" method="POST" class="flex-between gap-16 flex-wrap">
-                                @csrf
-                                <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                <div class="flex-align flex-wrap gap-16">
+                            <div class="flex-between gap-16 flex-wrap">
+                                <form action="{{ route('cart.add') }}" method="POST" class="flex-align flex-wrap gap-16">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
                                     <div class="border border-gray-100 rounded-pill py-9 px-16 flex-align">
                                         <button type="button" class="quantity__minus p-4 text-gray-700 hover-text-main-600 flex-center"><i class="ph ph-minus"></i></button>
-                                        <input type="number" name="quantity" id="product-quantity" class="quantity__input border-0 text-center w-32" value="1" min="1" max="{{ $product->current_stock ?? 99 }}">
+                                        <input type="number" name="quantity" id="product-quantity" class="quantity__input border-0 text-center w-32" value="1" min="{{ $product->isInStock() ? 1 : 0 }}" max="{{ $product->isInStock() ? max(1, ($product->quantity ?? 99)) : 0 }}" {{ !$product->isInStock() ? 'disabled' : '' }}>
                                         <button type="button" class="quantity__plus p-4 text-gray-700 hover-text-main-600 flex-center"><i class="ph ph-plus"></i></button>
                                     </div>
-                                    <button type="submit" class="btn btn-main rounded-pill flex-align d-inline-flex gap-8 px-48"> <i class="ph ph-shopping-cart"></i> Add To Cart</button>
-                                </div>
+                                    <button type="submit" class="btn btn-main rounded-pill flex-align d-inline-flex gap-8 px-48" {{ !$product->isInStock() ? 'disabled' : '' }}>
+                                        <i class="ph ph-shopping-cart"></i> {{ $product->isInStock() ? 'Add To Cart' : 'Out of Stock' }}
+                                    </button>
+                                </form>
 
                                 <div class="flex-align gap-12">
-                                    <a href="#" class="w-52 h-52 bg-main-50 text-main-600 text-xl hover-bg-main-600 hover-text-white flex-center rounded-circle">
+                                    @if($product->isInStock())
+                                        @if(in_array($product->id, $wishlistItems ?? []))
+                                        <form action="{{ route('wishlist.remove', $product->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="w-52 h-52 bg-main-600 text-white text-xl hover-bg-main-800 flex-center rounded-circle border-0" title="Remove from Wishlist">
+                                                <i class="ph ph-heart-fill text-white"></i>
+                                            </button>
+                                        </form>
+                                        @else
+                                        <form action="{{ route('wishlist.add') }}" method="POST" class="d-inline">
+                                            @csrf
+                                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                            <button type="submit" class="w-52 h-52 bg-main-50 text-main-600 text-xl hover-bg-main-600 hover-text-white flex-center rounded-circle border-0" title="Add to Wishlist">
+                                                <i class="ph ph-heart"></i>
+                                            </button>
+                                        </form>
+                                        @endif
+                                    @else
+                                    <button type="button" class="w-52 h-52 bg-gray-100 text-gray-400 text-xl flex-center rounded-circle border-0 cursor-not-allowed" title="Out of Stock" disabled>
                                         <i class="ph ph-heart"></i>
-                                    </a>
-                                    <a href="#" class="w-52 h-52 bg-main-50 text-main-600 text-xl hover-bg-main-600 hover-text-white flex-center rounded-circle">
+                                    </button>
+                                    @endif
+                                    <a href="#" class="w-52 h-52 bg-main-50 text-main-600 text-xl hover-bg-main-600 hover-text-white flex-center rounded-circle" title="Compare">
                                         <i class="ph ph-shuffle"></i>
                                     </a>
-                                    <a href="#" class="w-52 h-52 bg-main-50 text-main-600 text-xl hover-bg-main-600 hover-text-white flex-center rounded-circle">
+                                    <a href="#" class="w-52 h-52 bg-main-50 text-main-600 text-xl hover-bg-main-600 hover-text-white flex-center rounded-circle" title="Share">
                                         <i class="ph ph-share-network"></i>
                                     </a>
                                 </div>
-                            </form>
+                            </div>
 
                             <span class="mt-32 pt-32 text-gray-700 border-top border-gray-100 d-block"></span>
 
@@ -440,7 +468,7 @@
                             <div class="product-card__price mb-8">
                                 <span class="text-heading text-md fw-semibold ">{{ $relatedProduct->formatted_price }} <span class="text-gray-500 fw-normal">/Qty</span> </span>
                                 @if($relatedProduct->compare_price)
-                                <span class="text-gray-400 text-md fw-semibold text-decoration-line-through"> ${{ number_format($relatedProduct->compare_price, 2) }}</span>
+                                <span class="text-gray-400 text-md fw-semibold text-decoration-line-through"> Ksh {{ number_format($relatedProduct->compare_price, 2) }}</span>
                                 @endif
                             </div>
                             <div class="flex-align gap-6">
@@ -448,14 +476,32 @@
                                 <span class="text-15 fw-bold text-warning-600 d-flex"><i class="ph-fill ph-star"></i></span>
                                 <span class="text-xs fw-bold text-gray-600">({{ rand(10, 100) }}k)</span>
                             </div>
-                            <form action="{{ route('cart.add') }}" method="POST" class="mt-24">
-                                @csrf
-                                <input type="hidden" name="product_id" value="{{ $relatedProduct->id }}">
-                                <input type="hidden" name="quantity" value="1">
-                                <button type="submit" class="product-card__cart btn bg-main-50 text-main-600 hover-bg-main-600 hover-text-white py-11 px-24 rounded-pill flex-align gap-8 w-100 justify-content-center">
-                                    Add To Cart <i class="ph ph-shopping-cart"></i>
+                            <div class="flex-align gap-8 mt-24">
+                                @if($relatedProduct->isInStock())
+                                <form action="{{ route('cart.add') }}" method="POST" class="flex-grow-1">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $relatedProduct->id }}">
+                                    <input type="hidden" name="quantity" value="1">
+                                    <button type="submit" class="product-card__cart btn bg-main-50 text-main-600 hover-bg-main-600 hover-text-white py-11 px-24 rounded-pill flex-align gap-8 w-100 justify-content-center">
+                                        Add To Cart <i class="ph ph-shopping-cart"></i>
+                                    </button>
+                                </form>
+                                <form action="{{ route('wishlist.add') }}" method="POST" class="d-inline">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $relatedProduct->id }}">
+                                    <button type="submit" class="w-48 h-48 bg-main-50 text-main-600 hover-bg-main-600 hover-text-white flex-center rounded-circle border-0" title="Add to Wishlist">
+                                        <i class="ph ph-heart"></i>
+                                    </button>
+                                </form>
+                                @else
+                                <button type="button" class="product-card__cart btn bg-gray-100 text-gray-400 py-11 px-24 rounded-pill flex-align gap-8 w-100 justify-content-center cursor-not-allowed" disabled>
+                                    Out of Stock
                                 </button>
-                            </form>
+                                <button type="button" class="w-48 h-48 bg-gray-100 text-gray-400 flex-center rounded-circle border-0 cursor-not-allowed" title="Out of Stock" disabled>
+                                    <i class="ph ph-heart"></i>
+                                </button>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>

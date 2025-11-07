@@ -57,7 +57,7 @@ class DeliveriesTable
                     ->sortable(),
                 TextColumn::make('shipping_cost')
                     ->label('Shipping Cost')
-                    ->money('USD')
+                    ->formatStateUsing(fn ($state) => $state ? 'Ksh ' . number_format($state, 2) : 'N/A')
                     ->sortable()
                     ->alignEnd()
                     ->toggleable(),

@@ -44,5 +44,19 @@ Route::prefix('wishlist')->group(function () {
 });
 
 // Static pages
-Route::get('/about', [StoreController::class, 'about'])->name('about');
+Route::get('/about-us', [StoreController::class, 'about'])->name('about');
 Route::get('/contact', [StoreController::class, 'contact'])->name('contact');
+
+// Order tracking
+Route::get('/order-tracking', [StoreController::class, 'orderTracking'])->name('order.tracking');
+Route::post('/order-tracking', [StoreController::class, 'searchOrder'])->name('order.tracking.search');
+
+// Login routes
+Route::get('/login', [\App\Http\Controllers\LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [\App\Http\Controllers\LoginController::class, 'login'])->name('login.post');
+Route::post('/register', [\App\Http\Controllers\LoginController::class, 'register'])->name('register');
+Route::post('/logout', [\App\Http\Controllers\LoginController::class, 'logout'])->name('logout');
+
+// My Account routes
+Route::get('/my-account', [\App\Http\Controllers\MyAccountController::class, 'index'])->name('my-account.index');
+Route::post('/my-account', [\App\Http\Controllers\MyAccountController::class, 'update'])->name('my-account.update');

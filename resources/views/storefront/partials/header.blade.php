@@ -48,33 +48,15 @@
 
             <ul class="header-top__right flex-align flex-wrap gap-16 w-auto">
                 <li class="d-lg-flex d-none">
-                    <a href="#shipping" class="text-white text-sm hover-text-decoration-underline">Order Tracking</a>
+                    <a href="{{ route('contact') }}" class="text-white text-sm hover-text-decoration-underline">Contact Us</a>
                 </li>
-                <li class="d-lg-flex d-none">
+                  <li class="d-lg-flex d-none">
                     <a href="{{ route('about') }}" class="text-white text-sm hover-text-decoration-underline">About Us</a>
                 </li>
-                <li class="on-hover-item has-submenu arrow-white">
-                    <a href="javascript:void(0)" class="selected-text text-white text-sm py-8">Eng</a>
-                    <ul class="selectable-text-list on-hover-dropdown common-dropdown common-dropdown--sm max-h-200 scroll-sm px-0 py-8">
-                        <li>
-                            <a href="javascript:void(0)" class="hover-bg-gray-100 text-gray-500 text-xs py-6 px-16 flex-align gap-8 rounded-0">
-                                <img src="{{ asset('assets/images/thumbs/flag1.png') }}" alt="" class="w-16 h-12 rounded-4 border border-gray-100">
-                                English
-                            </a>
-                        </li>
-                    </ul>
+                <li class="d-lg-flex d-none">
+                    <a href="{{ route('order.tracking') }}" class="text-white text-sm hover-text-decoration-underline">Order Tracking</a>
                 </li>
-                <li class="on-hover-item has-submenu arrow-white">
-                    <a href="javascript:void(0)" class="selected-text text-white text-sm py-8">USD</a>
-                    <ul class="selectable-text-list on-hover-dropdown common-dropdown common-dropdown--sm max-h-200 scroll-sm px-0 py-8">
-                        <li>
-                            <a href="javascript:void(0)" class="hover-bg-gray-100 text-gray-500 text-xs py-6 px-16 flex-align gap-8 rounded-0">
-                                <img src="{{ asset('assets/images/thumbs/flag1.png') }}" alt="" class="w-16 h-12 rounded-4 border border-gray-100">
-                                USD
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+
             </ul>
         </div>
     </div>
@@ -111,12 +93,8 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="nav-menu__item">
-                        <a href="{{ route('about') }}" class="nav-menu__link text-heading-two {{ request()->routeIs('about') ? 'activePage' : '' }}">About</a>
-                    </li>
-                    <li class="nav-menu__item">
-                        <a href="{{ route('contact') }}" class="nav-menu__link text-heading-two {{ request()->routeIs('contact') ? 'activePage' : '' }}">Contact Us</a>
-                    </li>
+
+
                     <li class="on-hover-item nav-menu__item has-submenu position-relative">
                         <button type="button" class="category-button d-flex align-items-center gap-12 text-white bg-main-600 px-20 py-16 rounded-6 hover-bg-main-700 transition-2">
                             <span class="text-xl line-height-1"><i class="ph ph-squares-four"></i></span>
@@ -170,12 +148,6 @@
                             <i class="ph ph-magnifying-glass"></i>
                         </span>
                     </button>
-                    <a href="javascript:void(0)" class="flex-align gap-4 item-hover">
-                        <span class="text-xl text-gray-700 d-flex position-relative item-hover__text">
-                            <i class="ph ph-user"></i>
-                        </span>
-                        <span class="text-md text-heading-three item-hover__text d-none d-lg-flex">Profile</span>
-                    </a>
                     <a href="{{ route('wishlist.index') }}" class="flex-align gap-4 item-hover">
                         <span class="text-xl text-gray-700 d-flex position-relative me-6 mt-6 item-hover__text">
                             <i class="ph ph-heart"></i>
@@ -190,6 +162,60 @@
                         </span>
                         <span class="text-md text-heading-three item-hover__text d-none d-lg-flex">Cart</span>
                     </a>
+                    @auth('customer')
+                        <div class="on-hover-item has-submenu position-relative">
+                            <a href="{{ route('my-account.index') }}" class="flex-align gap-4 item-hover">
+                                <span class="text-xl text-gray-700 d-flex position-relative item-hover__text">
+                                    <i class="ph ph-user"></i>
+                                </span>
+                                <span class="text-md text-heading-three item-hover__text d-none d-lg-flex">My Account</span>
+                            </a>
+                            <!-- My Account Dropdown Start -->
+                            <ul class="on-hover-dropdown common-dropdown nav-submenu scroll-sm position-absolute inset-block-start-100 inset-inline-end-0 z-99 mt-8 min-w-200 bg-white border border-gray-100 rounded-8 shadow-lg py-8">
+                                <li class="common-dropdown__item nav-submenu__item">
+                                    <a href="{{ route('my-account.index') }}" class="common-dropdown__link nav-submenu__link text-heading-two hover-bg-neutral-100 d-flex align-items-center gap-12 py-12 px-16">
+                                        <i class="ph ph-user text-lg"></i>
+                                        <span>My Profile</span>
+                                    </a>
+                                </li>
+                                <li class="common-dropdown__item nav-submenu__item">
+                                    <a href="{{ route('order.tracking') }}" class="common-dropdown__link nav-submenu__link text-heading-two hover-bg-neutral-100 d-flex align-items-center gap-12 py-12 px-16">
+                                        <i class="ph ph-package text-lg"></i>
+                                        <span>Order Tracking</span>
+                                    </a>
+                                </li>
+                                <li class="common-dropdown__item nav-submenu__item">
+                                    <a href="{{ route('wishlist.index') }}" class="common-dropdown__link nav-submenu__link text-heading-two hover-bg-neutral-100 d-flex align-items-center gap-12 py-12 px-16">
+                                        <i class="ph ph-heart text-lg"></i>
+                                        <span>My Wishlist</span>
+                                    </a>
+                                </li>
+                                <li class="common-dropdown__item nav-submenu__item">
+                                    <a href="{{ route('cart.index') }}" class="common-dropdown__link nav-submenu__link text-heading-two hover-bg-neutral-100 d-flex align-items-center gap-12 py-12 px-16">
+                                        <i class="ph ph-shopping-cart-simple text-lg"></i>
+                                        <span>My Cart</span>
+                                    </a>
+                                </li>
+                                <li class="common-dropdown__item nav-submenu__item border-top border-gray-100 mt-8 pt-8">
+                                    <form action="{{ route('logout') }}" method="POST" class="mb-0">
+                                        @csrf
+                                        <button type="submit" class="common-dropdown__link nav-submenu__link text-heading-two hover-bg-neutral-100 d-flex align-items-center gap-12 w-100 text-start border-0 bg-transparent p-0 py-12 px-16">
+                                            <i class="ph ph-sign-out text-lg"></i>
+                                            <span>Logout</span>
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                            <!-- My Account Dropdown End -->
+                        </div>
+                    @else
+                        <a href="{{ route('login') }}" class="flex-align gap-4 item-hover">
+                            <span class="text-xl text-gray-700 d-flex position-relative item-hover__text">
+                                <i class="ph ph-sign-in"></i>
+                            </span>
+                            <span class="text-md text-heading-three item-hover__text d-none d-lg-flex">Login</span>
+                        </a>
+                    @endauth
                     <a href="tel:+1234567890" class="d-lg-flex align-items-center gap-12 d-none item-hover" style="border-left: 1px solid #e5e7eb; padding-left: 20px; margin-left: 8px;">
                         <span class="d-flex text-2xl text-gray-700">
                             <i class="ph ph-phone"></i>

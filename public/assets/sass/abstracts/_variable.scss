@@ -26,7 +26,7 @@ $colors: (
     "800": hsl(var(--main-two-h), var(--main-two-s), calc(var(--main-two-l) - var(--main-two-l) * 0.2)),
     "900": hsl(var(--main-two-h), var(--main-two-s), calc(var(--main-two-l) - var(--main-two-l) * 0.3))
   ),
-  
+
   "neutral": (
     "30": #F2F5FA,
     "40": #E5E7EB,
@@ -41,7 +41,7 @@ $colors: (
     "800": #11132e,
     "900": #1A1A1A,
   ),
-  
+
   "gray": (
     "50": #F1F1F1,
     "100": #E6E6E6,
@@ -64,7 +64,7 @@ $colors: (
     "700": #374151,
     "800": #1F2937,
   ),
-  
+
   "primary": (
     "50": #E4F1FF,
     "100": #BFDCFF,
@@ -105,7 +105,7 @@ $colors: (
   ),
 
   "warning": (
-    "50": #FEFCE8,  
+    "50": #FEFCE8,
     "100": #FEF9C3,
     "200": #FEF08A,
     "300": #FDE047,
@@ -162,8 +162,8 @@ $spaces: (
   "30": #{rem(30px)},
   "32": #{rem(32px)},
   "36": #{rem(32px)},
-  "40": #{rem(40px)}, 
-  "44": #{rem(44px)}, 
+  "40": #{rem(40px)},
+  "44": #{rem(44px)},
   "48": #{rem(48px)},
   "52": #{rem(52px)},
   "56": #{rem(56px)},
@@ -196,7 +196,7 @@ $font-sizes: (
 );
 
 /* ========================= Variable Css Start ======================== */
-:root {    
+:root {
 
   /* Font Family Variable */
   --heading-font: "Quicksand", sans-serif ;
@@ -204,8 +204,8 @@ $font-sizes: (
   --heading-font-three: "Outfit", sans-serif;;
   --heading-font-four: "Dancing Script", cursive;;
   --body-font: "Inter", sans-serif;
-  
-  /* Font Size Variable Start */  
+
+  /* Font Size Variable Start */
   --heading-one: clamp(2.25rem, -0.0733rem + 6.3692vw, 4.5rem); // Min:36px - Max:72px
   --heading-two: clamp(2rem, 0.7133rem + 2.8846vw, 3.5rem); // Min: 32px - Max: 56px
   --heading-three: clamp(1.75rem, 0.3353rem + 2.1661vw, 3rem); // Min: 28px - Max: 48px
@@ -217,41 +217,41 @@ $font-sizes: (
   --display-one: clamp(2.5rem, -0.0733rem + 6.3692vw, 7.5rem); // Min:40px - Max:120px
   /* Font Size End */
 
-  /* template main color */
-  --main-h: 196;
-  --main-s: 69%;
-  --main-l: 36%;
+  /* template main color - Golden/Tan #e1a743 */
+  --main-h: 38;
+  --main-s: 72%;
+  --main-l: 57%;
   --main: var(--main-h) var(--main-s) var(--main-l);
 
-  /* template main color */
-  --main-two-h: 224;
-  --main-two-s: 71%;
-  --main-two-l: 49%;
+  /* template main color - Darker golden for secondary */
+  --main-two-h: 38;
+  --main-two-s: 72%;
+  --main-two-l: 45%;
   --main-two: var(--main-two-h) var(--main-two-s) var(--main-two-l);
 
    /* White Color */
   --white: 0 0% 100%;
   --black: 235 49% 14%;
   --light: 0 0% 51%;
-  
+
   --heading-color: var(--black);
   --body-color: var(--light);
   --body-bg: var(--gray);
   --border-color: 236 13% 77%;
 
-  --bg-color-one: #F3FAF2; 
-  --bg-color-two: #FFFBF4; 
-  --bg-color-three: #F1F1F1; 
-  --neutral: #121535; 
+  --bg-color-one: #F3FAF2;
+  --bg-color-two: #FFFBF4;
+  --bg-color-three: #F1F1F1;
+  --neutral: #121535;
 
-  --translate-x-middle: translateX(-50%); 
-  --translate-y-middle: translateY(-50%); 
-    
+  --translate-x-middle: translateX(-50%);
+  --translate-y-middle: translateY(-50%);
+
   // spacing
   @each $property, $value in $spaces {
     --size-#{$property}: #{$value};
   }
-  
+
   // Colors
   @each $color, $shades in $colors {
     @each $shade, $value in $shades {
@@ -262,6 +262,6 @@ $font-sizes: (
   // font sizes
   @each $property, $value in $font-sizes {
     --font-#{$property}: #{$value};
-  }  
+  }
 }
 /* ========================= Variable Css End ======================== */

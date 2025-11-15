@@ -27,6 +27,29 @@
     <!-- Main css -->
     <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
 
+    <!-- Theme Color Override - Ensure Golden/Tan colors are applied -->
+    <style>
+        :root {
+            /* template main color - Golden/Tan #e1a743 */
+            --main-h: 38 !important;
+            --main-s: 72% !important;
+            --main-l: 57% !important;
+            --main: var(--main-h) var(--main-s) var(--main-l) !important;
+
+            /* template main color - Darker golden for secondary */
+            --main-two-h: 38 !important;
+            --main-two-s: 72% !important;
+            --main-two-l: 45% !important;
+            --main-two: var(--main-two-h) var(--main-two-s) var(--main-two-l) !important;
+
+            /* Red accent color #c90207 */
+            --accent-h: 357 !important;
+            --accent-s: 98% !important;
+            --accent-l: 40% !important;
+            --accent: var(--accent-h) var(--accent-s) var(--accent-l) !important;
+        }
+    </style>
+
     @stack('styles')
 </head>
 <body>

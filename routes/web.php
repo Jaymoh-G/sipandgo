@@ -60,3 +60,20 @@ Route::post('/logout', [\App\Http\Controllers\LoginController::class, 'logout'])
 // My Account routes
 Route::get('/my-account', [\App\Http\Controllers\MyAccountController::class, 'index'])->name('my-account.index');
 Route::post('/my-account', [\App\Http\Controllers\MyAccountController::class, 'update'])->name('my-account.update');
+
+// Storage file serving fallback (if symlink doesn't exist)
+Route::get('/storage/{path}', function ($path) {
+    $filePath = storage_path('app/public/' . $path);
+
+    if (!file_exists($filePath)) {
+        abort(404);
+    }
+
+    $mimeType = mime_content_type($filePath);
+    $fileSize = filesize($filePath);
+
+    return response()->file($filePath, [
+        'Content-Type' => $mimeType,
+        'Content-Length' => $fileSize,
+    ]);
+})->where('path', '.*')->name('storage.serve');

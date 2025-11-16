@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Helpers\SettingsHelper;
 use App\Models\Category;
 use App\Services\CartService;
 use Illuminate\Support\Facades\Session;
@@ -40,12 +41,19 @@ class ViewServiceProvider extends ServiceProvider
                 ->limit(8)
                 ->get();
 
+            // Get settings
+            $settings = SettingsHelper::all();
+
             $view->with([
                 'cartCount' => $cartService->getCount(),
                 'cartSubtotal' => $cartService->getSubtotal(),
                 'wishlistCount' => $wishlistCount,
                 'wishlistItems' => $wishlistItems, // Array of product IDs in wishlist
                 'headerCategories' => $headerCategories,
+                'settings' => $settings, // All settings available in all views
+                'siteName' => SettingsHelper::siteName(),
+                'siteLogo' => SettingsHelper::logo(),
+                'siteFavicon' => SettingsHelper::favicon(),
             ]);
         });
     }

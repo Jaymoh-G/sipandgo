@@ -4,22 +4,46 @@
         <div class="row g-4">
             <div class="col-12 col-md-6 col-lg-3 footer-item" data-aos="fade-up" data-aos-duration="200">
                 <div class="footer-item__logo mb-24">
-                    <a href="{{ route('home') }}"> <img src="{{ asset('assets/images/logo/sip-n-go-logo.png') }}" alt="Sip N Go Logo" style="max-height: 80px;"></a>
+                    <a href="{{ route('home') }}">
+                        @if($siteLogo ?? null)
+                            <img src="{{ $siteLogo }}" alt="{{ $siteName ?? 'Logo' }}" style="max-height: 80px;">
+                        @else
+                            <img src="{{ asset('assets/images/logo/sip-n-go-logo.png') }}" alt="{{ $siteName ?? 'Sip N Go Logo' }}" style="max-height: 80px;">
+                        @endif
+                    </a>
                 </div>
-                <p class="mb-24 text-gray-300">Sip & Go become the largest premium spirits, wine, and craft beverages retailer. We offer an extensive collection of the world's finest liquors with exceptional service.</p>
+                <p class="mb-24 text-gray-300">{{ $settings->site_description ?? 'Sip & Go become the largest premium spirits, wine, and craft beverages retailer. We offer an extensive collection of the world\'s finest liquors with exceptional service.' }}</p>
                 <div class="flex-align gap-16">
-                    <a href="https://www.facebook.com" class="w-44 h-44 flex-center bg-main-two-50 text-main-two-600 text-xl rounded-8 hover-bg-main-two-600 hover-text-white">
+                    @if($settings->facebook_url ?? null)
+                    <a href="{{ $settings->facebook_url }}" target="_blank" class="w-44 h-44 flex-center bg-main-two-50 text-main-two-600 text-xl rounded-8 hover-bg-main-two-600 hover-text-white">
                         <i class="ph-fill ph-facebook-logo"></i>
                     </a>
-                    <a href="https://www.twitter.com" class="w-44 h-44 flex-center bg-main-two-50 text-main-two-600 text-xl rounded-8 hover-bg-main-two-600 hover-text-white">
+                    @endif
+                    @if($settings->twitter_url ?? null)
+                    <a href="{{ $settings->twitter_url }}" target="_blank" class="w-44 h-44 flex-center bg-main-two-50 text-main-two-600 text-xl rounded-8 hover-bg-main-two-600 hover-text-white">
                         <i class="ph-fill ph-twitter-logo"></i>
                     </a>
-                    <a href="https://www.instagram.com" class="w-44 h-44 flex-center bg-main-two-50 text-main-two-600 text-xl rounded-8 hover-bg-main-two-600 hover-text-white">
+                    @endif
+                    @if($settings->instagram_url ?? null)
+                    <a href="{{ $settings->instagram_url }}" target="_blank" class="w-44 h-44 flex-center bg-main-two-50 text-main-two-600 text-xl rounded-8 hover-bg-main-two-600 hover-text-white">
                         <i class="ph-fill ph-instagram-logo"></i>
                     </a>
-                    <a href="https://www.linkedin.com" class="w-44 h-44 flex-center bg-main-two-50 text-main-two-600 text-xl rounded-8 hover-bg-main-two-600 hover-text-white">
+                    @endif
+                    @if($settings->linkedin_url ?? null)
+                    <a href="{{ $settings->linkedin_url }}" target="_blank" class="w-44 h-44 flex-center bg-main-two-50 text-main-two-600 text-xl rounded-8 hover-bg-main-two-600 hover-text-white">
                         <i class="ph-fill ph-linkedin-logo"></i>
                     </a>
+                    @endif
+                    @if($settings->youtube_url ?? null)
+                    <a href="{{ $settings->youtube_url }}" target="_blank" class="w-44 h-44 flex-center bg-main-two-50 text-main-two-600 text-xl rounded-8 hover-bg-main-two-600 hover-text-white">
+                        <i class="ph-fill ph-youtube-logo"></i>
+                    </a>
+                    @endif
+                    @if($settings->tiktok_url ?? null)
+                    <a href="{{ $settings->tiktok_url }}" target="_blank" class="w-44 h-44 flex-center bg-main-two-50 text-main-two-600 text-xl rounded-8 hover-bg-main-two-600 hover-text-white">
+                        <i class="ph-fill ph-tiktok-logo"></i>
+                    </a>
+                    @endif
                 </div>
             </div>
 
@@ -94,18 +118,26 @@
 
             <div class="col-12 col-md-6 col-lg-3 footer-item" data-aos="fade-up" data-aos-duration="1000">
                 <h6 class="footer-item__title text-white mb-24">Contact Us</h6>
+                @if($settings->phone ?? null)
                 <div class="flex-align gap-16 mb-16">
                     <span class="w-32 h-32 flex-center rounded-circle border border-gray-600 text-main-600 text-md flex-shrink-0"><i class="ph-fill ph-phone-call"></i></span>
-                    <a href="tel:+00123456789" class="text-md text-gray-300 hover-text-main-600">+00 123 456 789</a>
+                    <a href="tel:{{ $settings->phone }}" class="text-md text-gray-300 hover-text-main-600">{{ $settings->phone }}</a>
                 </div>
+                @endif
+                @if($settings->email ?? null)
                 <div class="flex-align gap-16 mb-16">
                     <span class="w-32 h-32 flex-center rounded-circle border border-gray-600 text-main-600 text-md flex-shrink-0"><i class="ph-fill ph-envelope"></i></span>
-                    <a href="mailto:support24@sipandgo.com" class="text-md text-gray-300 hover-text-main-600">support24@sipandgo.com</a>
+                    <a href="mailto:{{ $settings->email }}" class="text-md text-gray-300 hover-text-main-600">{{ $settings->email }}</a>
                 </div>
+                @endif
+                @if($settings->address ?? null || $settings->city ?? null || $settings->country ?? null)
                 <div class="flex-align gap-16 mb-16">
                     <span class="w-32 h-32 flex-center rounded-circle border border-gray-600 text-main-600 text-md flex-shrink-0"><i class="ph-fill ph-map-pin"></i></span>
-                    <span class="text-md text-gray-300">789 Inner Lane, California, USA</span>
+                    <span class="text-md text-gray-300">
+                        {{ $settings->address ?? '' }}{{ $settings->address && ($settings->city || $settings->country) ? ', ' : '' }}{{ $settings->city ?? '' }}{{ $settings->city && $settings->country ? ', ' : '' }}{{ $settings->country ?? '' }}
+                    </span>
                 </div>
+                @endif
             </div>
         </div>
     </div>
@@ -115,7 +147,7 @@
 <div class="bottom-footer py-8" style="background-color: #e1a743;">
     <div class="container container-lg">
         <div class="bottom-footer__inner flex-between flex-wrap gap-16 py-16">
-            <p class="bottom-footer__text wow fadeInLeftBig text-gray-900">Sip & Go eCommerce &copy; {{ date('Y') }}. All Rights Reserved. Must be 18+ to purchase alcohol.</p>
+            <p class="bottom-footer__text wow fadeInLeftBig text-gray-900">{{ $siteName ?? 'Sip & Go' }} eCommerce &copy; {{ date('Y') }}. All Rights Reserved. Must be 18+ to purchase alcohol.</p>
             <div class="flex-align gap-8 flex-wrap wow fadeInRightBig">
                 <span class="text-heading text-sm text-gray-900">We Are Accepting</span>
                 <img src="{{ asset('assets/images/thumbs/payment-method.png') }}" alt="Payment Methods">

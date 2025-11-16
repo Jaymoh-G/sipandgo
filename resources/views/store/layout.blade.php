@@ -65,8 +65,6 @@
     <div class="container container-lg">
         <div class="flex-between flex-wrap gap-8">
             <div class="d-flex align-items-center gap-10">
-                <span class="text-md fw-medium text-white d-none d-md-flex">Until the end of the sale:</span>
-                <span class="text-md fw-medium text-white d-flex d-md-none">Sale end:</span>
                 <div class="d-flex align-items-center gap-10" id="countdown25">
                     <div class="d-flex align-items-center gap-4 text-white">
                         <strong class="text-md fw-semibold days">35</strong>

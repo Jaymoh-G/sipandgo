@@ -2,48 +2,31 @@
 <div class="header-top bg-main-600 flex-between">
     <div class="container container-lg">
         <div class="flex-between flex-wrap gap-8">
-            <div class="d-flex align-items-center gap-10">
-                <span class="text-md fw-medium text-white d-none d-md-flex">Until the end of the sale:</span>
-                <span class="text-md fw-medium text-white d-flex d-md-none">Sale end:</span>
-                <div class="d-flex align-items-center gap-10" id="countdown25">
-                    <div class="d-flex align-items-center gap-4 text-white">
-                        <strong class="text-md fw-semibold days">35</strong>
-                        <span class="text-xs">Days</span>
-                    </div>
-                    <div class="d-flex align-items-center gap-4 text-white">
-                        <strong class="text-md fw-semibold hours">14</strong>
-                        <span class="text-xs">Hours</span>
-                    </div>
-                    <div class="d-flex align-items-center gap-4 text-white">
-                        <strong class="text-md fw-semibold minutes">54</strong>
-                        <span class="text-xs">Minutes</span>
-                    </div>
-                    <div class="d-flex align-items-center gap-4 text-white">
-                        <strong class="text-md fw-semibold seconds">28</strong>
-                        <span class="text-xs">Sec.</span>
-                    </div>
-                </div>
-            </div>
-
             <ul class="flex-align flex-wrap d-none d-xl-flex">
+                @if($settings->email ?? null)
                 <li class="border-right-item pe-12 me-12">
-                    <a href="mailto:info@sipandgo.com" class="text-white text-sm d-flex align-items-center gap-4 hover-text-decoration-underline">
+                    <a href="mailto:{{ $settings->email }}" class="text-white text-sm d-flex align-items-center gap-4 hover-text-decoration-underline">
                         <i class="ph ph-envelope text-md"></i>
-                        <span class="">info@sipandgo.com</span>
+                        <span class="">{{ $settings->email }}</span>
                     </a>
                 </li>
+                @endif
+                @if($settings->whatsapp_number ?? null)
                 <li class="border-right-item pe-12 me-12">
-                    <a href="https://wa.me/254712345678" target="_blank" class="text-white text-sm d-flex align-items-center gap-4 hover-text-decoration-underline">
+                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings->whatsapp_number) }}" target="_blank" class="text-white text-sm d-flex align-items-center gap-4 hover-text-decoration-underline">
                         <i class="ph ph-whatsapp-logo text-md"></i>
                         <span class="">WhatsApp</span>
                     </a>
                 </li>
+                @endif
+                @if($settings->city ?? null || $settings->country ?? null)
                 <li class="border-right-item pe-12 me-12">
                     <a href="https://maps.google.com" target="_blank" class="text-white text-sm d-flex align-items-center gap-4 hover-text-decoration-underline">
                         <i class="ph ph-map-pin text-md"></i>
-                        <span class="">Nairobi, Kenya</span>
+                        <span class="">{{ $settings->city ?? '' }}{{ $settings->city && $settings->country ? ', ' : '' }}{{ $settings->country ?? '' }}</span>
                     </a>
                 </li>
+                @endif
             </ul>
 
             <ul class="header-top__right flex-align flex-wrap gap-16 w-auto">
@@ -70,7 +53,11 @@
             <!-- Logo Start -->
             <div class="logo">
                 <a href="{{ route('home') }}" class="link">
-                    <img src="{{ asset('assets/images/logo/sip-n-go-logo.png') }}" alt="Sip N Go Logo" style="max-height: 60px;">
+                    @if($siteLogo ?? null)
+                        <img src="{{ $siteLogo }}" alt="{{ $siteName ?? 'Logo' }}" style="max-height: 80px;">
+                    @else
+                        <img src="{{ asset('assets/images/logo/sip-n-go-logo.png') }}" alt="{{ $siteName ?? 'Sip N Go Logo' }}" style="max-height: 80px;">
+                    @endif
                 </a>
             </div>
             <!-- Logo End  -->
@@ -216,15 +203,17 @@
                             <span class="text-md text-heading-three item-hover__text d-none d-lg-flex">Login</span>
                         </a>
                     @endauth
-                    <a href="tel:+1234567890" class="d-lg-flex align-items-center gap-12 d-none item-hover" style="border-left: 1px solid #e5e7eb; padding-left: 20px; margin-left: 8px;">
+                    @if($settings->phone ?? null)
+                    <a href="tel:{{ $settings->phone }}" class="d-lg-flex align-items-center gap-12 d-none item-hover" style="border-left: 1px solid #e5e7eb; padding-left: 20px; margin-left: 8px;">
                         <span class="d-flex text-2xl text-gray-700">
                             <i class="ph ph-phone"></i>
                         </span>
                         <span class="">
                             <span class="d-block text-heading text-sm fw-medium">Need any Help! call Us</span>
-                            <span class="d-block fw-bold text-main-600 hover-text-decoration-underline text-sm">+1 234 567 890</span>
+                            <span class="d-block fw-bold text-main-600 hover-text-decoration-underline text-sm">{{ $settings->phone }}</span>
                         </span>
                     </a>
+                    @endif
                 </div>
             </div>
             <!-- Header Middle Right End  -->

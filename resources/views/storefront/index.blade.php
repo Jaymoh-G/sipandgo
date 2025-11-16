@@ -10,59 +10,90 @@
             <a href="#featureSection" class="scroll-down w-84 h-84 text-center flex-center bg-main-600 rounded-circle border border-5 text-white border-white position-absolute start-50 translate-middle-x bottom-0 hover-bg-main-800">
                 <span class="icon line-height-0"><i class="ph ph-caret-double-down"></i></span>
             </a>
-            <img src="{{ asset('assets/images/bg/banner-bg.png') }}" alt="" class="banner-img position-absolute inset-block-start-0 inset-inline-start-0 w-100 h-100 z-n1 object-fit-cover rounded-24">
+            @if($sliders->isNotEmpty())
+                @if($sliders->first()->background_image)
+                    <img src="{{ asset('storage/' . $sliders->first()->background_image) }}" alt="" class="banner-img position-absolute inset-block-start-0 inset-inline-start-0 w-100 h-100 z-n1 object-fit-cover rounded-24">
+                @else
+                    <img src="{{ asset('assets/images/bg/banner-bg.png') }}" alt="" class="banner-img position-absolute inset-block-start-0 inset-inline-start-0 w-100 h-100 z-n1 object-fit-cover rounded-24">
+                @endif
 
-            <div class="flex-align">
-                <button type="button" id="banner-prev" class="slick-prev slick-arrow flex-center rounded-circle box-shadow-4xl bg-white text-xl hover-bg-main-600 hover-text-white transition-1">
-                    <i class="ph ph-caret-left"></i>
-                </button>
-                <button type="button" id="banner-next" class="slick-next slick-arrow flex-center rounded-circle box-shadow-4xl bg-white text-xl hover-bg-main-600 hover-text-white transition-1">
-                    <i class="ph ph-caret-right"></i>
-                </button>
-            </div>
+                <div class="flex-align">
+                    <button type="button" id="banner-prev" class="slick-prev slick-arrow flex-center rounded-circle box-shadow-4xl bg-white text-xl hover-bg-main-600 hover-text-white transition-1">
+                        <i class="ph ph-caret-left"></i>
+                    </button>
+                    <button type="button" id="banner-next" class="slick-next slick-arrow flex-center rounded-circle box-shadow-4xl bg-white text-xl hover-bg-main-600 hover-text-white transition-1">
+                        <i class="ph ph-caret-right"></i>
+                    </button>
+                </div>
 
-            <div class="banner-slider">
-                <div class="banner-slider__item">
-                    <div class="banner-slider__inner flex-between position-relative">
-                        <div class="banner-item__content">
-                            <span class="fw-semibold text-success-600 text-capitalize mb-8 animate-left-right animation-delay-08">Save up to 50% off on your first order</span>
-                            <h2 class="banner-item__title max-w-700 mb-30 animate-left-right animation-delay-1">Premium Liquor Store and Get <span class="text-main-600">Express</span> Delivery</h2>
-                            <div class="d-flex align-items-center gap-16 animate-left-right animation-delay-12">
-                                <a href="{{ route('products.index') }}" class="btn btn-main d-inline-flex align-items-center rounded-pill gap-8">
-                                    Explore Shop <span class="icon text-xl d-flex"><i class="ph ph-shopping-cart-simple"></i></span>
-                                </a>
-                                <div class="d-flex align-items-end gap-8">
-                                    <span class="text-heading fst-italic text-sm">Starting at</span>
-                                    <h6 class="text-danger-600 mb-0">Ksh 29.99</h6>
+                <div class="banner-slider">
+                    @foreach($sliders as $slider)
+                    <div class="banner-slider__item">
+                        <div class="banner-slider__inner flex-between position-relative">
+                            <div class="banner-item__content">
+                                @if($slider->subtitle)
+                                <span class="fw-semibold text-success-600 text-capitalize mb-8 animate-left-right animation-delay-08">{{ $slider->subtitle }}</span>
+                                @endif
+                                <h2 class="banner-item__title max-w-700 mb-30 animate-left-right animation-delay-1">{!! $slider->title !!}</h2>
+                                <div class="d-flex align-items-center gap-16 animate-left-right animation-delay-12">
+                                    @if($slider->button_text && $slider->button_link)
+                                    <a href="{{ $slider->button_link }}" class="btn btn-main d-inline-flex align-items-center rounded-pill gap-8">
+                                        {{ $slider->button_text }} <span class="icon text-xl d-flex"><i class="ph ph-shopping-cart-simple"></i></span>
+                                    </a>
+                                    @endif
+                                    @if($slider->price_text)
+                                    <div class="d-flex align-items-end gap-8">
+                                        <span class="text-heading fst-italic text-sm text-white">Starting at</span>
+                                        <h6 class="text-danger-600 mb-0 fw-bold" style="font-size: 1.5rem; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">{{ $slider->price_text }}</h6>
+                                    </div>
+                                    @endif
                                 </div>
                             </div>
+                            @if($slider->image)
+                            <div class="banner-item__thumb animate-scale animation-delay-12">
+                                <img src="{{ asset('storage/' . $slider->image) }}" alt="{{ $slider->title }}">
+                            </div>
+                            @endif
                         </div>
-                        <div class="banner-item__thumb animate-scale animation-delay-12">
-                            <img src="{{ asset('assets/images/thumbs/banner-img3.png') }}" alt="">
+                    </div>
+                    @endforeach
+                </div>
+            @else
+                {{-- Fallback to default slider if no sliders in database --}}
+                <img src="{{ asset('assets/images/bg/banner-bg.png') }}" alt="" class="banner-img position-absolute inset-block-start-0 inset-inline-start-0 w-100 h-100 z-n1 object-fit-cover rounded-24">
+
+                <div class="flex-align">
+                    <button type="button" id="banner-prev" class="slick-prev slick-arrow flex-center rounded-circle box-shadow-4xl bg-white text-xl hover-bg-main-600 hover-text-white transition-1">
+                        <i class="ph ph-caret-left"></i>
+                    </button>
+                    <button type="button" id="banner-next" class="slick-next slick-arrow flex-center rounded-circle box-shadow-4xl bg-white text-xl hover-bg-main-600 hover-text-white transition-1">
+                        <i class="ph ph-caret-right"></i>
+                    </button>
+                </div>
+
+                <div class="banner-slider">
+                    <div class="banner-slider__item">
+                        <div class="banner-slider__inner flex-between position-relative">
+                            <div class="banner-item__content">
+                                <span class="fw-semibold text-success-600 text-capitalize mb-8 animate-left-right animation-delay-08">Save up to 50% off on your first order</span>
+                                <h2 class="banner-item__title max-w-700 mb-30 animate-left-right animation-delay-1">Premium Liquor Store and Get <span class="text-main-600">Express</span> Delivery</h2>
+                                <div class="d-flex align-items-center gap-16 animate-left-right animation-delay-12">
+                                    <a href="{{ route('products.index') }}" class="btn btn-main d-inline-flex align-items-center rounded-pill gap-8">
+                                        Explore Shop <span class="icon text-xl d-flex"><i class="ph ph-shopping-cart-simple"></i></span>
+                                    </a>
+                                    <div class="d-flex align-items-end gap-8">
+                                        <span class="text-heading fst-italic text-sm">Starting at</span>
+                                        <h6 class="text-danger-600 mb-0">Ksh 29.99</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="banner-item__thumb animate-scale animation-delay-12">
+                                <img src="{{ asset('assets/images/thumbs/banner-img3.png') }}" alt="">
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="banner-slider__item">
-                    <div class="banner-slider__inner flex-between position-relative">
-                        <div class="banner-item__content">
-                            <span class="fw-semibold text-success-600 text-capitalize mb-8 animate-left-right animation-delay-08">Premium spirits collection</span>
-                            <h2 class="banner-item__title max-w-700 mb-30 animate-left-right animation-delay-1">World's Finest <span class="text-main-600">Whiskey</span> & Spirits</h2>
-                            <div class="d-flex align-items-center gap-16 animate-left-right animation-delay-12">
-                                <a href="{{ route('categories.show', ['category' => 'whisky-whiskey']) }}" class="btn btn-main d-inline-flex align-items-center rounded-pill gap-8">
-                                    Shop Whiskey <span class="icon text-xl d-flex"><i class="ph ph-shopping-cart-simple"></i></span>
-                                </a>
-                                <div class="d-flex align-items-end gap-8">
-                                    <span class="text-heading fst-italic text-sm">Starting at</span>
-                                    <h6 class="text-danger-600 mb-0">Ksh 49.99</h6>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="banner-item__thumb animate-scale animation-delay-12">
-                            <img src="{{ asset('assets/images/thumbs/banner-img1.png') }}" alt="">
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @endif
         </div>
     </div>
 </div>
@@ -186,29 +217,26 @@
         <div class="row gy-4">
             @foreach($categories as $category)
             <div class="col-lg-3 col-md-4 col-sm-6" data-aos="fade-up" data-aos-duration="400">
-                <div class="product-card h-100 p-24 border border-gray-100 hover-border-main-600 rounded-16 position-relative transition-2 bg-white hover-shadow-lg">
-                    <a href="{{ route('categories.show', $category->slug ?? $category) }}" class="product-card__thumb flex-center overflow-hidden rounded-16 mb-24 position-relative">
+                <div class="product-card h-100 border border-gray-100 hover-border-main-600 rounded-16 position-relative transition-2 bg-white hover-shadow-lg overflow-hidden">
+                    <a href="{{ route('categories.show', $category->slug ?? $category) }}" class="product-card__thumb position-relative overflow-hidden" style="border-radius: 16px 16px 0 0;">
                         @if($category->image)
-                            <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}" class="w-100 h-100 object-fit-cover transition-2 hover-scale-110">
+                            <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}" class="w-100 transition-2" style="height: 300px; object-fit: cover; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
                         @else
-                            <div class="w-100 h-200 bg-main-50 flex-center rounded-16 position-relative overflow-hidden">
-                                <img src="{{ asset('assets/images/icon/category-5.png') }}" alt="{{ $category->name }}" class="w-80 transition-2 hover-scale-110">
+                            <div class="w-100 bg-main-50 flex-center position-relative overflow-hidden" style="height: 300px;">
+                                <img src="{{ asset('assets/images/icon/category-5.png') }}" alt="{{ $category->name }}" class="w-80 transition-2">
                             </div>
                         @endif
-                        <div class="position-absolute inset-0 bg-main-600 opacity-0 hover-opacity-10 transition-2 rounded-16"></div>
-                    </a>
-                    <div class="product-card__content text-center">
-                        <h6 class="title text-lg fw-semibold mb-8">
-                            <a href="{{ route('categories.show', $category->slug ?? $category) }}" class="link text-heading hover-text-main-600">
+                        <div class="position-absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);"></div>
+                        <div class="position-absolute bottom-0 left-0 right-0 p-24 text-white">
+                            <h6 class="title text-lg fw-semibold mb-0 text-white">
                                 {{ $category->name }}
-                            </a>
-                        </h6>
-                        @if($category->products_count > 0)
-                        <div class="mb-12">
-                            <span class="text-main-600 fw-semibold text-sm">{{ $category->products_count }}</span>
-                            <span class="text-gray-500 text-sm"> Products Available</span>
+                            </h6>
+                            @if($category->products_count > 0)
+                            <span class="text-white text-sm" style="opacity: 0.9;">{{ $category->products_count }} Products</span>
+                            @endif
                         </div>
-                        @endif
+                    </a>
+                    <div class="product-card__content p-24 text-center">
                         @if($category->description)
                         <p class="text-gray-600 text-sm mb-24">
                             {{ Str::limit($category->description, 80) }}

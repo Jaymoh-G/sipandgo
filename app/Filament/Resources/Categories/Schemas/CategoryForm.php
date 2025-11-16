@@ -35,11 +35,13 @@ class CategoryForm
                     ->preload()
                     ->placeholder('No parent (top level)'),
                 FileUpload::make('image')
+                    ->label('Cover Photo')
                     ->image()
                     ->disk('public')
                     ->directory('categories')
                     ->imageEditor()
-                    ->helperText('Category image'),
+                    ->helperText('Upload a cover photo for this category (recommended: 800x600px or larger)')
+                    ->columnSpanFull(),
                 Toggle::make('is_active')
                     ->label('Active')
                     ->default(true)

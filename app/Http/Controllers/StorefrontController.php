@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Slider;
 use Illuminate\Http\Request;
 
 class StorefrontController extends Controller
@@ -28,7 +29,11 @@ class StorefrontController extends Controller
             ->limit(8)
             ->get();
 
-        return view('storefront.index', compact('featuredProducts', 'categories'));
+        $sliders = Slider::active()
+            ->ordered()
+            ->get();
+
+        return view('storefront.index', compact('featuredProducts', 'categories', 'sliders'));
     }
 
     /**

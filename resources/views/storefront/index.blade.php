@@ -450,18 +450,20 @@
     /* Slider image dimensions */
     .banner-item {
         min-height: 450px !important;
-        height: auto !important;
+        height: 490px !important;
         padding-bottom: 40px !important;
         overflow: visible !important;
     }
 
-    .banner-img {
+    .banner .banner-img {
         width: 100% !important;
         height: 490px !important;
         min-height: 490px !important;
+        max-height: 490px !important;
         object-fit: cover !important;
         object-position: center bottom !important;
-        margin-bottom: 0 !important;
+        bottom: -40px !important;
+        top: auto !important;
     }
 
     .banner-item__thumb {
@@ -485,14 +487,16 @@
     @media (max-width: 992px) {
         .banner-item {
             min-height: 400px !important;
-            height: auto !important;
+            height: 430px !important;
             padding-bottom: 30px !important;
         }
 
-        .banner-img {
+        .banner .banner-img {
             height: 430px !important;
             min-height: 430px !important;
+            max-height: 430px !important;
             object-position: center bottom !important;
+            bottom: -30px !important;
         }
 
         .banner-item__thumb {
@@ -508,14 +512,16 @@
     @media (max-width: 768px) {
         .banner-item {
             min-height: 350px !important;
-            height: auto !important;
+            height: 370px !important;
             padding-bottom: 20px !important;
         }
 
-        .banner-img {
+        .banner .banner-img {
             height: 370px !important;
             min-height: 370px !important;
+            max-height: 370px !important;
             object-position: center bottom !important;
+            bottom: -20px !important;
         }
 
         .banner-item__thumb {

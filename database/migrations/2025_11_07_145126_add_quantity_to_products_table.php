@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->integer('quantity')->default(0)->after('track_inventory');
-        });
+        if (!Schema::hasColumn('products', 'quantity')) {
+            Schema::table('products', function (Blueprint $table) {
+                $table->integer('quantity')->default(0)->after('track_inventory');
+            });
+        }
     }
 
     /**

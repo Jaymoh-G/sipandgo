@@ -48,7 +48,7 @@ class SliderForm
                     ->disk('public')
                     ->directory('sliders')
                     ->imageEditor()
-                    ->helperText('Main image displayed on the slider (recommended: 600x600px)')
+                    ->helperText('Main image displayed on the slider (recommended: 500x500px, max 500px height)')
                     ->columnSpan(1),
                 FileUpload::make('background_image')
                     ->label('Background Image')
@@ -56,7 +56,7 @@ class SliderForm
                     ->disk('public')
                     ->directory('sliders')
                     ->imageEditor()
-                    ->helperText('Optional background image for the slider')
+                    ->helperText('Background image for the slider (recommended: 1920x600px for desktop, will be cropped to fit)')
                     ->columnSpan(1),
                 TextInput::make('sort_order')
                     ->label('Sort Order')

@@ -445,8 +445,205 @@
 </section>
 <!-- ============================ Features Section End =============================== -->
 
+@push('styles')
+<style>
+    /* Slider image dimensions */
+    .banner-item {
+        min-height: 450px !important;
+        height: auto !important;
+        padding-bottom: 40px !important;
+        overflow: visible !important;
+    }
+
+    .banner-img {
+        width: 100% !important;
+        height: 490px !important;
+        min-height: 490px !important;
+        object-fit: cover !important;
+        object-position: center bottom !important;
+        margin-bottom: 0 !important;
+    }
+
+    .banner-item__thumb {
+        max-width: 400px !important;
+        width: 100% !important;
+        height: auto !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .banner-item__thumb img {
+        width: 100% !important;
+        height: auto !important;
+        max-width: 400px !important;
+        max-height: 400px !important;
+        object-fit: contain !important;
+        object-position: center !important;
+    }
+
+    @media (max-width: 992px) {
+        .banner-item {
+            min-height: 400px !important;
+            height: auto !important;
+            padding-bottom: 30px !important;
+        }
+
+        .banner-img {
+            height: 430px !important;
+            min-height: 430px !important;
+            object-position: center bottom !important;
+        }
+
+        .banner-item__thumb {
+            max-width: 350px !important;
+        }
+
+        .banner-item__thumb img {
+            max-width: 350px !important;
+            max-height: 350px !important;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .banner-item {
+            min-height: 350px !important;
+            height: auto !important;
+            padding-bottom: 20px !important;
+        }
+
+        .banner-img {
+            height: 370px !important;
+            min-height: 370px !important;
+            object-position: center bottom !important;
+        }
+
+        .banner-item__thumb {
+            max-width: 250px !important;
+        }
+
+        .banner-item__thumb img {
+            max-width: 250px !important;
+            max-height: 250px !important;
+        }
+    }
+
+    /* Ensure banner slider arrows are visible and functional */
+    .banner .slick-arrow {
+        position: absolute !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        z-index: 10 !important;
+        width: 48px !important;
+        height: 48px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background-color: rgba(255, 255, 255, 0.95) !important;
+        border: none !important;
+        border-radius: 50% !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+    .banner .slick-arrow:hover {
+        background-color: var(--main-600) !important;
+        color: #ffffff !important;
+        transform: translateY(-50%) scale(1.1) !important;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25) !important;
+    }
+
+    .banner .slick-arrow:active {
+        transform: translateY(-50%) scale(0.95) !important;
+    }
+
+    .banner #banner-prev {
+        left: 20px !important;
+        right: auto !important;
+    }
+
+    .banner #banner-next {
+        right: 20px !important;
+        left: auto !important;
+    }
+
+    .banner .slick-arrow i {
+        font-size: 20px !important;
+        color: var(--main-600) !important;
+        transition: color 0.3s ease !important;
+    }
+
+    .banner .slick-arrow:hover i {
+        color: #ffffff !important;
+    }
+
+    .banner .slick-arrow.slick-disabled {
+        opacity: 0.5 !important;
+        cursor: not-allowed !important;
+    }
+
+    @media (max-width: 768px) {
+        .banner .slick-arrow {
+            width: 40px !important;
+            height: 40px !important;
+        }
+
+        .banner #banner-prev {
+            left: 10px !important;
+        }
+
+        .banner #banner-next {
+            right: 10px !important;
+        }
+
+        .banner .slick-arrow i {
+            font-size: 18px !important;
+        }
+    }
+</style>
+@endpush
+
 @push('scripts')
 <script>
+    // Ensure banner slider arrows are properly initialized
+    document.addEventListener('DOMContentLoaded', function() {
+        // Wait for slick to initialize, then ensure arrows are visible
+        setTimeout(function() {
+            const bannerSlider = $('.banner-slider');
+            if (bannerSlider.length && typeof bannerSlider.slick === 'function') {
+                // Reinitialize if needed to ensure arrows work
+                if (!bannerSlider.hasClass('slick-initialized')) {
+                    bannerSlider.slick({
+                        slidesToShow: 1,
+                        slidesToScroll: 1,
+                        autoplay: true,
+                        autoplaySpeed: 4000,
+                        speed: 1000,
+                        dots: false,
+                        pauseOnHover: true,
+                        fade: true,
+                        cssEase: 'linear',
+                        arrows: true,
+                        draggable: true,
+                        infinite: true,
+                        nextArrow: '#banner-next',
+                        prevArrow: '#banner-prev',
+                    });
+                }
+
+                // Ensure arrows are visible
+                $('#banner-prev, #banner-next').css({
+                    'display': 'flex',
+                    'visibility': 'visible',
+                    'opacity': '1'
+                });
+            }
+        }, 100);
+    });
+
     // Simple countdown timer
     function updateCountdown() {
         const now = new Date().getTime();
@@ -483,6 +680,86 @@
 
     // Start countdown when page loads
     document.addEventListener("DOMContentLoaded", updateCountdown);
+
+    // Ensure category slider auto-plays
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            const featureSlider = $('.feature-item-wrapper');
+            if (featureSlider.length && typeof featureSlider.slick === 'function') {
+                // Check if already initialized
+                if (featureSlider.hasClass('slick-initialized')) {
+                    // Reinitialize with autoplay enabled
+                    featureSlider.slick('unslick');
+                }
+
+                // Initialize with autoplay
+                featureSlider.slick({
+                    slidesToShow: 10,
+                    slidesToScroll: 1,
+                    autoplay: true,
+                    autoplaySpeed: 3000,
+                    speed: 800,
+                    dots: false,
+                    pauseOnHover: true,
+                    arrows: true,
+                    draggable: true,
+                    infinite: true,
+                    nextArrow: '#feature-item-wrapper-next',
+                    prevArrow: '#feature-item-wrapper-prev',
+                    responsive: [
+                        {
+                            breakpoint: 1699,
+                            settings: {
+                                slidesToShow: 9,
+                            }
+                        },
+                        {
+                            breakpoint: 1599,
+                            settings: {
+                                slidesToShow: 8,
+                            }
+                        },
+                        {
+                            breakpoint: 1399,
+                            settings: {
+                                slidesToShow: 6,
+                            }
+                        },
+                        {
+                            breakpoint: 992,
+                            settings: {
+                                slidesToShow: 5,
+                            }
+                        },
+                        {
+                            breakpoint: 768,
+                            settings: {
+                                slidesToShow: 4,
+                            }
+                        },
+                        {
+                            breakpoint: 575,
+                            settings: {
+                                slidesToShow: 3,
+                            }
+                        },
+                        {
+                            breakpoint: 424,
+                            settings: {
+                                slidesToShow: 2,
+                            }
+                        },
+                        {
+                            breakpoint: 359,
+                            settings: {
+                                slidesToShow: 1,
+                            }
+                        },
+                    ]
+                });
+            }
+        }, 200);
+    });
 </script>
 @endpush
 @endsection

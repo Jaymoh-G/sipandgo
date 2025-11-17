@@ -45,7 +45,7 @@ Route::prefix('wishlist')->group(function () {
 
 // Static pages
 Route::get('/about-us', [StoreController::class, 'about'])->name('about');
-Route::get('/contact', [StoreController::class, 'contact'])->name('contact');
+Route::get('/contact-us', [StoreController::class, 'contact'])->name('contact');
 
 // Order tracking
 Route::get('/order-tracking', [StoreController::class, 'orderTracking'])->name('order.tracking');

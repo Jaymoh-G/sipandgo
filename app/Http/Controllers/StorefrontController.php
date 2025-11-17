@@ -66,10 +66,10 @@ class StorefrontController extends Controller
         }
 
         // Price filtering
-        if ($request->has('min_price') && $request->min_price) {
+        if ($request->has('min_price') && $request->min_price !== null && $request->min_price !== '') {
             $query->where('price', '>=', $request->min_price);
         }
-        if ($request->has('max_price') && $request->max_price) {
+        if ($request->has('max_price') && $request->max_price !== null && $request->max_price !== '') {
             $query->where('price', '<=', $request->max_price);
         }
 

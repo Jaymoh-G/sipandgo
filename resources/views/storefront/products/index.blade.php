@@ -32,12 +32,21 @@
                     <!-- Price Filter -->
                     <div class="shop-sidebar__box border border-gray-100 rounded-8 p-32 mb-32">
                         <h6 class="text-xl border-bottom border-gray-100 pb-24 mb-24">Filter by Price</h6>
-                        <form method="GET" action="{{ route('products.index') }}">
+                        <form method="GET" action="{{ route('products.index') }}" id="price-filter-form">
                             @if(request('category'))
                                 <input type="hidden" name="category" value="{{ request('category') }}">
                             @endif
                             @if(request('search'))
                                 <input type="hidden" name="search" value="{{ request('search') }}">
+                            @endif
+                            @if(request('brand'))
+                                <input type="hidden" name="brand" value="{{ request('brand') }}">
+                            @endif
+                            @if(request('sort'))
+                                <input type="hidden" name="sort" value="{{ request('sort') }}">
+                            @endif
+                            @if(request('direction'))
+                                <input type="hidden" name="direction" value="{{ request('direction') }}">
                             @endif
                             <div class="custom--range">
                                 <div id="slider-range"></div>
@@ -49,7 +58,7 @@
                                     </div>
                                 </div>
                                 <input type="hidden" name="min_price" id="min_price_input" value="{{ request('min_price', 0) }}">
-                                <input type="hidden" name="max_price" id="max_price_input" value="{{ request('max_price', 1000) }}">
+                                <input type="hidden" name="max_price" id="max_price_input" value="{{ request('max_price', 50000) }}">
                             </div>
                         </form>
                     </div>
@@ -202,6 +211,111 @@
     </div>
 </section>
 
+@push('styles')
+<style>
+    /* Ensure both slider handles are visible and draggable */
+    .custom--range {
+        position: relative;
+        padding: 20px 0 !important;
+        overflow: visible !important;
+    }
+
+    #slider-range.ui-slider {
+        position: relative !important;
+        margin: 20px 0 !important;
+        overflow: visible !important;
+    }
+
+    #slider-range .ui-slider-handle {
+        width: 20px !important;
+        height: 20px !important;
+        background-color: var(--main-600) !important;
+        border: 3px solid #ffffff !important;
+        cursor: grab !important;
+        z-index: 10 !important;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3) !important;
+        position: absolute !important;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        margin-left: -10px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+    }
+
+    #slider-range .ui-slider-handle:active {
+        cursor: grabbing !important;
+        transform: translateY(-50%) scale(1.5) !important;
+        z-index: 15 !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important;
+    }
+
+    #slider-range .ui-slider-handle:hover {
+        transform: translateY(-50%) scale(1.3) !important;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.4) !important;
+        z-index: 12 !important;
+    }
+
+    /* Ensure the second handle (max) is always visible */
+    #slider-range .ui-slider-handle:last-of-type {
+        z-index: 11 !important;
+    }
+
+    #slider-range .ui-slider-handle:last-of-type:hover {
+        z-index: 13 !important;
+    }
+
+    #slider-range .ui-slider-handle:last-of-type:active {
+        z-index: 16 !important;
+    }
+
+    /* Ensure range bar doesn't hide handles */
+    #slider-range .ui-slider-range {
+        z-index: 1 !important;
+    }
+
+    /* Style the price display input */
+    .custom--range__prices {
+        width: auto !important;
+        min-width: 180px !important;
+        max-width: 220px !important;
+        padding: 8px 12px !important;
+        border: 1px solid var(--gray-200) !important;
+        border-radius: 8px !important;
+        background-color: #ffffff !important;
+        color: var(--main-600) !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+        text-align: center !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .custom--range__prices:focus {
+        outline: none !important;
+        border-color: var(--main-600) !important;
+        box-shadow: 0 0 0 3px rgba(225, 167, 67, 0.1) !important;
+    }
+
+    .custom--range__content {
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+    }
+
+    .custom--range__content span {
+        white-space: nowrap !important;
+    }
+
+    @media (max-width: 576px) {
+        .custom--range__prices {
+            min-width: 150px !important;
+            max-width: 180px !important;
+            font-size: 13px !important;
+            padding: 6px 10px !important;
+        }
+    }
+</style>
+@endpush
+
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -244,29 +358,92 @@ document.addEventListener('DOMContentLoaded', function () {
         listBtn.addEventListener('click', setList);
     }
 
-    // Price range slider (jQuery UI) like shop.html
-    if (window.jQuery && jQuery.ui && document.getElementById('slider-range')) {
-        const $ = window.jQuery;
-        const minDefault = Number(document.getElementById('min_price_input')?.value || 0);
-        const maxDefault = Number(document.getElementById('max_price_input')?.value || 1000);
+    // Price range slider (jQuery UI) - Override main.js initialization with KES
+    function initPriceSlider() {
+        if (window.jQuery && jQuery.ui && document.getElementById('slider-range')) {
+            const $ = window.jQuery;
+            let minDefault = Number(document.getElementById('min_price_input')?.value || 0);
+            let maxDefault = Number(document.getElementById('max_price_input')?.value || 50000);
 
-        $('#slider-range').slider({
-            range: true,
-            min: 0,
-            max: 1000,
-            values: [minDefault, maxDefault],
-            slide: function(event, ui) {
-                const text = '$' + ui.values[0] + ' - $' + ui.values[1];
-                document.getElementById('amount').value = text;
-            },
-            change: function(event, ui) {
-                document.getElementById('min_price_input').value = ui.values[0];
-                document.getElementById('max_price_input').value = ui.values[1];
+            // Ensure min and max are different and valid
+            if (minDefault >= maxDefault) {
+                minDefault = 0;
+                maxDefault = 50000;
+            }
+            if (minDefault < 0) minDefault = 0;
+            if (maxDefault > 50000) maxDefault = 50000;
+
+            // Destroy existing slider if it exists (from main.js)
+            if ($('#slider-range').hasClass('ui-slider')) {
+                $('#slider-range').slider('destroy');
+            }
+
+            // Initialize with KES currency - ensure both handles are draggable
+            $('#slider-range').slider({
+                range: true,
+                min: 0,
+                max: 50000,
+                step: 100, // Add step for smoother dragging
+                values: [minDefault, maxDefault],
+                slide: function(event, ui) {
+                    // Prevent handles from crossing each other
+                    if (ui.values[0] >= ui.values[1]) {
+                        return false;
+                    }
+                    const text = 'Ksh ' + ui.values[0].toLocaleString() + ' - Ksh ' + ui.values[1].toLocaleString();
+                    $('#amount').val(text);
+                    // Update hidden inputs immediately on slide
+                    $('#min_price_input').val(ui.values[0]);
+                    $('#max_price_input').val(ui.values[1]);
+                },
+                change: function(event, ui) {
+                    // Ensure values are set when slider changes
+                    $('#min_price_input').val(ui.values[0]);
+                    $('#max_price_input').val(ui.values[1]);
+                }
+            });
+
+            // Ensure both handles are visible and draggable
+            setTimeout(function() {
+                const handles = $('#slider-range .ui-slider-handle');
+                if (handles.length === 2) {
+                    handles.each(function(index) {
+                        $(this).css({
+                            'cursor': 'grab',
+                            'z-index': '3',
+                            'display': 'block',
+                            'visibility': 'visible',
+                            'opacity': '1'
+                        });
+                    });
+                }
+            }, 50);
+
+            // Set initial display value with KES
+            const initVals = $('#slider-range').slider('values');
+            $('#amount').val('Ksh ' + initVals[0].toLocaleString() + ' - Ksh ' + initVals[1].toLocaleString());
+
+            // Update hidden inputs with initial values
+            $('#min_price_input').val(initVals[0]);
+            $('#max_price_input').val(initVals[1]);
+        }
+    }
+
+    // Run immediately and also after a short delay to override main.js
+    initPriceSlider();
+    setTimeout(initPriceSlider, 100);
+
+    // Ensure values are set before form submission
+    const priceFilterForm = document.getElementById('price-filter-form');
+    if (priceFilterForm) {
+        priceFilterForm.addEventListener('submit', function(e) {
+            const slider = $('#slider-range');
+            if (slider.hasClass('ui-slider')) {
+                const values = slider.slider('values');
+                $('#min_price_input').val(values[0]);
+                $('#max_price_input').val(values[1]);
             }
         });
-
-        const initVals = $('#slider-range').slider('values');
-        document.getElementById('amount').value = '$' + initVals[0] + ' - $' + initVals[1];
     }
 });
 </script>

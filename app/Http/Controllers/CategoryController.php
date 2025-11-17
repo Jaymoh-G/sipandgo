@@ -15,7 +15,7 @@ class CategoryController extends Controller
                 $query->where('is_active', true);
             }])
             ->orderBy('sort_order')
-            ->get();
+            ->paginate(8);
 
         return view('storefront.categories.index', compact('categories'));
     }

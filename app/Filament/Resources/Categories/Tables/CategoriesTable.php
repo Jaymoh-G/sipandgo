@@ -20,8 +20,23 @@ class CategoriesTable
         return $table
             ->columns([
                 ImageColumn::make('image')
+                    ->label('Image')
                     ->circular()
                     ->size(50)
+                    ->disk('public')
+                    ->getStateUsing(function ($record) {
+                        if (!$record->image) {
+                            return null;
+                        }
+
+                        // If it's already a full URL, return as is
+                        if (filter_var($record->image, FILTER_VALIDATE_URL)) {
+                            return $record->image;
+                        }
+
+                        // Otherwise, return the storage path
+                        return asset('storage/' . ltrim($record->image, '/'));
+                    })
                     ->placeholder('No image'),
                 TextColumn::make('name')
                     ->searchable()

@@ -112,163 +112,40 @@
                 </button>
             </div>
             <div class="feature-item-wrapper">
-                <div class="feature-item text-center wow bounceIn" data-aos="fade-up" data-aos-duration="400">
+                @forelse($categories as $index => $category)
+                <div class="feature-item text-center wow bounceIn" data-aos="fade-up" data-aos-duration="{{ 400 + ($index * 200) }}">
                     <div class="feature-item__thumb rounded-circle">
-                        <a href="{{ route('categories.show', ['category' => 'whisky-whiskey']) }}" class="w-100 h-100 flex-center">
-                            <img src="{{ asset('assets/images/icon/category-5.png') }}" alt="">
+                        <a href="{{ route('categories.show', $category->slug ?? $category) }}" class="w-100 h-100 flex-center">
+                            @if($category->image)
+                                <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}" class="w-100 h-100 object-fit-cover rounded-circle">
+                            @else
+                                <img src="{{ asset('assets/images/icon/category-5.png') }}" alt="{{ $category->name }}">
+                            @endif
                         </a>
                     </div>
                     <div class="feature-item__content mt-16">
-                        <h6 class="text-lg mb-8"><a href="{{ route('categories.show', ['category' => 'whisky-whiskey']) }}" class="text-inherit">Whisky & Whiskey</a></h6>
-                        <span class="text-sm text-gray-400">Premium Collection</span>
+                        <h6 class="text-lg mb-8">
+                            <a href="{{ route('categories.show', $category->slug ?? $category) }}" class="text-inherit">{{ $category->name }}</a>
+                        </h6>
+                        <span class="text-sm text-gray-400">
+                            @if($category->products_count > 0)
+                                {{ $category->products_count }} {{ Str::plural('Product', $category->products_count) }}
+                            @else
+                                Premium Collection
+                            @endif
+                        </span>
                     </div>
                 </div>
-                <div class="feature-item text-center wow bounceIn" data-aos="fade-up" data-aos-duration="600">
-                    <div class="feature-item__thumb rounded-circle">
-                        <a href="{{ route('categories.show', ['category' => 'vodka']) }}" class="w-100 h-100 flex-center">
-                            <img src="{{ asset('assets/images/icon/category-5.png') }}" alt="">
-                        </a>
-                    </div>
-                    <div class="feature-item__content mt-16">
-                        <h6 class="text-lg mb-8"><a href="{{ route('categories.show', ['category' => 'vodka']) }}" class="text-inherit">Vodka</a></h6>
-                        <span class="text-sm text-gray-400">Premium Collection</span>
-                    </div>
+                @empty
+                <div class="col-12 text-center py-40">
+                    <p class="text-gray-600">No categories available at the moment.</p>
                 </div>
-                <div class="feature-item text-center wow bounceIn" data-aos="fade-up" data-aos-duration="800">
-                    <div class="feature-item__thumb rounded-circle">
-                        <a href="{{ route('categories.show', ['category' => 'rum']) }}" class="w-100 h-100 flex-center">
-                            <img src="{{ asset('assets/images/icon/category-5.png') }}" alt="">
-                        </a>
-                    </div>
-                    <div class="feature-item__content mt-16">
-                        <h6 class="text-lg mb-8"><a href="{{ route('categories.show', ['category' => 'rum']) }}" class="text-inherit">Rum</a></h6>
-                        <span class="text-sm text-gray-400">Premium Collection</span>
-                    </div>
-                </div>
-                <div class="feature-item text-center wow bounceIn" data-aos="fade-up" data-aos-duration="1000">
-                    <div class="feature-item__thumb rounded-circle">
-                        <a href="{{ route('categories.show', ['category' => 'gin']) }}" class="w-100 h-100 flex-center">
-                            <img src="{{ asset('assets/images/icon/category-5.png') }}" alt="">
-                        </a>
-                    </div>
-                    <div class="feature-item__content mt-16">
-                        <h6 class="text-lg mb-8"><a href="{{ route('categories.show', ['category' => 'gin']) }}" class="text-inherit">Gin</a></h6>
-                        <span class="text-sm text-gray-400">Premium Collection</span>
-                    </div>
-                </div>
-                <div class="feature-item text-center wow bounceIn" data-aos="fade-up" data-aos-duration="1200">
-                    <div class="feature-item__thumb rounded-circle">
-                        <a href="{{ route('categories.show', ['category' => 'tequila-mezcal']) }}" class="w-100 h-100 flex-center">
-                            <img src="{{ asset('assets/images/icon/category-5.png') }}" alt="">
-                        </a>
-                    </div>
-                    <div class="feature-item__content mt-16">
-                        <h6 class="text-lg mb-8"><a href="{{ route('categories.show', ['category' => 'tequila-mezcal']) }}" class="text-inherit">Tequila & Mezcal</a></h6>
-                        <span class="text-sm text-gray-400">Premium Collection</span>
-                    </div>
-                </div>
-                <div class="feature-item text-center wow bounceIn" data-aos="fade-up" data-aos-duration="1400">
-                    <div class="feature-item__thumb rounded-circle">
-                        <a href="{{ route('categories.show', ['category' => 'wine']) }}" class="w-100 h-100 flex-center">
-                            <img src="{{ asset('assets/images/icon/category-5.png') }}" alt="">
-                        </a>
-                    </div>
-                    <div class="feature-item__content mt-16">
-                        <h6 class="text-lg mb-8"><a href="{{ route('categories.show', ['category' => 'wine']) }}" class="text-inherit">Wine</a></h6>
-                        <span class="text-sm text-gray-400">Premium Collection</span>
-                    </div>
-                </div>
-                <div class="feature-item text-center wow bounceIn" data-aos="fade-up" data-aos-duration="1600">
-                    <div class="feature-item__thumb rounded-circle">
-                        <a href="{{ route('categories.show', ['category' => 'beer']) }}" class="w-100 h-100 flex-center">
-                            <img src="{{ asset('assets/images/icon/category-5.png') }}" alt="">
-                        </a>
-                    </div>
-                    <div class="feature-item__content mt-16">
-                        <h6 class="text-lg mb-8"><a href="{{ route('categories.show', ['category' => 'beer']) }}" class="text-inherit">Beer</a></h6>
-                        <span class="text-sm text-gray-400">Premium Collection</span>
-                    </div>
-                </div>
-                <div class="feature-item text-center wow bounceIn" data-aos="fade-up" data-aos-duration="1800">
-                    <div class="feature-item__thumb rounded-circle">
-                        <a href="{{ route('categories.show', ['category' => 'ready-to-drink']) }}" class="w-100 h-100 flex-center">
-                            <img src="{{ asset('assets/images/icon/category-5.png') }}" alt="">
-                        </a>
-                    </div>
-                    <div class="feature-item__content mt-16">
-                        <h6 class="text-lg mb-8"><a href="{{ route('categories.show', ['category' => 'ready-to-drink']) }}" class="text-inherit">Ready-to-Drink</a></h6>
-                        <span class="text-sm text-gray-400">Premium Collection</span>
-                    </div>
-                </div>
+                @endforelse
             </div>
         </div>
     </div>
 </div>
 <!-- ============================ Feature Section End =============================== -->
-
-<!-- ============================ Category Section Start =============================== -->
-<section class="category py-80 bg-gray-50">
-    <div class="container container-lg">
-        <div class="section-heading text-center mb-56">
-            <h2 class="text-heading-two mb-16">Shop by Category</h2>
-            <p class="text-gray-600">Explore our premium collection organized by spirit type</p>
-        </div>
-
-        <div class="row gy-4">
-            @foreach($categories as $category)
-            <div class="col-lg-3 col-md-4 col-sm-6" data-aos="fade-up" data-aos-duration="400">
-                <div class="product-card h-100 border border-gray-100 hover-border-main-600 rounded-16 position-relative transition-2 bg-white hover-shadow-lg overflow-hidden">
-                    <a href="{{ route('categories.show', $category->slug ?? $category) }}" class="product-card__thumb position-relative overflow-hidden" style="border-radius: 16px 16px 0 0;">
-                        @if($category->image)
-                            <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}" class="w-100 transition-2" style="height: 300px; object-fit: cover; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
-                        @else
-                            <div class="w-100 bg-main-50 flex-center position-relative overflow-hidden" style="height: 300px;">
-                                <img src="{{ asset('assets/images/icon/category-5.png') }}" alt="{{ $category->name }}" class="w-80 transition-2">
-                            </div>
-                        @endif
-                        <div class="position-absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);"></div>
-                        <div class="position-absolute bottom-0 left-0 right-0 p-24 text-white">
-                            <h6 class="title text-lg fw-semibold mb-0 text-white">
-                                {{ $category->name }}
-                            </h6>
-                            @if($category->products_count > 0)
-                            <span class="text-white text-sm" style="opacity: 0.9;">{{ $category->products_count }} Products</span>
-                            @endif
-                        </div>
-                    </a>
-                    <div class="product-card__content p-24 text-center">
-                        @if($category->description)
-                        <p class="text-gray-600 text-sm mb-24">
-                            {{ Str::limit($category->description, 80) }}
-                        </p>
-                        @endif
-                        <a href="{{ route('categories.show', $category->slug ?? $category) }}" class="btn bg-main-50 text-main-600 hover-bg-main-600 hover-text-white py-11 px-24 rounded-pill flex-align gap-8 w-100 justify-content-center transition-2">
-                            Shop Now <i class="ph ph-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            @endforeach
-        </div>
-
-        @if($categories->isEmpty())
-        <div class="text-center py-80">
-            <div class="mb-24">
-                <i class="ph ph-folder-open text-6xl text-gray-400"></i>
-            </div>
-            <h4 class="text-heading mb-16">No Categories Available</h4>
-            <p class="text-gray-600 mb-32">Check back soon for our premium collection!</p>
-        </div>
-        @else
-        <div class="text-center mt-56">
-            <a href="{{ route('categories.index') }}" class="btn btn-main rounded-pill d-inline-flex align-items-center gap-8 px-40 py-16">
-                View All Categories <i class="ph ph-arrow-right"></i>
-            </a>
-        </div>
-        @endif
-    </div>
-</section>
-<!-- ============================ Category Section End =============================== -->
 
 <!-- ============================ Deal of the Week Section Start =============================== -->
 <section class="deal py-80 bg-gray-50">

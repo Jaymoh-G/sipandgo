@@ -49,7 +49,6 @@ class SettingsForm
                     ->directory('settings')
                     ->imageEditor()
                     ->maxSize(2048)
-                    ->mimeTypes(['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'])
                     ->helperText('Payment methods image displayed in footer (recommended: 300x50px or similar). Accepted formats: JPG, PNG, GIF, WebP, SVG (max 2MB)')
                     ->columnSpanFull(),
 

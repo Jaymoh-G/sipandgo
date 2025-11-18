@@ -510,10 +510,17 @@
     }
 
     @media (max-width: 768px) {
+        .banner {
+            margin-bottom: 40px !important;
+            padding-bottom: 0 !important;
+        }
+
         .banner-item {
             min-height: 350px !important;
-            height: 370px !important;
+            height: auto !important;
             padding-bottom: 20px !important;
+            margin-bottom: 30px !important;
+            overflow: hidden !important;
         }
 
         .banner .banner-img {
@@ -521,16 +528,186 @@
             min-height: 370px !important;
             max-height: 370px !important;
             object-position: center bottom !important;
-            bottom: -20px !important;
+            bottom: 0 !important;
         }
 
+        /* Make slider inner stack with image first, price on left, content below */
+        .banner-slider__inner {
+            flex-direction: column !important;
+            align-items: center !important;
+            gap: 15px !important;
+            padding: 20px 10px !important;
+            position: relative !important;
+        }
+
+        /* Image container - first, with price positioned to its left */
         .banner-item__thumb {
-            max-width: 250px !important;
+            max-width: 200px !important;
+            width: 100% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            order: 1 !important;
+            position: relative !important;
+            z-index: 2 !important;
+            margin: 0 auto 15px !important;
         }
 
         .banner-item__thumb img {
-            max-width: 250px !important;
-            max-height: 250px !important;
+            max-width: 200px !important;
+            max-height: 200px !important;
+            width: auto !important;
+            height: auto !important;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+
+        /* Content container - below image */
+        .banner-item__content {
+            width: 100% !important;
+            max-width: 100% !important;
+            text-align: center !important;
+            order: 2 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 12px !important;
+            position: relative !important;
+        }
+
+        /* Price wrapper - extract price and position it to left of image */
+        .banner-item__content > .d-flex.align-items-center.gap-16 {
+            position: absolute !important;
+            top: -80px !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            width: 100% !important;
+            max-width: 300px !important;
+            justify-content: flex-start !important;
+            padding-left: 0 !important;
+            z-index: 3 !important;
+            order: 0 !important;
+        }
+
+        /* Price positioned to the left of image */
+        .banner-item__content .d-flex.align-items-end.gap-8 {
+            position: absolute !important;
+            left: -90px !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+            z-index: 4 !important;
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 4px !important;
+            white-space: nowrap !important;
+        }
+
+        .banner-item__content .d-flex.align-items-end.gap-8 span {
+            font-size: 0.7rem !important;
+            color: rgba(255, 255, 255, 0.9) !important;
+        }
+
+        .banner-item__content .d-flex.align-items-end.gap-8 h6 {
+            font-size: 1.1rem !important;
+        }
+
+        /* Hide button from price wrapper */
+        .banner-item__content > .d-flex.align-items-center.gap-16 .btn {
+            display: none !important;
+        }
+
+        /* Title and subtitle */
+        .banner-item__content > .fw-semibold {
+            order: 1 !important;
+            text-align: center !important;
+            margin-bottom: 8px !important;
+        }
+
+        .banner-item__content > .banner-item__title {
+            order: 2 !important;
+            text-align: center !important;
+            margin-bottom: 15px !important;
+        }
+
+        /* Button - show separately below title */
+        .banner-item__content .btn {
+            order: 3 !important;
+            margin: 0 auto !important;
+            display: inline-flex !important;
+        }
+
+        /* Ensure feature section has proper spacing on mobile */
+        .feature {
+            margin-top: 40px !important;
+            padding-top: 40px !important;
+        }
+
+        .feature .container {
+            padding-top: 20px !important;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .banner {
+            margin-bottom: 30px !important;
+        }
+
+        .banner-item {
+            min-height: 300px !important;
+            height: auto !important;
+            padding-bottom: 15px !important;
+            margin-bottom: 25px !important;
+        }
+
+        .banner .banner-img {
+            height: 320px !important;
+            min-height: 320px !important;
+            max-height: 320px !important;
+            bottom: 0 !important;
+        }
+
+        .banner-slider__inner {
+            gap: 15px !important;
+            padding: 15px 5px !important;
+        }
+
+        .banner-item__content {
+            padding: 0 10px !important;
+        }
+
+        .banner-item__title {
+            font-size: 1.5rem !important;
+            margin-bottom: 15px !important;
+        }
+
+        .banner-item__thumb {
+            max-width: 180px !important;
+            width: 100% !important;
+        }
+
+        .banner-item__thumb img {
+            max-width: 180px !important;
+            max-height: 180px !important;
+            width: auto !important;
+            height: auto !important;
+        }
+
+        /* Adjust price position for smaller screens */
+        .banner-item__content .d-flex.align-items-end.gap-8 {
+            left: -70px !important;
+        }
+
+        .banner-item__content .d-flex.align-items-end.gap-8 span {
+            font-size: 0.65rem !important;
+        }
+
+        .banner-item__content .d-flex.align-items-end.gap-8 h6 {
+            font-size: 1rem !important;
+        }
+
+        .feature {
+            margin-top: 30px !important;
+            padding-top: 30px !important;
         }
     }
 

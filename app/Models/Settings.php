@@ -11,6 +11,7 @@ class Settings extends Model
         'site_description',
         'logo',
         'favicon',
+        'payment_methods_image',
         'email',
         'phone',
         'mobile',

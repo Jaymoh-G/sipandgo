@@ -42,6 +42,14 @@ class SettingsForm
                     ->maxSize(512)
                     ->helperText('Upload your site favicon (recommended: 32x32 or 16x16 pixels)')
                     ->columnSpan(1),
+                FileUpload::make('payment_methods_image')
+                    ->label('Payment Methods Image')
+                    ->image()
+                    ->disk('public')
+                    ->directory('settings')
+                    ->imageEditor()
+                    ->helperText('Payment methods image displayed in footer (recommended: 300x50px or similar)')
+                    ->columnSpanFull(),
 
                 // Contact Information
                 TextInput::make('email')

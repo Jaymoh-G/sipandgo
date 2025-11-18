@@ -150,7 +150,27 @@
             <p class="bottom-footer__text wow fadeInLeftBig text-gray-900">{{ $siteName ?? 'Sip & Go' }} eCommerce &copy; {{ date('Y') }}. All Rights Reserved. Must be 18+ to purchase alcohol.</p>
             <div class="flex-align gap-8 flex-wrap wow fadeInRightBig">
                 <span class="text-heading text-sm text-gray-900">We Are Accepting</span>
-                <img src="{{ asset('assets/images/thumbs/payment-method.png') }}" alt="Payment Methods">
+                @php
+                    $paymentImage = $settings->payment_methods_image ?? null;
+                    if ($paymentImage && !empty(trim($paymentImage))) {
+                        // Check if it's already a full URL
+                        if (filter_var($paymentImage, FILTER_VALIDATE_URL)) {
+                            $paymentImageUrl = $paymentImage;
+                        } else {
+                            // Remove leading slash if present and ensure proper path
+                            $paymentImage = ltrim($paymentImage, '/');
+                            // Ensure the path is not empty
+                            if (!empty($paymentImage)) {
+                                $paymentImageUrl = asset('storage/' . $paymentImage);
+                            } else {
+                                $paymentImageUrl = asset('assets/images/thumbs/payment-method.png');
+                            }
+                        }
+                    } else {
+                        $paymentImageUrl = asset('assets/images/thumbs/payment-method.png');
+                    }
+                @endphp
+                <img src="{{ $paymentImageUrl }}" alt="Payment Methods" style="max-height: 40px; width: auto;">
             </div>
         </div>
     </div>

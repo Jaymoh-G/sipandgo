@@ -148,7 +148,7 @@
     <div class="container container-lg">
         <div class="bottom-footer__inner flex-between flex-wrap gap-16 py-16">
             <p class="bottom-footer__text wow fadeInLeftBig text-gray-900">{{ $siteName ?? 'Sip & Go' }} eCommerce &copy; {{ date('Y') }}. All Rights Reserved. Must be 18+ to purchase alcohol.</p>
-            <div class="flex-align gap-8 flex-wrap wow fadeInRightBig">
+            <div class="flex-align gap-8 flex-wrap wow fadeInRightBig" style="margin-left: -15px;">
                 <span class="text-heading text-sm text-gray-900">We Are Accepting</span>
                 @php
                     $paymentImage = $settings->payment_methods_image ?? null;

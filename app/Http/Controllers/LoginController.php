@@ -36,6 +36,13 @@ class LoginController extends Controller
             ]);
         }
 
+        // Check if customer is active
+        if (!$customer->is_active) {
+            throw ValidationException::withMessages([
+                'email' => ['Your account has been deactivated. Please contact support.'],
+            ]);
+        }
+
         Auth::guard('customer')->login($customer, $request->boolean('remember'));
 
         $request->session()->regenerate();

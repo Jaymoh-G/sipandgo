@@ -96,7 +96,7 @@
                     </div>
                     <div class="col-xl-6">
                         <div class="product-details__content">
-                            <h5 class="mb-12">{{ $product->name }} <span class="text-gray-500">({{ $product->quantity ?? 0 }})</span></h5>
+                            <h5 class="mb-12">{{ $product->name }}</h5>
                             <div class="flex-align flex-wrap gap-12">
                                 <div class="flex-align gap-12 flex-wrap">
                                     <div class="flex-align gap-8">

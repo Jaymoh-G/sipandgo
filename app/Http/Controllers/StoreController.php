@@ -36,6 +36,11 @@ class StoreController extends Controller
         return view('storefront.contact');
     }
 
+    public function faq()
+    {
+        return view('storefront.faq');
+    }
+
     /**
      * Display order tracking form
      */

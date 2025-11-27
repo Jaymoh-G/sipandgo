@@ -51,8 +51,8 @@ class CartController extends Controller
         $quantity = $validated['quantity'] ?? 1;
 
         // Check if requested quantity is available
-        if ($product->track_inventory && $quantity > $product->current_stock) {
-            return back()->with('error', 'Requested quantity exceeds available stock. Only ' . $product->current_stock . ' items available.');
+        if ($product->track_inventory && $quantity > ($product->quantity ?? 0)) {
+            return back()->with('error', 'Requested quantity exceeds available stock. Only ' . ($product->quantity ?? 0) . ' items available.');
         }
 
         $success = $this->cartService->add($validated['product_id'], $quantity);
@@ -75,8 +75,8 @@ class CartController extends Controller
 
         $product = Product::find($productId);
 
-        if ($product && $product->track_inventory && $validated['quantity'] > $product->current_stock) {
-            return back()->with('error', 'Requested quantity exceeds available stock. Only ' . $product->current_stock . ' items available.');
+        if ($product && $product->track_inventory && $validated['quantity'] > ($product->quantity ?? 0)) {
+            return back()->with('error', 'Requested quantity exceeds available stock. Only ' . ($product->quantity ?? 0) . ' items available.');
         }
 
         $success = $this->cartService->update($productId, $validated['quantity']);

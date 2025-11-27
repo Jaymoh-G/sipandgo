@@ -106,18 +106,36 @@
                 <div class="mt-40">
                     <h4 class="text-lg fw-semibold text-heading mb-24">Follow Us</h4>
                     <div class="d-flex align-items-center gap-16">
-                        <a href="#" class="w-48 h-48 bg-main-600 hover-bg-main-700 text-white rounded-circle flex-center transition-2">
-                            <i class="ph ph-facebook-logo text-xl"></i>
+                        @if($settings->facebook_url ?? null)
+                        <a href="{{ $settings->facebook_url }}" target="_blank" class="w-48 h-48 text-white rounded-circle flex-center transition-2" style="background-color: #1877F2;" onmouseover="this.style.backgroundColor='#166FE5'" onmouseout="this.style.backgroundColor='#1877F2'">
+                            <i class="ph-fill ph-facebook-logo text-xl"></i>
                         </a>
-                        <a href="#" class="w-48 h-48 bg-main-600 hover-bg-main-700 text-white rounded-circle flex-center transition-2">
-                            <i class="ph ph-twitter-logo text-xl"></i>
+                        @endif
+                        @if($settings->twitter_url ?? null)
+                        <a href="{{ $settings->twitter_url }}" target="_blank" class="w-48 h-48 text-white rounded-circle flex-center transition-2" style="background-color: #000000;" onmouseover="this.style.backgroundColor='#1DA1F2'" onmouseout="this.style.backgroundColor='#000000'">
+                            <i class="ph-fill ph-twitter-logo text-xl"></i>
                         </a>
-                        <a href="#" class="w-48 h-48 bg-main-600 hover-bg-main-700 text-white rounded-circle flex-center transition-2">
-                            <i class="ph ph-instagram-logo text-xl"></i>
+                        @endif
+                        @if($settings->instagram_url ?? null)
+                        <a href="{{ $settings->instagram_url }}" target="_blank" class="w-48 h-48 text-white rounded-circle flex-center transition-2" style="background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                            <i class="ph-fill ph-instagram-logo text-xl"></i>
                         </a>
-                        <a href="#" class="w-48 h-48 bg-main-600 hover-bg-main-700 text-white rounded-circle flex-center transition-2">
-                            <i class="ph ph-youtube-logo text-xl"></i>
+                        @endif
+                        @if($settings->youtube_url ?? null)
+                        <a href="{{ $settings->youtube_url }}" target="_blank" class="w-48 h-48 text-white rounded-circle flex-center transition-2" style="background-color: #FF0000;" onmouseover="this.style.backgroundColor='#CC0000'" onmouseout="this.style.backgroundColor='#FF0000'">
+                            <i class="ph-fill ph-youtube-logo text-xl"></i>
                         </a>
+                        @endif
+                        @if($settings->linkedin_url ?? null)
+                        <a href="{{ $settings->linkedin_url }}" target="_blank" class="w-48 h-48 text-white rounded-circle flex-center transition-2" style="background-color: #0077B5;" onmouseover="this.style.backgroundColor='#005885'" onmouseout="this.style.backgroundColor='#0077B5'">
+                            <i class="ph-fill ph-linkedin-logo text-xl"></i>
+                        </a>
+                        @endif
+                        @if($settings->tiktok_url ?? null)
+                        <a href="{{ $settings->tiktok_url }}" target="_blank" class="w-48 h-48 text-white rounded-circle flex-center transition-2" style="background-color: #000000;" onmouseover="this.style.backgroundColor='#333333'" onmouseout="this.style.backgroundColor='#000000'">
+                            <i class="ph-fill ph-tiktok-logo text-xl"></i>
+                        </a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -168,11 +186,21 @@
                             <textarea id="message" name="message" rows="6" required class="form-control common-input px-16 py-12 border border-gray-100 rounded-8 focus-border-main-600" placeholder="Tell us how we can help you..."></textarea>
                         </div>
 
-                        <div class="d-flex align-items-start gap-12">
-                            <input type="checkbox" id="age_verification" name="age_verification" required class="mt-4">
-                            <label for="age_verification" class="text-sm text-gray-700 mb-0">
-                                I confirm that I am 18 years of age or older
-                            </label>
+                        <div>
+                            <label for="year_of_birth" class="form-label text-gray-900 fw-medium mb-8 d-block">Year of Birth *</label>
+                            <select id="year_of_birth"
+                                   name="year_of_birth"
+                                   required
+                                   class="form-select common-input border-gray-100 @error('year_of_birth') border-danger-500 @enderror">
+                                <option value="">Select Year of Birth</option>
+                                @for($year = date('Y') - 18; $year >= date('Y') - 100; $year--)
+                                    <option value="{{ $year }}" {{ old('year_of_birth') == $year ? 'selected' : '' }}>{{ $year }}</option>
+                                @endfor
+                            </select>
+                            <p class="text-xs text-gray-500 mt-8">You must be 18 years or older to contact us</p>
+                            @error('year_of_birth')
+                            <p class="text-danger-500 text-sm mt-8">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <button type="submit" class="btn btn-main rounded-pill w-100 d-inline-flex align-items-center justify-content-center gap-8">
@@ -192,36 +220,41 @@
             <div class="row gy-4">
                 <div class="col-lg-6" data-aos="fade-up" data-aos-duration="400">
                     <div class="product-card h-100 p-24 border border-gray-100 rounded-16 bg-white">
-                        <h4 class="text-lg fw-semibold text-heading mb-12">Do you ship nationwide?</h4>
+                        <h4 class="text-lg fw-semibold text-heading mb-12">Do you deliver everywhere in Kenya?</h4>
                         <p class="text-gray-600 mb-0">
-                            Yes, we ship to most states in the US. Some restrictions may apply based on local laws.
+                            We deliver within Nairobi same-day and countrywide through courier partners.
                         </p>
                     </div>
                 </div>
                 <div class="col-lg-6" data-aos="fade-up" data-aos-duration="600">
                     <div class="product-card h-100 p-24 border border-gray-100 rounded-16 bg-white">
-                        <h4 class="text-lg fw-semibold text-heading mb-12">What is your return policy?</h4>
+                        <h4 class="text-lg fw-semibold text-heading mb-12">What are your delivery charges?</h4>
                         <p class="text-gray-600 mb-0">
-                            We offer returns within 30 days of purchase, subject to our return policy terms.
+                            Delivery fees vary by location. Some Nairobi orders qualify for free delivery.
                         </p>
                     </div>
                 </div>
                 <div class="col-lg-6" data-aos="fade-up" data-aos-duration="800">
                     <div class="product-card h-100 p-24 border border-gray-100 rounded-16 bg-white">
-                        <h4 class="text-lg fw-semibold text-heading mb-12">Do you offer age verification?</h4>
+                        <h4 class="text-lg fw-semibold text-heading mb-12">What payment methods do you accept?</h4>
                         <p class="text-gray-600 mb-0">
-                            Yes, we require age verification for all alcohol purchases. You must be 18+ to order.
+                            We accept M-Pesa, cards, bank transfer, and cash on delivery (selected areas).
                         </p>
                     </div>
                 </div>
                 <div class="col-lg-6" data-aos="fade-up" data-aos-duration="1000">
                     <div class="product-card h-100 p-24 border border-gray-100 rounded-16 bg-white">
-                        <h4 class="text-lg fw-semibold text-heading mb-12">How long does shipping take?</h4>
+                        <h4 class="text-lg fw-semibold text-heading mb-12">Do I need to be 18+ to order?</h4>
                         <p class="text-gray-600 mb-0">
-                            Standard shipping takes 3-5 business days. Express shipping options are available.
+                            Yes. ID verification may be required upon delivery.
                         </p>
                     </div>
                 </div>
+            </div>
+            <div class="text-center mt-40">
+                <a href="{{ route('faq') }}" class="btn btn-outline-main rounded-pill px-48">
+                    View All FAQs <i class="ph ph-arrow-right ms-2"></i>
+                </a>
             </div>
         </div>
     </div>

@@ -183,7 +183,7 @@
                             <span class="text-xs fw-medium text-gray-500">{{ $product->category->name ?? 'Uncategorized' }}</span>
                         </div>
                         <h6 class="title text-lg fw-semibold mt-12 mb-8">
-                            <a href="{{ route('products.show', $product->slug) }}" class="link text-line-2 hover-text-main-600">{{ $product->name }} <span class="text-gray-500">({{ $product->quantity ?? 0 }})</span></a>
+                            <a href="{{ route('products.show', $product->slug) }}" class="link text-line-2 hover-text-main-600">{{ $product->name }}</a>
                         </h6>
                         @if($product->short_description)
                         <p class="text-gray-600 text-sm mb-12">
@@ -278,7 +278,7 @@
                             <span class="text-xs fw-medium text-gray-500">{{ $product->category->name ?? 'Uncategorized' }}</span>
                         </div>
                         <h6 class="title text-lg fw-semibold mt-12 mb-8">
-                            <a href="{{ route('products.show', $product->slug) }}" class="link text-line-2 hover-text-main-600">{{ $product->name }} <span class="text-gray-500">({{ $product->quantity ?? 0 }})</span></a>
+                            <a href="{{ route('products.show', $product->slug) }}" class="link text-line-2 hover-text-main-600">{{ $product->name }}</a>
                         </h6>
                         @if($product->short_description)
                         <p class="text-gray-600 text-sm mb-12">
@@ -341,61 +341,6 @@
     </div>
 </section>
 <!-- ============================ Featured Products Section End =============================== -->
-
-<!-- ============================ Newsletter Section Start =============================== -->
-<section class="newsletter py-80 bg-main-600">
-    <div class="container container-lg">
-        <div class="row align-items-center">
-            <div class="col-lg-6 mb-32 mb-lg-0" data-aos="fade-right" data-aos-duration="400">
-                <div class="d-flex align-items-center gap-16 mb-24">
-                    <div class="w-80 h-80 bg-white bg-opacity-20 rounded-circle flex-center flex-shrink-0">
-                        <i class="ph ph-envelope-simple text-4xl text-white"></i>
-                    </div>
-                    <div class="flex-1">
-                        <h2 class="text-heading-two text-white mb-8">Join Our Newsletter</h2>
-                        <p class="text-white text-lg mb-24">Get 10% off your first order</p>
-                        <div class="d-flex flex-column gap-16">
-                            <div class="d-flex align-items-center gap-12">
-                                <i class="ph ph-check-circle text-2xl text-white"></i>
-                                <span class="text-white">Exclusive deals and discounts</span>
-                            </div>
-                            <div class="d-flex align-items-center gap-12">
-                                <i class="ph ph-check-circle text-2xl text-white"></i>
-                                <span class="text-white">New product announcements</span>
-                            </div>
-                            <div class="d-flex align-items-center gap-12">
-                                <i class="ph ph-check-circle text-2xl text-white"></i>
-                                <span class="text-white">Premium spirits recommendations</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6" data-aos="fade-left" data-aos-duration="400">
-                <div class="bg-white rounded-24 p-40 box-shadow-lg">
-                    <h3 class="text-heading mb-16 text-center">Subscribe Now</h3>
-                    <p class="text-gray-600 text-center mb-32">
-                        Stay updated with our latest premium spirits and exclusive offers
-                    </p>
-                    <form action="#" method="POST" class="d-flex flex-column gap-16">
-                        @csrf
-                        <div class="position-relative">
-                            <i class="ph ph-envelope position-absolute start-0 top-50 translate-middle-y ms-24 text-gray-400 text-xl"></i>
-                            <input type="email" name="email" placeholder="Enter your email address" required class="form-control common-input ps-64 pe-24 py-16 rounded-pill border border-gray-200 focus-border-main-600 w-100" />
-                        </div>
-                        <button type="submit" class="btn btn-main rounded-pill w-100 py-16 fw-semibold d-flex align-items-center justify-content-center gap-8">
-                            <i class="ph ph-paper-plane-tilt"></i> Subscribe Now
-                        </button>
-                        <p class="text-sm text-gray-500 text-center mb-0">
-                            <i class="ph ph-lock-key"></i> We respect your privacy. Unsubscribe at any time.
-                        </p>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- ============================ Newsletter Section End =============================== -->
 
 <!-- ============================ Features Section Start =============================== -->
 <section class="features py-80 bg-white">

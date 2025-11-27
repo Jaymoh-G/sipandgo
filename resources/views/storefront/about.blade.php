@@ -116,56 +116,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Team Section -->
-        <div class="bg-gray-50 rounded-16 p-40">
-            <div class="section-heading text-center mb-56">
-                <h2 class="text-heading-two mb-16">Meet Our Team</h2>
-                <p class="text-gray-600">
-                    Our passionate team of spirits experts is dedicated to helping you discover your next favorite drink.
-                </p>
-            </div>
-            <div class="row gy-4">
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-duration="400">
-                    <div class="product-card h-100 p-32 bg-white rounded-16 text-center border border-gray-100 transition-2 hover-border-main-600">
-                        <div class="w-96 h-96 bg-main-50 rounded-circle flex-center mx-auto mb-24">
-                            <i class="ph ph-user text-5xl text-main-600"></i>
-                        </div>
-                        <h4 class="text-heading mb-8">James Smith</h4>
-                        <p class="text-main-600 fw-semibold mb-8">Store Manager</p>
-                        <p class="text-sm text-gray-500">
-                            15+ years in spirits retail
-                        </p>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-duration="600">
-                    <div class="product-card h-100 p-32 bg-white rounded-16 text-center border border-gray-100 transition-2 hover-border-main-600">
-                        <div class="w-96 h-96 bg-main-50 rounded-circle flex-center mx-auto mb-24">
-                            <i class="ph ph-user text-5xl text-main-600"></i>
-                        </div>
-                        <h4 class="text-heading mb-8">Sarah Johnson</h4>
-                        <p class="text-main-600 fw-semibold mb-8">Wine Specialist</p>
-                        <p class="text-sm text-gray-500">
-                            Certified sommelier
-                        </p>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-duration="800">
-                    <div class="product-card h-100 p-32 bg-white rounded-16 text-center border border-gray-100 transition-2 hover-border-main-600">
-                        <div class="w-96 h-96 bg-main-50 rounded-circle flex-center mx-auto mb-24">
-                            <i class="ph ph-user text-5xl text-main-600"></i>
-                        </div>
-                        <h4 class="text-heading mb-8">Mike Davis</h4>
-                        <p class="text-main-600 fw-semibold mb-8">Spirits Expert</p>
-                        <p class="text-sm text-gray-500">
-                            Whiskey connoisseur
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </section>
 <!-- ============================ About Section End =============================== -->

@@ -761,28 +761,6 @@
 // ========================= hot deals Slider Js End ===================
 
 
-// ========================= Copy Coupon Code Js Start ===================
-let copyCouponBtn = document.querySelector('.copy-coupon-btn');
-let copyText = document.querySelector('.copy-text');
-
-if(copyCouponBtn && copyText) {
-  copyText.style.display = 'none';
-
-  copyCouponBtn.addEventListener('click', function () {
-    let text = this.textContent;
-    navigator.clipboard.writeText(text);
-    this.classList.add('copied');
-    copyText.innerHTML = 'Copied';
-    copyText.style.display = 'inline-block';
-
-    setTimeout(() => {
-      this.classList.remove('copied');
-      copyText.style.display = 'none';
-    }, 2000);
-
-  });
-}
-// ========================= Copy Coupon Code Js End ===================
 
 
   // ========================= hot deals Slider Js Start ==============

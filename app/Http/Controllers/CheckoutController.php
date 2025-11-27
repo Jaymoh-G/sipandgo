@@ -62,7 +62,19 @@ class CheckoutController extends Controller
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|max:191',
             'phone' => 'nullable|string|max:255',
-            'date_of_birth' => 'required|date|before:today|before:-18 years',
+            'year_of_birth' => [
+                'required',
+                'integer',
+                'min:' . (date('Y') - 100),
+                'max:' . (date('Y') - 18),
+                function ($attribute, $value, $fail) {
+                    $currentYear = date('Y');
+                    $age = $currentYear - $value;
+                    if ($age < 18) {
+                        $fail('You must be 18 years or older to purchase alcohol products.');
+                    }
+                },
+            ],
 
             // Billing Address
             'billing_address_line_1' => 'required|string|max:255',
@@ -85,7 +97,6 @@ class CheckoutController extends Controller
 
             // Terms and Conditions
             'terms_accepted' => 'required|accepted',
-            'age_verified' => 'required|accepted',
         ]);
 
         try {
@@ -102,7 +113,7 @@ class CheckoutController extends Controller
                     'last_name' => $validated['last_name'],
                     'email' => $validated['email'],
                     'phone' => $validated['phone'] ?? null,
-                    'date_of_birth' => $validated['date_of_birth'],
+                    'date_of_birth' => $validated['year_of_birth'] . '-01-01', // Store as date with year only
                     'age_verified' => true,
                     'age_verified_at' => now(),
                     'password' => Hash::make(Str::random(16)), // Random password for guest checkout

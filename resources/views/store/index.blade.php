@@ -435,30 +435,6 @@
     </div>
 </section>
 
-<!-- Newsletter Section -->
-<section class="py-16 bg-gradient-to-r from-amber-600 to-amber-700 text-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 class="text-3xl font-bold mb-4">
-            Join Our Newsletter, Get 10% Off
-        </h2>
-        <p class="text-xl mb-8 text-amber-100">
-            Stay updated with our latest premium spirits and exclusive offers
-        </p>
-        <div class="max-w-md mx-auto flex">
-            <input
-                type="email"
-                placeholder="Enter your email address"
-                class="flex-1 px-4 py-3 rounded-l-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-300"
-            />
-            <button
-                class="bg-gray-900 hover:bg-gray-800 text-white px-6 py-3 rounded-r-lg font-semibold transition-colors"
-            >
-                Subscribe Now
-            </button>
-        </div>
-    </div>
-</section>
-
 <!-- Features Section -->
 <section class="py-16 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -94,60 +94,10 @@ premium spirits, wine, and craft beverages') @section('content')
                 </div>
             </div>
         </div>
-
-        <!-- Team Section -->
-        <div class="bg-gray-50 rounded-lg p-12 text-center">
-            <h2 class="text-3xl font-bold text-gray-900 mb-6">Meet Our Team</h2>
-            <p class="text-lg text-gray-600 mb-8">
-                Our passionate team of spirits experts is dedicated to helping
-                you discover your next favorite drink.
-            </p>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-white rounded-lg p-6 shadow-md">
-                    <div
-                        class="bg-gradient-to-br from-amber-100 to-amber-200 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4"
-                    >
-                        <i class="fas fa-user text-3xl text-amber-600"></i>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">
-                        James Smith
-                    </h3>
-                    <p class="text-gray-600 mb-2">Store Manager</p>
-                    <p class="text-sm text-gray-500">
-                        15+ years in spirits retail
-                    </p>
-                </div>
-
-                <div class="bg-white rounded-lg p-6 shadow-md">
-                    <div
-                        class="bg-gradient-to-br from-amber-100 to-amber-200 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4"
-                    >
-                        <i class="fas fa-user text-3xl text-amber-600"></i>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">
-                        Sarah Johnson
-                    </h3>
-                    <p class="text-gray-600 mb-2">Wine Specialist</p>
-                    <p class="text-sm text-gray-500">Certified sommelier</p>
-                </div>
-
-                <div class="bg-white rounded-lg p-6 shadow-md">
-                    <div
-                        class="bg-gradient-to-br from-amber-100 to-amber-200 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4"
-                    >
-                        <i class="fas fa-user text-3xl text-amber-600"></i>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">
-                        Mike Davis
-                    </h3>
-                    <p class="text-gray-600 mb-2">Spirits Expert</p>
-                    <p class="text-sm text-gray-500">Whiskey connoisseur</p>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 @endsection
+
 
 
 

@@ -2,9 +2,9 @@
 <div class="header-top bg-main-600 flex-between">
     <div class="container container-lg">
         <div class="flex-between flex-wrap gap-8">
-            <ul class="flex-align flex-wrap d-none d-xl-flex">
+            <ul class="flex-align flex-wrap">
                 @if($settings->email ?? null)
-                <li class="border-right-item pe-12 me-12">
+                <li class="border-right-item pe-12 me-12 d-none d-md-flex">
                     <a href="mailto:{{ $settings->email }}" class="text-white text-sm d-flex align-items-center gap-4 hover-text-decoration-underline">
                         <i class="ph ph-envelope text-md"></i>
                         <span class="">{{ $settings->email }}</span>
@@ -13,14 +13,14 @@
                 @endif
                 @if($settings->whatsapp_number ?? null)
                 <li class="border-right-item pe-12 me-12">
-                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings->whatsapp_number) }}" target="_blank" class="text-white text-sm d-flex align-items-center gap-4 hover-text-decoration-underline">
-                        <i class="ph ph-whatsapp-logo text-md"></i>
+                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings->whatsapp_number) }}" target="_blank" class="text-white text-sm d-flex align-items-center gap-4 hover-text-decoration-underline fw-semibold" style="color: #25D366 !important;">
+                        <i class="ph-fill ph-whatsapp-logo text-xl"></i>
                         <span class="">WhatsApp</span>
                     </a>
                 </li>
                 @endif
                 @if($settings->city ?? null || $settings->country ?? null)
-                <li class="border-right-item pe-12 me-12">
+                <li class="border-right-item pe-12 me-12 d-none d-lg-flex">
                     <a href="https://maps.google.com" target="_blank" class="text-white text-sm d-flex align-items-center gap-4 hover-text-decoration-underline">
                         <i class="ph ph-map-pin text-md"></i>
                         <span class="">{{ $settings->city ?? '' }}{{ $settings->city && $settings->country ? ', ' : '' }}{{ $settings->country ?? '' }}</span>
@@ -67,10 +67,14 @@
                 <!-- Nav Menu Start -->
                 <ul class="nav-menu flex-align" style="gap: 24px;">
                     <li class="nav-menu__item">
-                        <a href="{{ route('home') }}" class="nav-menu__link text-heading-two {{ request()->routeIs('home') ? 'activePage' : '' }}">Home</a>
+                        <a href="{{ route('home') }}" class="nav-menu__link text-heading-two {{ request()->routeIs('home') ? 'activePage' : '' }}" style="padding: 16px 16px; font-weight: 600; letter-spacing: 0.3px; transition: all 0.3s ease;">
+                            <i class="ph ph-house me-2" style="font-size: 18px;"></i>Home
+                        </a>
                     </li>
                     <li class="on-hover-item nav-menu__item has-submenu {{ request()->routeIs('products.index') || request()->routeIs('categories.index') ? 'activePage' : '' }}">
-                        <a href="{{ route('products.index') }}" class="nav-menu__link text-heading-two">Shop</a>
+                        <a href="{{ route('products.index') }}" class="nav-menu__link text-heading-two" style="padding: 16px 16px; font-weight: 600; letter-spacing: 0.3px; transition: all 0.3s ease;">
+                            <i class="ph ph-shopping-bag me-2" style="font-size: 18px;"></i>Shop
+                        </a>
                         <ul class="on-hover-dropdown common-dropdown nav-submenu scroll-sm">
                             <li class="common-dropdown__item nav-submenu__item {{ request()->routeIs('products.index') ? 'activePage' : '' }}">
                                 <a href="{{ route('products.index') }}" class="common-dropdown__link nav-submenu__link text-heading-two hover-bg-neutral-100">All Products</a>

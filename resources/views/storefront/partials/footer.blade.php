@@ -15,32 +15,32 @@
                 <p class="mb-24 text-gray-300">{{ $settings->site_description ?? 'Sip & Go become the largest premium spirits, wine, and craft beverages retailer. We offer an extensive collection of the world\'s finest liquors with exceptional service.' }}</p>
                 <div class="flex-align gap-16">
                     @if($settings->facebook_url ?? null)
-                    <a href="{{ $settings->facebook_url }}" target="_blank" class="w-44 h-44 flex-center bg-main-two-50 text-main-two-600 text-xl rounded-8 hover-bg-main-two-600 hover-text-white">
+                    <a href="{{ $settings->facebook_url }}" target="_blank" class="w-44 h-44 flex-center text-white text-xl rounded-8 transition-2" style="background-color: #1877F2;" onmouseover="this.style.backgroundColor='#166FE5'" onmouseout="this.style.backgroundColor='#1877F2'">
                         <i class="ph-fill ph-facebook-logo"></i>
                     </a>
                     @endif
                     @if($settings->twitter_url ?? null)
-                    <a href="{{ $settings->twitter_url }}" target="_blank" class="w-44 h-44 flex-center bg-main-two-50 text-main-two-600 text-xl rounded-8 hover-bg-main-two-600 hover-text-white">
+                    <a href="{{ $settings->twitter_url }}" target="_blank" class="w-44 h-44 flex-center text-white text-xl rounded-8 transition-2" style="background-color: #000000;" onmouseover="this.style.backgroundColor='#1DA1F2'" onmouseout="this.style.backgroundColor='#000000'">
                         <i class="ph-fill ph-twitter-logo"></i>
                     </a>
                     @endif
                     @if($settings->instagram_url ?? null)
-                    <a href="{{ $settings->instagram_url }}" target="_blank" class="w-44 h-44 flex-center bg-main-two-50 text-main-two-600 text-xl rounded-8 hover-bg-main-two-600 hover-text-white">
+                    <a href="{{ $settings->instagram_url }}" target="_blank" class="w-44 h-44 flex-center text-white text-xl rounded-8 transition-2" style="background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
                         <i class="ph-fill ph-instagram-logo"></i>
                     </a>
                     @endif
                     @if($settings->linkedin_url ?? null)
-                    <a href="{{ $settings->linkedin_url }}" target="_blank" class="w-44 h-44 flex-center bg-main-two-50 text-main-two-600 text-xl rounded-8 hover-bg-main-two-600 hover-text-white">
+                    <a href="{{ $settings->linkedin_url }}" target="_blank" class="w-44 h-44 flex-center text-white text-xl rounded-8 transition-2" style="background-color: #0077B5;" onmouseover="this.style.backgroundColor='#005885'" onmouseout="this.style.backgroundColor='#0077B5'">
                         <i class="ph-fill ph-linkedin-logo"></i>
                     </a>
                     @endif
                     @if($settings->youtube_url ?? null)
-                    <a href="{{ $settings->youtube_url }}" target="_blank" class="w-44 h-44 flex-center bg-main-two-50 text-main-two-600 text-xl rounded-8 hover-bg-main-two-600 hover-text-white">
+                    <a href="{{ $settings->youtube_url }}" target="_blank" class="w-44 h-44 flex-center text-white text-xl rounded-8 transition-2" style="background-color: #FF0000;" onmouseover="this.style.backgroundColor='#CC0000'" onmouseout="this.style.backgroundColor='#FF0000'">
                         <i class="ph-fill ph-youtube-logo"></i>
                     </a>
                     @endif
                     @if($settings->tiktok_url ?? null)
-                    <a href="{{ $settings->tiktok_url }}" target="_blank" class="w-44 h-44 flex-center bg-main-two-50 text-main-two-600 text-xl rounded-8 hover-bg-main-two-600 hover-text-white">
+                    <a href="{{ $settings->tiktok_url }}" target="_blank" class="w-44 h-44 flex-center text-white text-xl rounded-8 transition-2" style="background-color: #000000;" onmouseover="this.style.backgroundColor='#333333'" onmouseout="this.style.backgroundColor='#000000'">
                         <i class="ph-fill ph-tiktok-logo"></i>
                     </a>
                     @endif
@@ -70,6 +70,9 @@
                 <ul class="footer-menu">
                     <li class="mb-16">
                         <a href="{{ route('contact') }}" class="text-gray-300 hover-text-main-600">Contact Us</a>
+                    </li>
+                    <li class="mb-16">
+                        <a href="{{ route('faq') }}" class="text-gray-300 hover-text-main-600">FAQs</a>
                     </li>
                     <li class="mb-16">
                         <a href="{{ route('order.tracking') }}" class="text-gray-300 hover-text-main-600">Track Your Order</a>

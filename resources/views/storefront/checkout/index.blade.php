@@ -38,10 +38,6 @@
         </div>
         @endif
 
-        <div class="border border-gray-100 rounded-8 px-30 py-20 mb-40">
-            <span class="">Have a coupon? <a href="{{ route('cart.index') }}" class="fw-semibold text-gray-900 hover-text-decoration-underline hover-text-main-600">Click here to enter your code</a> </span>
-        </div>
-
         <form action="{{ route('checkout.store') }}" method="POST" id="checkout-form">
             @csrf
             <div class="row">
@@ -96,16 +92,18 @@
                                 @enderror
                             </div>
                             <div class="col-12">
-                                <input type="date"
-                                       id="date_of_birth"
-                                       name="date_of_birth"
-                                       value="{{ old('date_of_birth') }}"
+                                <label for="year_of_birth" class="form-label text-gray-900 fw-medium mb-8 d-block">Year of Birth *</label>
+                                <select id="year_of_birth"
+                                       name="year_of_birth"
                                        required
-                                       max="{{ date('Y-m-d', strtotime('-18 years')) }}"
-                                       class="common-input border-gray-100 @error('date_of_birth') border-danger-500 @enderror"
-                                       placeholder="Date of Birth *">
-                                <p class="text-xs text-gray-500 mt-8">Must be 18+ to purchase alcohol</p>
-                                @error('date_of_birth')
+                                       class="form-select common-input border-gray-100 @error('year_of_birth') border-danger-500 @enderror">
+                                    <option value="">Select Year of Birth</option>
+                                    @for($year = date('Y') - 18; $year >= date('Y') - 100; $year--)
+                                        <option value="{{ $year }}" {{ old('year_of_birth') == $year ? 'selected' : '' }}>{{ $year }}</option>
+                                    @endfor
+                                </select>
+                                <p class="text-xs text-gray-500 mt-8">You must be 18 years or older to purchase alcohol</p>
+                                @error('year_of_birth')
                                 <p class="text-danger-500 text-sm mt-8">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -360,17 +358,6 @@
                                     </label>
                                 </div>
                                 @error('terms_accepted')
-                                <p class="text-danger-500 text-sm mt-8">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div class="mb-0">
-                                <div class="form-check common-check">
-                                    <input class="form-check-input" type="checkbox" id="age_verified" name="age_verified" value="1" required {{ old('age_verified') ? 'checked' : '' }}>
-                                    <label class="form-check-label text-gray-500 text-sm" for="age_verified">
-                                        I confirm that I am 18 years of age or older and that I am legally allowed to purchase alcohol products *
-                                    </label>
-                                </div>
-                                @error('age_verified')
                                 <p class="text-danger-500 text-sm mt-8">{{ $message }}</p>
                                 @enderror
                             </div>

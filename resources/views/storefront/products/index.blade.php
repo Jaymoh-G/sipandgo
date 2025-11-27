@@ -138,7 +138,7 @@
                                 </a>
                                 <div class="product-card__content mt-16">
                                     <h6 class="title text-lg fw-semibold mt-12 mb-8">
-                                        <a href="{{ route('products.show', $product->slug) }}" class="link text-line-2 hover-text-main-600">{{ $product->name }} <span class="text-gray-500">({{ $product->quantity ?? 0 }})</span></a>
+                                        <a href="{{ route('products.show', $product->slug) }}" class="link text-line-2 hover-text-main-600">{{ $product->name }}</a>
                                     </h6>
                                     <div class="flex-align mb-12 gap-6">
                                         <span class="text-xs fw-medium text-gray-500">{{ $product->category->name ?? 'Uncategorized' }}</span>

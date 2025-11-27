@@ -48,6 +48,122 @@
             --accent-l: 40% !important;
             --accent: var(--accent-h) var(--accent-s) var(--accent-l) !important;
         }
+
+        /* Enhanced Menu Items Styling */
+        .nav-menu__item:first-child .nav-menu__link,
+        .nav-menu__item:nth-child(2) .nav-menu__link {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .nav-menu__item:first-child .nav-menu__link:hover,
+        .nav-menu__item:nth-child(2) .nav-menu__link:hover {
+            background-color: rgba(225, 167, 67, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .nav-menu__item.activePage .nav-menu__link {
+            background-color: rgba(225, 167, 67, 0.15);
+            color: hsl(var(--main)) !important;
+        }
+
+        .nav-menu__item.activePage .nav-menu__link i {
+            color: hsl(var(--main)) !important;
+        }
+
+        /* Floating WhatsApp Button */
+        .whatsapp-float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 20px;
+            left: 20px;
+            background-color: #25D366;
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            animation: pulse 2s infinite;
+        }
+
+        .whatsapp-float:hover {
+            background-color: #20BA5A;
+            transform: scale(1.1);
+            box-shadow: 2px 2px 20px rgba(37, 211, 102, 0.5);
+        }
+
+        .whatsapp-float i {
+            font-size: 32px;
+        }
+
+        .whatsapp-tooltip {
+            position: absolute;
+            left: 70px;
+            background-color: #333;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .whatsapp-tooltip::before {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-width: 5px 5px 5px 0;
+            border-style: solid;
+            border-color: transparent #333 transparent transparent;
+        }
+
+        .whatsapp-float:hover .whatsapp-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(37, 211, 102, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .whatsapp-float {
+                width: 56px;
+                height: 56px;
+                bottom: 15px;
+                left: 15px;
+            }
+
+            .whatsapp-float i {
+                font-size: 28px;
+            }
+
+            .whatsapp-tooltip {
+                display: none;
+            }
+        }
     </style>
 
     @stack('styles')
@@ -94,6 +210,14 @@
 </main>
 
 @include('storefront.partials.footer')
+
+<!-- Floating WhatsApp Button -->
+@if($settings->whatsapp_number ?? null)
+<a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings->whatsapp_number) }}" target="_blank" class="whatsapp-float" title="Chat on WhatsApp">
+    <i class="ph-fill ph-whatsapp-logo"></i>
+    <span class="whatsapp-tooltip">Chat with us</span>
+</a>
+@endif
 
 @include('storefront.partials.scripts')
 

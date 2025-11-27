@@ -145,10 +145,6 @@
                     </div>
 
                     <div class="flex-between flex-wrap gap-16 mt-32">
-                        <div class="flex-align gap-16">
-                            <input type="text" class="common-input" placeholder="Coupon Code">
-                            <button type="submit" class="btn btn-main py-18 w-100 rounded-8">Apply Coupon</button>
-                        </div>
                         <a href="{{ route('products.index') }}" class="text-lg text-gray-500 hover-text-main-600 d-flex align-items-center gap-8">
                             <i class="ph ph-arrow-left"></i> Continue Shopping
                         </a>

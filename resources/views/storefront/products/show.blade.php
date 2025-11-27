@@ -63,35 +63,20 @@
                                 @endif
                                 @if($product->images && is_array($product->images))
                                     @foreach(array_slice($product->images, 0, 4) as $image)
-                                    <div class="">
-                                        <div class="product-details__thumb flex-center h-100">
-                                            <img src="{{ is_string($image) ? $image : ($image['url'] ?? asset('assets/images/thumbs/product-img1.png')) }}" alt="{{ $product->name }}">
+                                        @php
+                                            $imageUrl = is_string($image) ? trim($image) : ($image['url'] ?? null);
+                                        @endphp
+                                        @if(!empty($imageUrl))
+                                        <div class="">
+                                            <div class="product-details__thumb flex-center h-100">
+                                                <img src="{{ $imageUrl }}" alt="{{ $product->name }}">
+                                            </div>
                                         </div>
-                                    </div>
+                                        @endif
                                     @endforeach
                                 @endif
                             </div>
 
-                            <div class="mt-24">
-                                <div class="product-details__images-slider">
-                                    @if($product->primary_image_url)
-                                    <div>
-                                        <div class="max-w-120 max-h-120 h-100 flex-center border border-gray-100 rounded-16 p-8">
-                                            <img src="{{ $product->primary_image_url }}" alt="{{ $product->name }}">
-                                        </div>
-                                    </div>
-                                    @endif
-                                    @if($product->images && is_array($product->images))
-                                        @foreach(array_slice($product->images, 0, 4) as $image)
-                                        <div>
-                                            <div class="max-w-120 max-h-120 h-100 flex-center border border-gray-100 rounded-16 p-8">
-                                                <img src="{{ is_string($image) ? $image : ($image['url'] ?? asset('assets/images/thumbs/product-img1.png')) }}" alt="{{ $product->name }}">
-                                            </div>
-                                        </div>
-                                        @endforeach
-                                    @endif
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <div class="col-xl-6">
@@ -121,23 +106,6 @@
                                 </div>
                             </div>
                             <span class="mt-32 pt-32 text-gray-700 border-top border-gray-100 d-block"></span>
-
-                            @if($product->is_on_sale)
-                            <div class="flex-align flex-wrap gap-16 bg-color-one rounded-8 py-16 px-24">
-                                <div class="flex-align gap-16">
-                                    <span class="text-main-600 text-sm">Special Offer:</span>
-                                </div>
-                                <div class="countdown" id="countdown11">
-                                    <ul class="countdown-list flex-align flex-wrap">
-                                        <li class="countdown-list__item text-heading flex-align gap-4 text-xs fw-medium w-28 h-28 rounded-4 border border-main-600 p-0 flex-center"><span class="days"></span></li>
-                                        <li class="countdown-list__item text-heading flex-align gap-4 text-xs fw-medium w-28 h-28 rounded-4 border border-main-600 p-0 flex-center"><span class="hours"></span></li>
-                                        <li class="countdown-list__item text-heading flex-align gap-4 text-xs fw-medium w-28 h-28 rounded-4 border border-main-600 p-0 flex-center"><span class="minutes"></span></li>
-                                        <li class="countdown-list__item text-heading flex-align gap-4 text-xs fw-medium w-28 h-28 rounded-4 border border-main-600 p-0 flex-center"><span class="seconds"></span></li>
-                                    </ul>
-                                </div>
-                                <span class="text-gray-900 text-xs">Remains untill the end of the offer</span>
-                            </div>
-                            @endif
 
                             @if($product->track_inventory && ($product->quantity ?? 0) > 0 && ($product->quantity ?? 0) < 50)
                             <div class="mb-24">
@@ -211,85 +179,6 @@
 
                             <span class="mt-32 pt-32 text-gray-700 border-top border-gray-100 d-block"></span>
 
-                            @if($product->is_on_sale)
-                            <div class="flex-between gap-16 p-12 border border-main-two-600 border-dashed rounded-8 mb-16">
-                                <div class="flex-align gap-12">
-                                    <button type="button" class="w-18 h-18 flex-center border border-gray-900 text-xs rounded-circle hover-bg-gray-100">
-                                        <i class="ph ph-plus"></i>
-                                    </button>
-                                    <span class="text-gray-900 fw-medium text-xs">Special Offer: {{ $product->discount_percentage }}% OFF</span>
-                                </div>
-                                <a href="{{ route('shop') }}" class="text-xs fw-semibold text-main-two-600 text-decoration-underline hover-text-main-two-700">View Details</a>
-                            </div>
-                            @endif
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="product-details__sidebar border border-gray-100 rounded-16 overflow-hidden">
-                    <div class="p-24">
-                        <div class="flex-between bg-main-600 rounded-pill p-8">
-                            <div class="flex-align gap-8">
-                                <span class="w-44 h-44 bg-white rounded-circle flex-center text-2xl"><i class="ph ph-storefront"></i></span>
-                                <span class="text-white">by Sip & Go</span>
-                            </div>
-                            <a href="{{ route('shop') }}" class="btn btn-white rounded-pill text-uppercase">View Store</a>
-                        </div>
-                    </div>
-                    <div class="p-24 bg-color-one d-flex align-items-start gap-24 border-bottom border-gray-100">
-                        <span class="w-44 h-44 bg-white text-main-600 rounded-circle flex-center text-2xl flex-shrink-0">
-                            <i class="ph-fill ph-truck"></i>
-                        </span>
-                        <div class="">
-                            <h6 class="text-sm mb-8">Fast Delivery</h6>
-                            <p class="text-gray-700">Lightning-fast shipping, guaranteed.</p>
-                        </div>
-                    </div>
-                    <div class="p-24 bg-color-one d-flex align-items-start gap-24 border-bottom border-gray-100">
-                        <span class="w-44 h-44 bg-white text-main-600 rounded-circle flex-center text-2xl flex-shrink-0">
-                            <i class="ph-fill ph-arrow-u-up-left"></i>
-                        </span>
-                        <div class="">
-                            <h6 class="text-sm mb-8">Free 90-day returns</h6>
-                            <p class="text-gray-700">Shop risk-free with easy returns.</p>
-                        </div>
-                    </div>
-                    <div class="p-24 bg-color-one d-flex align-items-start gap-24 border-bottom border-gray-100">
-                        <span class="w-44 h-44 bg-white text-main-600 rounded-circle flex-center text-2xl flex-shrink-0">
-                            <i class="ph-fill ph-check-circle"></i>
-                        </span>
-                        <div class="">
-                            <h6 class="text-sm mb-8">Pickup available at Shop location</h6>
-                            <p class="text-gray-700">Usually ready in 24 hours</p>
-                        </div>
-                    </div>
-                    <div class="p-24 bg-color-one d-flex align-items-start gap-24 border-bottom border-gray-100">
-                        <span class="w-44 h-44 bg-white text-main-600 rounded-circle flex-center text-2xl flex-shrink-0">
-                            <i class="ph-fill ph-credit-card"></i>
-                        </span>
-                        <div class="">
-                            <h6 class="text-sm mb-8">Payment</h6>
-                            <p class="text-gray-700">Payment upon receipt of goods, Payment by card in the department, Google Pay, Online card.</p>
-                        </div>
-                    </div>
-                    <div class="p-24 bg-color-one d-flex align-items-start gap-24 border-bottom border-gray-100">
-                        <span class="w-44 h-44 bg-white text-main-600 rounded-circle flex-center text-2xl flex-shrink-0">
-                            <i class="ph-fill ph-check-circle"></i>
-                        </span>
-                        <div class="">
-                            <h6 class="text-sm mb-8">Warranty</h6>
-                            <p class="text-gray-700">The Consumer Protection Act does not provide for the return of this product of proper quality.</p>
-                        </div>
-                    </div>
-                    <div class="p-24 bg-color-one d-flex align-items-start gap-24 border-bottom border-gray-100">
-                        <span class="w-44 h-44 bg-white text-main-600 rounded-circle flex-center text-2xl flex-shrink-0">
-                            <i class="ph-fill ph-package"></i>
-                        </span>
-                        <div class="">
-                            <h6 class="text-sm mb-8">Packaging</h6>
-                            <p class="text-gray-700">Research & development value proposition graphical user interface investor.</p>
                         </div>
                     </div>
                 </div>
@@ -443,9 +332,6 @@
             @foreach($relatedProducts as $relatedProduct)
             <div>
                 <div class="product-card h-100 p-8 border border-gray-100 hover-border-main-600 rounded-16 position-relative transition-2">
-                    @if($relatedProduct->is_on_sale)
-                    <span class="product-card__badge bg-danger-600 px-8 py-4 text-sm text-white">Sale {{ $relatedProduct->discount_percentage }}% </span>
-                    @endif
                     <a href="{{ route('products.show', $relatedProduct->slug) }}" class="product-card__thumb flex-center overflow-hidden">
                         @if($relatedProduct->primary_image_url)
                             <img src="{{ $relatedProduct->primary_image_url }}" alt="{{ $relatedProduct->name }}">

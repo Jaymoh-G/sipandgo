@@ -68,13 +68,7 @@
                     class="h-64 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center relative"
                 >
                     <i class="fas fa-wine-bottle text-6xl text-gray-400"></i>
-                    @if($product->is_on_sale)
-                    <div
-                        class="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-sm font-semibold"
-                    >
-                        {{ $product->discount_percentage }}% OFF
-                    </div>
-                    @endif
+
                 </div>
                 <div class="p-6">
                     <div class="text-sm text-gray-500 mb-1">

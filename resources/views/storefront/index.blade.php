@@ -160,16 +160,7 @@
             <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-duration="400">
                 <div class="product-card h-100 p-16 border border-gray-100 hover-border-main-600 rounded-16 position-relative transition-2 bg-white">
                     <a href="{{ route('products.show', $product->slug) }}" class="product-card__thumb flex-center rounded-8 bg-gray-50 position-relative overflow-hidden">
-                        @if($product->is_on_sale)
-                        <span class="product-card__badge bg-main-600 px-8 py-4 text-sm text-white position-absolute inset-inline-start-0 inset-block-start-0 z-1">
-                            {{ $product->discount_percentage }}% OFF
-                        </span>
-                        @endif
-                        @if($product->is_featured)
-                        <span class="product-card__badge bg-success-600 px-8 py-4 text-sm text-white position-absolute inset-inline-end-0 inset-block-start-0 z-1">
-                            Best Seller
-                        </span>
-                        @endif
+
                         @if($product->primary_image_url)
                             <img src="{{ $product->primary_image_url }}" alt="{{ $product->name }}" class="w-100 h-100 object-fit-cover">
                         @else
@@ -260,11 +251,6 @@
             <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-duration="400">
                 <div class="product-card h-100 p-16 border border-gray-100 hover-border-main-600 rounded-16 position-relative transition-2 d-flex flex-column">
                     <a href="{{ route('products.show', $product->slug) }}" class="product-card__thumb flex-center rounded-8 bg-gray-50 position-relative overflow-hidden mb-16" style="height: 250px; width: 100%;">
-                        @if($product->is_on_sale)
-                        <span class="product-card__badge bg-main-600 px-8 py-4 text-sm text-white position-absolute inset-inline-start-0 inset-block-start-0 z-1">
-                            {{ $product->discount_percentage }}% OFF
-                        </span>
-                        @endif
                         @if($product->primary_image_url)
                             <img src="{{ $product->primary_image_url }}" alt="{{ $product->name }}" class="w-100 h-100 object-fit-cover">
                         @else

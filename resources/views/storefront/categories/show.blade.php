@@ -107,9 +107,6 @@
                     @foreach($products as $product)
                     <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-duration="400">
                         <div class="product-card h-100 p-8 border border-gray-100 hover-border-main-600 rounded-16 position-relative transition-2">
-                            @if($product->is_on_sale)
-                            <span class="product-card__badge bg-danger-600 px-8 py-4 text-sm text-white">Sale {{ $product->discount_percentage }}%</span>
-                            @endif
                             <a href="{{ route('products.show', $product->slug) }}" class="product-card__thumb flex-center overflow-hidden rounded-16 mb-16">
                                 @if($product->primary_image_url)
                                     <img src="{{ $product->primary_image_url }}" alt="{{ $product->name }}">

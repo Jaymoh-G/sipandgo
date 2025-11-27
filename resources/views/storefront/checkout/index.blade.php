@@ -38,334 +38,100 @@
         </div>
         @endif
 
+        @if(session('success'))
+        <div class="alert alert-success mb-32 bg-success-50 border border-success-200 text-success-800 px-24 py-16 rounded-8">
+            <i class="ph ph-check-circle me-8"></i>{{ session('success') }}
+        </div>
+        @endif
+
         <form action="{{ route('checkout.store') }}" method="POST" id="checkout-form">
             @csrf
-            <div class="row">
-                <div class="col-xl-9 col-lg-8">
-                    <div class="pe-xl-5">
-                        <div class="row gy-3">
-                            <div class="col-sm-6 col-xs-6">
-                                <input type="text"
-                                       id="first_name"
-                                       name="first_name"
-                                       value="{{ old('first_name') }}"
-                                       required
-                                       class="common-input border-gray-100 @error('first_name') border-danger-500 @enderror"
-                                       placeholder="First Name *">
-                                @error('first_name')
-                                <p class="text-danger-500 text-sm mt-8">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div class="col-sm-6 col-xs-6">
-                                <input type="text"
-                                       id="last_name"
-                                       name="last_name"
-                                       value="{{ old('last_name') }}"
-                                       required
-                                       class="common-input border-gray-100 @error('last_name') border-danger-500 @enderror"
-                                       placeholder="Last Name *">
-                                @error('last_name')
-                                <p class="text-danger-500 text-sm mt-8">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div class="col-12">
-                                <input type="email"
-                                       id="email"
-                                       name="email"
-                                       value="{{ old('email') }}"
-                                       required
-                                       class="common-input border-gray-100 @error('email') border-danger-500 @enderror"
-                                       placeholder="Email Address *">
-                                @error('email')
-                                <p class="text-danger-500 text-sm mt-8">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div class="col-12">
-                                <input type="tel"
-                                       id="phone"
-                                       name="phone"
-                                       value="{{ old('phone') }}"
-                                       class="common-input border-gray-100 @error('phone') border-danger-500 @enderror"
-                                       placeholder="Phone">
-                                @error('phone')
-                                <p class="text-danger-500 text-sm mt-8">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div class="col-12">
-                                <label for="year_of_birth" class="form-label text-gray-900 fw-medium mb-8 d-block">Year of Birth *</label>
-                                <select id="year_of_birth"
-                                       name="year_of_birth"
-                                       required
-                                       class="form-select common-input border-gray-100 @error('year_of_birth') border-danger-500 @enderror">
-                                    <option value="">Select Year of Birth</option>
-                                    @for($year = date('Y') - 18; $year >= date('Y') - 100; $year--)
-                                        <option value="{{ $year }}" {{ old('year_of_birth') == $year ? 'selected' : '' }}>{{ $year }}</option>
-                                    @endfor
-                                </select>
-                                <p class="text-xs text-gray-500 mt-8">You must be 18 years or older to purchase alcohol</p>
-                                @error('year_of_birth')
-                                <p class="text-danger-500 text-sm mt-8">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div class="col-12">
-                                <input type="text"
-                                       id="billing_country"
-                                       name="billing_country"
-                                       value="{{ old('billing_country', 'Kenya') }}"
-                                       required
-                                       class="common-input border-gray-100 @error('billing_country') border-danger-500 @enderror"
-                                       placeholder="Country *">
-                                @error('billing_country')
-                                <p class="text-danger-500 text-sm mt-8">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div class="col-12">
-                                <input type="text"
-                                       id="billing_address_line_1"
-                                       name="billing_address_line_1"
-                                       value="{{ old('billing_address_line_1') }}"
-                                       required
-                                       class="common-input border-gray-100 @error('billing_address_line_1') border-danger-500 @enderror"
-                                       placeholder="House number and street name *">
-                                @error('billing_address_line_1')
-                                <p class="text-danger-500 text-sm mt-8">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div class="col-12">
-                                <input type="text"
-                                       id="billing_address_line_2"
-                                       name="billing_address_line_2"
-                                       value="{{ old('billing_address_line_2') }}"
-                                       class="common-input border-gray-100 @error('billing_address_line_2') border-danger-500 @enderror"
-                                       placeholder="Apartment, suite, unit, etc. (Optional)">
-                                @error('billing_address_line_2')
-                                <p class="text-danger-500 text-sm mt-8">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div class="col-12">
-                                <input type="text"
-                                       id="billing_city"
-                                       name="billing_city"
-                                       value="{{ old('billing_city') }}"
-                                       required
-                                       class="common-input border-gray-100 @error('billing_city') border-danger-500 @enderror"
-                                       placeholder="City *">
-                                @error('billing_city')
-                                <p class="text-danger-500 text-sm mt-8">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div class="col-12">
-                                <input type="text"
-                                       id="billing_state"
-                                       name="billing_state"
-                                       value="{{ old('billing_state') }}"
-                                       required
-                                       class="common-input border-gray-100 @error('billing_state') border-danger-500 @enderror"
-                                       placeholder="State/County *">
-                                @error('billing_state')
-                                <p class="text-danger-500 text-sm mt-8">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div class="col-12">
-                                <input type="text"
-                                       id="billing_postal_code"
-                                       name="billing_postal_code"
-                                       value="{{ old('billing_postal_code') }}"
-                                       required
-                                       class="common-input border-gray-100 @error('billing_postal_code') border-danger-500 @enderror"
-                                       placeholder="Post Code *">
-                                @error('billing_postal_code')
-                                <p class="text-danger-500 text-sm mt-8">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div class="col-12">
-                                <div class="my-40">
-                                    <h6 class="text-lg mb-24">Shipping Address</h6>
-                                    <div class="row gy-3">
-                                        <div class="col-12">
-                                            <input type="text"
-                                                   id="shipping_address_line_1"
-                                                   name="shipping_address_line_1"
-                                                   value="{{ old('shipping_address_line_1') }}"
-                                                   required
-                                                   class="common-input border-gray-100 @error('shipping_address_line_1') border-danger-500 @enderror"
-                                                   placeholder="House number and street name *">
-                                            @error('shipping_address_line_1')
-                                            <p class="text-danger-500 text-sm mt-8">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                        <div class="col-12">
-                                            <input type="text"
-                                                   id="shipping_address_line_2"
-                                                   name="shipping_address_line_2"
-                                                   value="{{ old('shipping_address_line_2') }}"
-                                                   class="common-input border-gray-100 @error('shipping_address_line_2') border-danger-500 @enderror"
-                                                   placeholder="Apartment, suite, unit, etc. (Optional)">
-                                            @error('shipping_address_line_2')
-                                            <p class="text-danger-500 text-sm mt-8">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                        <div class="col-12">
-                                            <input type="text"
-                                                   id="shipping_city"
-                                                   name="shipping_city"
-                                                   value="{{ old('shipping_city') }}"
-                                                   required
-                                                   class="common-input border-gray-100 @error('shipping_city') border-danger-500 @enderror"
-                                                   placeholder="City *">
-                                            @error('shipping_city')
-                                            <p class="text-danger-500 text-sm mt-8">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                        <div class="col-12">
-                                            <input type="text"
-                                                   id="shipping_state"
-                                                   name="shipping_state"
-                                                   value="{{ old('shipping_state') }}"
-                                                   required
-                                                   class="common-input border-gray-100 @error('shipping_state') border-danger-500 @enderror"
-                                                   placeholder="State/County *">
-                                            @error('shipping_state')
-                                            <p class="text-danger-500 text-sm mt-8">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                        <div class="col-12">
-                                            <input type="text"
-                                                   id="shipping_postal_code"
-                                                   name="shipping_postal_code"
-                                                   value="{{ old('shipping_postal_code') }}"
-                                                   required
-                                                   class="common-input border-gray-100 @error('shipping_postal_code') border-danger-500 @enderror"
-                                                   placeholder="Post Code *">
-                                            @error('shipping_postal_code')
-                                            <p class="text-danger-500 text-sm mt-8">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                        <div class="col-12">
-                                            <input type="text"
-                                                   id="shipping_country"
-                                                   name="shipping_country"
-                                                   value="{{ old('shipping_country', 'Kenya') }}"
-                                                   required
-                                                   class="common-input border-gray-100 @error('shipping_country') border-danger-500 @enderror"
-                                                   placeholder="Country *">
-                                            @error('shipping_country')
-                                            <p class="text-danger-500 text-sm mt-8">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-12">
-                                <div class="my-40">
-                                    <h6 class="text-lg mb-24">Additional Information</h6>
-                                    <input type="text"
-                                           id="order_notes"
-                                           name="order_notes"
-                                           value="{{ old('order_notes') }}"
-                                           class="common-input border-gray-100"
-                                           placeholder="Notes about your order, e.g. special notes for delivery.">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-4">
-                    <div class="checkout-sidebar">
-                        <div class="bg-color-three rounded-8 p-24 text-center">
-                            <span class="text-gray-900 text-xl fw-semibold">Your Orders</span>
-                        </div>
-
-                        <div class="border border-gray-100 rounded-8 px-24 py-40 mt-24">
-                            <div class="mb-32 pb-32 border-bottom border-gray-100 flex-between gap-8">
-                                <span class="text-gray-900 fw-medium text-xl font-heading-two">Product</span>
-                                <span class="text-gray-900 fw-medium text-xl font-heading-two">Subtotal</span>
-                            </div>
-
-                            @foreach($items as $item)
-                            <div class="flex-between gap-24 mb-32">
-                                <div class="flex-align gap-12">
-                                    <span class="text-gray-900 fw-normal text-md font-heading-two w-144 text-line-2">{{ $item['product']->name }}</span>
-                                    <span class="text-gray-900 fw-normal text-md font-heading-two"><i class="ph-bold ph-x"></i></span>
-                                    <span class="text-gray-900 fw-semibold text-md font-heading-two">{{ $item['quantity'] }}</span>
-                                </div>
-                                <span class="text-gray-900 fw-bold text-md font-heading-two">Ksh {{ number_format($item['total'], 2) }}</span>
-                            </div>
-                            @endforeach
-
-                            <div class="border-top border-gray-100 pt-30 mt-30">
-                                <div class="mb-32 flex-between gap-8">
-                                    <span class="text-gray-900 font-heading-two text-xl fw-semibold">Subtotal</span>
-                                    <span class="text-gray-900 font-heading-two text-md fw-bold">Ksh {{ number_format($subtotal, 2) }}</span>
-                                </div>
-                                <div class="mb-32 flex-between gap-8">
-                                    <span class="text-gray-900 font-heading-two text-xl fw-semibold">Tax (10%)</span>
-                                    <span class="text-gray-900 font-heading-two text-md fw-bold">Ksh {{ number_format($taxAmount, 2) }}</span>
-                                </div>
-                                <div class="mb-32 flex-between gap-8">
-                                    <span class="text-gray-900 font-heading-two text-xl fw-semibold">Shipping</span>
-                                    <span class="text-gray-900 font-heading-two text-md fw-bold">Ksh {{ number_format($shippingAmount, 2) }}</span>
-                                </div>
-                                <div class="mb-0 flex-between gap-8">
-                                    <span class="text-gray-900 font-heading-two text-xl fw-semibold">Total</span>
-                                    <span class="text-gray-900 font-heading-two text-md fw-bold">Ksh {{ number_format($total, 2) }}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mt-32">
-                            <h6 class="text-lg mb-24">Payment Method</h6>
-                            <div class="payment-item">
-                                <div class="form-check common-check common-radio py-16 mb-0">
-                                    <input class="form-check-input" type="radio" name="payment_method" id="payment1" value="bank_transfer" {{ old('payment_method', 'bank_transfer') == 'bank_transfer' ? 'checked' : '' }}>
-                                    <label class="form-check-label fw-semibold text-neutral-600" for="payment1">Direct Bank transfer</label>
-                                </div>
-                                <div class="payment-item__content px-16 py-24 rounded-8 bg-main-50 position-relative">
-                                    <p class="text-gray-800">Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.</p>
-                                </div>
-                            </div>
-                            <div class="payment-item">
-                                <div class="form-check common-check common-radio py-16 mb-0">
-                                    <input class="form-check-input" type="radio" name="payment_method" id="payment2" value="mpesa" {{ old('payment_method') == 'mpesa' ? 'checked' : '' }}>
-                                    <label class="form-check-label fw-semibold text-neutral-600" for="payment2">M-Pesa</label>
-                                </div>
-                                <div class="payment-item__content px-16 py-24 rounded-8 bg-main-50 position-relative">
-                                    <p class="text-gray-800">Pay via M-Pesa mobile money. You will receive payment instructions via SMS after placing your order.</p>
-                                </div>
-                            </div>
-                            <div class="payment-item">
-                                <div class="form-check common-check common-radio py-16 mb-0">
-                                    <input class="form-check-input" type="radio" name="payment_method" id="payment3" value="cash_on_delivery" {{ old('payment_method') == 'cash_on_delivery' ? 'checked' : '' }}>
-                                    <label class="form-check-label fw-semibold text-neutral-600" for="payment3">Cash on delivery</label>
-                                </div>
-                                <div class="payment-item__content px-16 py-24 rounded-8 bg-main-50 position-relative">
-                                    <p class="text-gray-800">Pay with cash upon delivery. Please have exact change ready for the delivery person.</p>
-                                </div>
-                            </div>
-                            @error('payment_method')
+            <div class="row gy-4 align-items-start">
+                <div class="col-lg-6">
+                    <div class="bg-white border border-gray-100 rounded-16 shadow-sm p-32">
+                        <h5 class="mb-12 text-gray-900">Pay with M-Pesa</h5>
+                        <p class="text-sm text-gray-600 mb-24">
+                            Enter the M-Pesa number to receive the STK push. Delivery address is optional.
+                        </p>
+                        <div class="mb-20">
+                            <label class="form-label text-sm text-gray-500">M-Pesa Number *</label>
+                            <input
+                                type="tel"
+                                id="mpesa_number"
+                                name="mpesa_number"
+                                value="{{ old('mpesa_number') }}"
+                                required
+                                class="common-input @error('mpesa_number') border-danger-500 @enderror"
+                                placeholder="e.g. 0712 345678"
+                            >
+                            @error('mpesa_number')
                             <p class="text-danger-500 text-sm mt-8">{{ $message }}</p>
                             @enderror
                         </div>
-
-                        <div class="mt-32 pt-32 border-top border-gray-100">
-                            <div class="mb-16">
-                                <div class="form-check common-check">
-                                    <input class="form-check-input" type="checkbox" id="terms_accepted" name="terms_accepted" value="1" required {{ old('terms_accepted') ? 'checked' : '' }}>
-                                    <label class="form-check-label text-gray-500 text-sm" for="terms_accepted">
-                                        I agree to the <a href="#" class="text-main-600 text-decoration-underline">Terms and Conditions</a> and <a href="#" class="text-main-600 text-decoration-underline">Privacy Policy</a> *
-                                    </label>
+                        <div class="mb-24">
+                            <label class="form-label text-sm text-gray-500">Delivery Address (optional)</label>
+                            <textarea
+                                id="delivery_address"
+                                name="delivery_address"
+                                rows="4"
+                                class="common-input @error('delivery_address') border-danger-500 @enderror"
+                                placeholder="Estate, house number, delivery notes"
+                            >{{ old('delivery_address') }}</textarea>
+                            @error('delivery_address')
+                            <p class="text-danger-500 text-sm mt-8">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <button type="submit" class="btn btn-main w-100 py-12 rounded-pill fw-semibold">
+                            <i class="ph ph-lightning me-2"></i>Send STK Push
+                        </button>
+                        <p class="text-xs text-gray-500 text-center mt-12 mb-0">
+                            You’ll receive an M-Pesa prompt on your phone to complete the payment.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="bg-white border border-gray-100 rounded-16 shadow-sm p-24">
+                        <h5 class="mb-20 text-gray-900">Order Summary</h5>
+                        <div class="space-y-3 mb-24">
+                            @foreach($items as $item)
+                                <div class="d-flex justify-content-between align-items-start border-bottom border-gray-100 pb-2">
+                                    <div>
+                                        <p class="mb-1 text-sm text-gray-800 fw-semibold">{{ $item['product']->name }}</p>
+                                        <span class="text-xs text-gray-500">Qty: {{ $item['quantity'] }}</span>
+                                    </div>
+                                    <span class="text-sm fw-bold text-gray-900">Ksh {{ number_format($item['total'], 2) }}</span>
                                 </div>
-                                @error('terms_accepted')
-                                <p class="text-danger-500 text-sm mt-8">{{ $message }}</p>
-                                @enderror
+                            @endforeach
+                        </div>
+                        <div class="border-top border-gray-100 pt-3">
+                            <div class="d-flex justify-content-between text-sm mb-2">
+                                <span class="text-gray-600">Subtotal</span>
+                                <span class="text-gray-900 fw-semibold">Ksh {{ number_format($subtotal, 2) }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between text-sm mb-2">
+                                <span class="text-gray-600">Tax (10%)</span>
+                                <span class="text-gray-900 fw-semibold">Ksh {{ number_format($taxAmount, 2) }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between text-sm mb-2">
+                                <span class="text-gray-600">Shipping</span>
+                                <span class="text-gray-900 fw-semibold">Ksh {{ number_format($shippingAmount, 2) }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top border-gray-100">
+                                <span class="fw-bold text-gray-900">Total</span>
+                                <span class="fw-bold text-gray-900">Ksh {{ number_format($total, 2) }}</span>
                             </div>
                         </div>
-
-                        <button type="submit" class="btn btn-main mt-40 py-18 w-100 rounded-8 mt-56">
-                            <i class="ph ph-lock me-8"></i>Place Order
-                        </button>
+                        <ul class="list-unstyled mt-24 text-sm text-gray-600">
+                            <li class="d-flex align-items-center mb-8">
+                                <i class="ph ph-check-circle text-main-600 me-2"></i>M-Pesa STK push for instant payment
+                            </li>
+                            <li class="d-flex align-items-center mb-8">
+                                <i class="ph ph-truck text-main-600 me-2"></i>Fast dispatch after payment
+                            </li>
+                            <li class="d-flex align-items-center">
+                                <i class="ph ph-shield-check text-main-600 me-2"></i>Secure checkout experience
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -374,37 +140,5 @@
 </section>
 <!-- ================================= Checkout Page End ===================================== -->
 
-@push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Handle payment method radio buttons to show/hide content
-    const paymentRadios = document.querySelectorAll('input[name="payment_method"]');
-    const paymentContents = document.querySelectorAll('.payment-item__content');
-
-    paymentRadios.forEach(radio => {
-        radio.addEventListener('change', function() {
-            // Hide all payment content
-            paymentContents.forEach(content => {
-                content.style.display = 'none';
-            });
-            // Show selected payment content
-            if (this.checked) {
-                const content = this.closest('.payment-item').querySelector('.payment-item__content');
-                if (content) {
-                    content.style.display = 'block';
-                }
-            }
-        });
-
-        // Show content for initially checked radio
-        if (radio.checked) {
-            const content = radio.closest('.payment-item').querySelector('.payment-item__content');
-            if (content) {
-                content.style.display = 'block';
-            }
-        }
-    });
-});
-</script>
-@endpush
 @endsection
+

@@ -2,26 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\OrderConfirmation;
-use App\Models\Customer;
 use App\Models\Order;
-use App\Models\OrderItem;
-use App\Models\Product;
 use App\Services\CartService;
+use App\Services\MpesaService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
 
 class CheckoutController extends Controller
 {
     protected $cartService;
+    protected $mpesaService;
 
-    public function __construct(CartService $cartService)
+    public function __construct(CartService $cartService, MpesaService $mpesaService)
     {
         $this->cartService = $cartService;
+        $this->mpesaService = $mpesaService;
     }
 
     /**
@@ -55,191 +50,37 @@ class CheckoutController extends Controller
             return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
         }
 
-        // Validate customer input
         $validated = $request->validate([
-            // Customer Information
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|email|max:191',
-            'phone' => 'nullable|string|max:255',
-            'year_of_birth' => [
-                'required',
-                'integer',
-                'min:' . (date('Y') - 100),
-                'max:' . (date('Y') - 18),
-                function ($attribute, $value, $fail) {
-                    $currentYear = date('Y');
-                    $age = $currentYear - $value;
-                    if ($age < 18) {
-                        $fail('You must be 18 years or older to purchase alcohol products.');
-                    }
-                },
-            ],
-
-            // Billing Address
-            'billing_address_line_1' => 'required|string|max:255',
-            'billing_address_line_2' => 'nullable|string|max:255',
-            'billing_city' => 'required|string|max:255',
-            'billing_state' => 'required|string|max:255',
-            'billing_postal_code' => 'required|string|max:255',
-            'billing_country' => 'required|string|max:255',
-
-            // Shipping Address
-            'shipping_address_line_1' => 'required|string|max:255',
-            'shipping_address_line_2' => 'nullable|string|max:255',
-            'shipping_city' => 'required|string|max:255',
-            'shipping_state' => 'required|string|max:255',
-            'shipping_postal_code' => 'required|string|max:255',
-            'shipping_country' => 'required|string|max:255',
-
-            // Payment Information
-            'payment_method' => 'required|string|in:bank_transfer,mpesa,cash_on_delivery',
-
-            // Terms and Conditions
-            'terms_accepted' => 'required|accepted',
+            'mpesa_number' => ['required', 'string', 'regex:/^(?:\+?254|0)?7\d{8}$/'],
+            'delivery_address' => ['nullable', 'string', 'max:500'],
         ]);
 
+        $subtotal = $this->cartService->getSubtotal();
+        $taxAmount = round($subtotal * 0.10, 2);
+        $shippingAmount = 10.00;
+        $totalAmount = round($subtotal + $taxAmount + $shippingAmount, 2);
+
+        $formattedPhone = $this->formatPhoneNumber($validated['mpesa_number']);
+        $reference = 'SIP' . now()->format('YmdHis');
+
         try {
-            DB::beginTransaction();
+            $response = $this->mpesaService->stkPush(
+                $formattedPhone,
+                $totalAmount,
+                $reference,
+                $validated['delivery_address'] ?? null
+            );
 
-            // Find or create customer
-            $customer = Customer::where('email', $validated['email'])->first();
-
-            if (!$customer) {
-                // Create new customer
-                $customer = Customer::create([
-                    'store_id' => null, // Set to default store or get from session
-                    'first_name' => $validated['first_name'],
-                    'last_name' => $validated['last_name'],
-                    'email' => $validated['email'],
-                    'phone' => $validated['phone'] ?? null,
-                    'date_of_birth' => $validated['year_of_birth'] . '-01-01', // Store as date with year only
-                    'age_verified' => true,
-                    'age_verified_at' => now(),
-                    'password' => Hash::make(Str::random(16)), // Random password for guest checkout
-                    'address_line_1' => $validated['billing_address_line_1'],
-                    'address_line_2' => $validated['billing_address_line_2'] ?? null,
-                    'city' => $validated['billing_city'],
-                    'state' => $validated['billing_state'],
-                    'postal_code' => $validated['billing_postal_code'],
-                    'country' => $validated['billing_country'],
-                    'is_active' => true,
-                    'email_verified' => false,
-                ]);
-            } else {
-                // Update existing customer information
-                $customer->update([
-                    'first_name' => $validated['first_name'],
-                    'last_name' => $validated['last_name'],
-                    'phone' => $validated['phone'] ?? $customer->phone,
-                    'address_line_1' => $validated['billing_address_line_1'],
-                    'address_line_2' => $validated['billing_address_line_2'] ?? null,
-                    'city' => $validated['billing_city'],
-                    'state' => $validated['billing_state'],
-                    'postal_code' => $validated['billing_postal_code'],
-                    'country' => $validated['billing_country'],
-                ]);
+            if (!$response['success']) {
+                return back()->withInput()->with('error', $response['message'] ?? 'Failed to initiate M-Pesa STK push.');
             }
 
-            // Calculate order totals
-            $subtotal = $this->cartService->getSubtotal();
-            $taxRate = 0.10; // 10% tax rate
-            $taxAmount = round($subtotal * $taxRate, 2);
-            $shippingAmount = 10.00; // Fixed shipping
-            $totalAmount = round($subtotal + $taxAmount + $shippingAmount, 2);
-
-            // Generate order number
-            $orderNumber = 'ORD-' . strtoupper(Str::random(8));
-
-            // Create order
-            $order = Order::create([
-                'store_id' => null, // Set to default store or get from session
-                'order_number' => $orderNumber,
-                'customer_id' => $customer->id,
-                'status' => 'pending',
-                'subtotal' => $subtotal,
-                'tax_amount' => $taxAmount,
-                'shipping_amount' => $shippingAmount,
-                'discount_amount' => 0,
-                'total_amount' => $totalAmount,
-                'currency' => 'USD',
-                'payment_status' => 'pending',
-                'payment_method' => $validated['payment_method'],
-                'shipping_method' => 'standard',
-                'billing_address' => [
-                    'name' => $validated['first_name'] . ' ' . $validated['last_name'],
-                    'address_line_1' => $validated['billing_address_line_1'],
-                    'address_line_2' => $validated['billing_address_line_2'] ?? null,
-                    'city' => $validated['billing_city'],
-                    'state' => $validated['billing_state'],
-                    'postal_code' => $validated['billing_postal_code'],
-                    'country' => $validated['billing_country'],
-                ],
-                'shipping_address' => [
-                    'name' => $validated['first_name'] . ' ' . $validated['last_name'],
-                    'address_line_1' => $validated['shipping_address_line_1'],
-                    'address_line_2' => $validated['shipping_address_line_2'] ?? null,
-                    'city' => $validated['shipping_city'],
-                    'state' => $validated['shipping_state'],
-                    'postal_code' => $validated['shipping_postal_code'],
-                    'country' => $validated['shipping_country'],
-                ],
-            ]);
-
-            // Create order items and deduct quantity from products
-            foreach ($items as $item) {
-                $product = $item['product'];
-                $quantity = $item['quantity'];
-
-                // Check stock availability before creating order item
-                if ($product->track_inventory && $product->quantity < $quantity) {
-                    DB::rollBack();
-                    return back()->withInput()
-                        ->with('error', "Insufficient stock for {$product->name}. Available: {$product->quantity}, Requested: {$quantity}");
-                }
-
-                // Create order item
-                OrderItem::create([
-                    'store_id' => null, // Set to default store or get from session
-                    'order_id' => $order->id,
-                    'product_id' => $product->id,
-                    'product_variant_id' => null,
-                    'product_name' => $product->name,
-                    'product_sku' => $product->sku,
-                    'quantity' => $quantity,
-                    'unit_price' => $item['unit_price'],
-                    'total_price' => $item['total'],
-                    'product_attributes' => null,
-                ]);
-
-                // Deduct quantity from product if inventory tracking is enabled
-                if ($product->track_inventory) {
-                    $product->decrement('quantity', $quantity);
-                }
-            }
-
-            // Clear cart session
             $this->cartService->clear();
 
-            DB::commit();
-
-            // Send order confirmation email (using log driver)
-            try {
-                Mail::to($customer->email)->send(new OrderConfirmation($order));
-            } catch (\Exception $e) {
-                // Log email error but don't fail the order
-                Log::error('Failed to send order confirmation email: ' . $e->getMessage());
-            }
-
-            return redirect()->route('checkout.success', $order->order_number)
-                ->with('success', 'Order placed successfully!');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error('Checkout error: ' . $e->getMessage());
-
-            return back()->withInput()
-                ->with('error', 'An error occurred while processing your order. Please try again.');
+            return redirect()->route('checkout')->with('success', $response['customer_message'] ?? 'STK push sent. Please complete payment on your phone.');
+        } catch (\Throwable $e) {
+            Log::error('Checkout STK push error: ' . $e->getMessage());
+            return back()->withInput()->with('error', 'Unable to initiate payment. Please try again.');
         }
     }
 
@@ -253,6 +94,27 @@ class CheckoutController extends Controller
             ->firstOrFail();
 
         return view('storefront.checkout.success', compact('order'));
+    }
+
+    protected function formatPhoneNumber(string $number): string
+    {
+        $digits = preg_replace('/\D+/', '', $number);
+
+        if ($digits === null || $digits === '') {
+            throw new \InvalidArgumentException('Invalid phone number.');
+        }
+
+        if (str_starts_with($digits, '0')) {
+            $digits = '254' . substr($digits, 1);
+        } elseif (str_starts_with($digits, '7')) {
+            $digits = '254' . $digits;
+        } elseif (str_starts_with($digits, '254')) {
+            // Already in correct format
+        } else {
+            throw new \InvalidArgumentException('Invalid phone number format.');
+        }
+
+        return $digits;
     }
 }
 

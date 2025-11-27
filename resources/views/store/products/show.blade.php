@@ -33,239 +33,114 @@
             </ol>
         </nav>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <!-- Product Image -->
-            <div>
-                <div
-                    class="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg flex items-center justify-center mb-6"
-                >
-                    <i class="fas fa-wine-bottle text-8xl text-gray-400"></i>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+            <!-- Product Media -->
+            <div class="lg:col-span-6 space-y-6">
+                <div class="bg-gradient-to-br from-gray-100 via-gray-200 to-gray-100 rounded-3xl p-6 shadow-lg">
+                    @if($product->primary_image_url)
+                        <img src="{{ $product->primary_image_url }}" alt="{{ $product->name }}" class="w-full h-full object-contain rounded-2xl">
+                    @else
+                        <div class="aspect-square flex items-center justify-center">
+                            <i class="fas fa-wine-bottle text-8xl text-gray-300"></i>
+                        </div>
+                    @endif
                 </div>
 
-                @if($product->is_on_sale)
-                <div
-                    class="bg-red-500 text-white px-4 py-2 rounded-lg text-center font-semibold"
-                >
-                    {{ $product->discount_percentage }}% OFF - Limited Time!
+                @if($product->images && is_array($product->images))
+                @php
+                    $thumbnails = collect($product->images)
+                        ->map(function ($image) {
+                            return is_string($image) ? trim($image) : ($image['url'] ?? null);
+                        })
+                        ->filter()
+                        ->take(4);
+                @endphp
+                @if($thumbnails->isNotEmpty())
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    @foreach($thumbnails as $thumb)
+                    <div class="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
+                        <img src="{{ $thumb }}" alt="{{ $product->name }}" class="w-full h-28 object-contain">
+                    </div>
+                    @endforeach
                 </div>
+                @endif
                 @endif
             </div>
 
             <!-- Product Details -->
-            <div>
-                <div class="mb-4">
-                    <span
-                        class="inline-block bg-amber-100 text-amber-800 text-sm font-semibold px-3 py-1 rounded-full"
-                    >
+            <div class="lg:col-span-6 space-y-6">
+                <div class="flex items-center gap-3">
+                    <span class="inline-flex items-center gap-2 bg-amber-100 text-amber-700 text-xs font-semibold px-3 py-1 rounded-full">
+                        <i class="fas fa-tag text-amber-600"></i>
                         {{ $product->category->name }}
                     </span>
+                    <span class="text-sm text-gray-500">SKU: {{ $product->sku }}</span>
                 </div>
 
-                <h1 class="text-3xl font-bold text-gray-900 mb-4">
-                    {{ $product->name }}
-                </h1>
-
-                <div class="flex items-center space-x-4 mb-6">
-                    <div class="flex items-center space-x-2">
-                        <span
-                            class="text-4xl font-bold text-gray-900"
-                            >{{ $product->formatted_price }}</span
-                        >
+                <div class="flex items-center justify-between">
+                    <h1 class="text-4xl font-bold text-gray-900">{{ $product->name }}</h1>
+                    <div class="text-right">
+                        <div class="text-3xl font-bold text-gray-900">{{ $product->formatted_price }}</div>
                         @if($product->compare_price)
-                        <span
-                            class="text-2xl text-gray-500 line-through"
-                            >{{ '$' . number_format($product->compare_price, 2) }}</span
-                        >
+                        <span class="text-sm text-gray-400 line-through">{{ '$' . number_format($product->compare_price, 2) }}</span>
                         @endif
                     </div>
                 </div>
 
-                <div class="mb-6">
-                    <p class="text-lg text-gray-700">
-                        {{ $product->description }}
-                    </p>
-                </div>
+                <p class="text-lg text-gray-600 leading-relaxed">
+                    {{ $product->short_description ?? $product->description }}
+                </p>
 
-                <!-- Product Specifications -->
-                <div class="bg-gray-50 rounded-lg p-6 mb-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">
-                        Product Details
-                    </h3>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <span class="text-sm text-gray-600">Brand:</span>
-                            <span
-                                class="text-sm font-medium text-gray-900 ml-2"
-                                >{{ $product->brand ?? 'N/A' }}</span
-                            >
-                        </div>
-                        <div>
-                            <span class="text-sm text-gray-600"
-                                >Alcohol Content:</span
-                            >
-                            <span
-                                class="text-sm font-medium text-gray-900 ml-2"
-                                >{{ $product->alcohol_content ?? 'N/A' }}</span
-                            >
-                        </div>
-                        <div>
-                            <span class="text-sm text-gray-600">Volume:</span>
-                            <span
-                                class="text-sm font-medium text-gray-900 ml-2"
-                                >{{ $product->volume ?? 'N/A' }}</span
-                            >
-                        </div>
-                        <div>
-                            <span class="text-sm text-gray-600">Origin:</span>
-                            <span
-                                class="text-sm font-medium text-gray-900 ml-2"
-                                >{{ $product->origin_country ?? 'N/A' }}</span
-                            >
-                        </div>
-                        <div>
-                            <span class="text-sm text-gray-600">SKU:</span>
-                            <span
-                                class="text-sm font-medium text-gray-900 ml-2"
-                                >{{ $product->sku }}</span
-                            >
-                        </div>
-                        <div>
-                            <span class="text-sm text-gray-600"
-                                >Age Requirement:</span
-                            >
-                            <span class="text-sm font-medium text-gray-900 ml-2"
-                                >{{ $product->min_age }}+</span
-                            >
-                        </div>
+                <div class="grid grid-cols-2 gap-4 bg-gray-50 rounded-3xl p-6 border border-gray-100">
+                    <div>
+                        <p class="text-sm text-gray-500">Brand</p>
+                        <p class="text-lg font-semibold text-gray-900">{{ $product->brand ?? 'N/A' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Alcohol Content</p>
+                        <p class="text-lg font-semibold text-gray-900">{{ $product->alcohol_content ?? 'N/A' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Volume</p>
+                        <p class="text-lg font-semibold text-gray-900">{{ $product->volume ?? 'N/A' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Origin</p>
+                        <p class="text-lg font-semibold text-gray-900">{{ $product->origin_country ?? 'N/A' }}</p>
                     </div>
                 </div>
 
-                <!-- Age Verification Notice -->
-                <div
-                    class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6"
-                >
-                    <div class="flex items-center">
-                        <i
-                            class="fas fa-exclamation-triangle text-amber-600 mr-3"
-                        ></i>
-                        <div>
-                            <h4 class="text-sm font-semibold text-amber-800">
-                                Age Verification Required
-                            </h4>
-                            <p class="text-sm text-amber-700">
-                                You must be {{ $product->min_age }} or older to
-                                purchase this product.
-                            </p>
+                <div class="bg-amber-50 border border-amber-200 rounded-3xl p-5 flex items-start gap-4">
+                    <span class="flex h-12 w-12 items-center justify-center rounded-full bg-amber-100 text-amber-600">
+                        <i class="fas fa-shield-alt"></i>
+                    </span>
+                    <div>
+                        <p class="font-semibold text-amber-900">Age Verification</p>
+                        <p class="text-sm text-amber-800">You must be {{ $product->min_age }} or older to purchase this product.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-600 font-medium">Quantity</span>
+                        <div class="flex rounded-full border border-gray-200 overflow-hidden">
+                            <button class="px-4 py-2 text-gray-600 hover:bg-gray-50"><i class="fas fa-minus"></i></button>
+                            <input type="number" min="1" value="1" class="w-16 text-center border-x border-gray-200 focus:outline-none">
+                            <button class="px-4 py-2 text-gray-600 hover:bg-gray-50"><i class="fas fa-plus"></i></button>
                         </div>
                     </div>
-                </div>
-
-                <!-- Add to Cart -->
-                <div class="flex space-x-4">
-                    <div
-                        class="flex items-center border border-gray-300 rounded-lg"
-                    >
-                        <button
-                            class="px-4 py-2 text-gray-600 hover:text-gray-900"
-                        >
-                            <i class="fas fa-minus"></i>
-                        </button>
-                        <input
-                            type="number"
-                            value="1"
-                            min="1"
-                            class="w-16 text-center border-0 focus:outline-none"
-                        />
-                        <button
-                            class="px-4 py-2 text-gray-600 hover:text-gray-900"
-                        >
-                            <i class="fas fa-plus"></i>
-                        </button>
+                    <button class="w-full flex items-center justify-center gap-3 bg-amber-600 hover:bg-amber-700 text-white py-4 rounded-full font-semibold shadow-lg shadow-amber-200 transition">
+                        <i class="fas fa-shopping-cart"></i> Add to Cart
+                    </button>
+                    <div class="flex items-center justify-between text-sm text-gray-500">
+                        <span><i class="fas fa-shipping-fast mr-2 text-amber-600"></i>Fast dispatch</span>
+                        <span><i class="fas fa-undo mr-2 text-amber-600"></i>Easy Returns</span>
+                        <span><i class="fas fa-lock mr-2 text-amber-600"></i>Secure Checkout</span>
                     </div>
-                    <button
-                        class="flex-1 bg-amber-600 hover:bg-amber-700 text-white py-3 px-6 rounded-lg font-semibold transition-colors"
-                    >
-                        <i class="fas fa-shopping-cart mr-2"></i>
-                        Add to Cart
-                    </button>
-                </div>
-
-                <!-- Additional Actions -->
-                <div class="flex space-x-4 mt-4">
-                    <button
-                        class="flex items-center text-gray-600 hover:text-gray-900"
-                    >
-                        <i class="fas fa-heart mr-2"></i>
-                        Add to Wishlist
-                    </button>
-                    <button
-                        class="flex items-center text-gray-600 hover:text-gray-900"
-                    >
-                        <i class="fas fa-share mr-2"></i>
-                        Share
-                    </button>
                 </div>
             </div>
         </div>
 
-        <!-- Related Products -->
-        @if($relatedProducts->count() > 0)
-        <div class="mt-16">
-            <h2 class="text-2xl font-bold text-gray-900 mb-8">
-                Related Products
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                @foreach($relatedProducts as $relatedProduct)
-                <div
-                    class="product-card bg-white rounded-lg shadow-md overflow-hidden"
-                >
-                    <div
-                        class="h-48 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center relative"
-                    >
-                        <i
-                            class="fas fa-wine-bottle text-4xl text-gray-400"
-                        ></i>
-                        @if($relatedProduct->is_on_sale)
-                        <div
-                            class="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-xs font-semibold"
-                        >
-                            {{ $relatedProduct->discount_percentage }}% OFF
-                        </div>
-                        @endif
-                    </div>
-                    <div class="p-4">
-                        <div class="text-xs text-gray-500 mb-1">
-                            {{ $relatedProduct->category->name }}
-                        </div>
-                        <h3 class="text-sm font-semibold text-gray-900 mb-2">
-                            {{ Str::limit($relatedProduct->name, 50) }}
-                        </h3>
-                        <div class="flex items-center justify-between mb-3">
-                            <div class="flex items-center space-x-1">
-                                <span
-                                    class="text-lg font-bold text-gray-900"
-                                    >{{ $relatedProduct->formatted_price }}</span
-                                >
-                                @if($relatedProduct->compare_price)
-                                <span
-                                    class="text-sm text-gray-500 line-through"
-                                    >{{ '$' . number_format($relatedProduct->compare_price, 2) }}</span
-                                >
-                                @endif
-                            </div>
-                        </div>
-                        <a
-                            href="{{ route('products.show', $relatedProduct) }}"
-                            class="w-full bg-gray-900 hover:bg-gray-800 text-white py-2 px-3 rounded-lg font-semibold transition-colors text-center block text-sm"
-                        >
-                            View Details
-                        </a>
-                    </div>
-                </div>
-                @endforeach
-            </div>
-        </div>
-        @endif
     </div>
 </div>
 @endsection

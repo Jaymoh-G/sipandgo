@@ -123,11 +123,6 @@
                         <div class="col-12 col-md-6 col-lg-3 product-col">
                             <div class="product-card h-100 p-16 border border-gray-100 hover-border-main-600 rounded-16 position-relative transition-2">
                                 <a href="{{ route('products.show', $product->slug) }}" class="product-card__thumb flex-center rounded-8 bg-gray-50 position-relative overflow-hidden">
-                                    @if($product->is_on_sale)
-                                    <span class="product-card__badge bg-main-600 px-8 py-4 text-sm text-white position-absolute inset-inline-start-0 inset-block-start-0 z-1">
-                                        {{ $product->discount_percentage }}% OFF
-                                    </span>
-                                    @endif
                                     @if($product->primary_image_url)
                                         <img src="{{ $product->primary_image_url }}" alt="{{ $product->name }}" class="w-100 h-100 object-fit-cover">
                                     @else

@@ -13,7 +13,7 @@
                 @endif
                 @if($settings->whatsapp_number ?? null)
                 <li class="border-right-item pe-12 me-12">
-                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings->whatsapp_number) }}" target="_blank" class="text-white text-sm d-flex align-items-center gap-4 hover-text-decoration-underline fw-semibold" style="color: #25D366 !important;">
+                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings->whatsapp_number) }}" target="_blank" class="text-white text-sm d-flex align-items-center gap-4 hover-text-decoration-underline fw-semibold">
                         <i class="ph-fill ph-whatsapp-logo text-xl"></i>
                         <span class="">WhatsApp</span>
                     </a>

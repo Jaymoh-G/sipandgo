@@ -103,7 +103,11 @@ class Product extends Model
     public function getCurrentStockAttribute(): int
     {
         $inventory = $this->inventory()->first();
-        return $inventory ? $inventory->quantity_available : 0;
+        if ($inventory) {
+            return $inventory->quantity_available;
+        }
+        // Fallback to products table quantity if no inventory record exists
+        return $this->quantity ?? 0;
     }
 
     public function getIsLowStockAttribute(): bool
@@ -130,8 +134,8 @@ class Product extends Model
             return true;
         }
 
-        // Check if quantity is greater than 0
-        return ($this->quantity ?? 0) > 0;
+        // Use current_stock which checks inventory table first, then falls back to quantity
+        return $this->current_stock > 0;
     }
 
     public function orderItems(): HasMany

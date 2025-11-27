@@ -45,7 +45,7 @@ class CartService
         }
 
         // Check if requested quantity is available
-        if ($product->track_inventory && $quantity > ($product->quantity ?? 0)) {
+        if ($product->track_inventory && $quantity > $product->current_stock) {
             return false;
         }
 
@@ -56,7 +56,7 @@ class CartService
             $newQuantity = $cart[$productId]['quantity'] + $quantity;
 
             // Check if new total quantity exceeds stock
-            if ($product->track_inventory && $newQuantity > ($product->quantity ?? 0)) {
+            if ($product->track_inventory && $newQuantity > $product->current_stock) {
                 return false;
             }
 
@@ -103,7 +103,7 @@ class CartService
         }
 
         // Check if requested quantity exceeds available stock
-        if ($product->track_inventory && $quantity > ($product->quantity ?? 0)) {
+        if ($product->track_inventory && $quantity > $product->current_stock) {
             return false;
         }
 

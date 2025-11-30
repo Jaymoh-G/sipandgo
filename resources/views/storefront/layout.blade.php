@@ -120,6 +120,22 @@
             }
         }
 
+        /* Mobile Menu Submenu Styling */
+        .mobile-menu .has-submenu.active .submenu-arrow {
+            transform: rotate(180deg) !important;
+        }
+
+        .mobile-menu .nav-submenu {
+            background-color: rgba(0, 0, 0, 0.02);
+            border-left: 2px solid hsl(var(--main));
+            margin-top: 8px;
+        }
+
+        .mobile-menu .nav-submenu__link {
+            padding-left: 32px !important;
+            font-size: 14px;
+        }
+
         /* Floating WhatsApp Button */
         .whatsapp-float {
             position: fixed;
@@ -247,10 +263,13 @@
             </a>
         </li>
         <li class="on-hover-item nav-menu__item has-submenu {{ request()->routeIs('products.index') || request()->routeIs('categories.index') ? 'activePage' : '' }}">
-            <a href="{{ route('products.index') }}" class="nav-menu__link text-heading-two">
-                <i class="ph ph-shopping-bag me-2"></i>Shop
+            <a href="javascript:void(0)" class="nav-menu__link text-heading-two mobile-submenu-toggle d-flex align-items-center justify-content-between">
+                <span class="d-flex align-items-center">
+                    <i class="ph ph-shopping-bag me-2"></i>Shop
+                </span>
+                <i class="ph ph-caret-down submenu-arrow" style="transition: transform 0.3s;"></i>
             </a>
-            <ul class="on-hover-dropdown common-dropdown nav-submenu scroll-sm">
+            <ul class="on-hover-dropdown common-dropdown nav-submenu scroll-sm" style="display: none;">
                 <li class="common-dropdown__item nav-submenu__item {{ request()->routeIs('products.index') ? 'activePage' : '' }}">
                     <a href="{{ route('products.index') }}" class="common-dropdown__link nav-submenu__link text-heading-two hover-bg-neutral-100">All Products</a>
                 </li>

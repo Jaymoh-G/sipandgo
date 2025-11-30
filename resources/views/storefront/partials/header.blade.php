@@ -88,7 +88,7 @@
                     </li>
 
 
-                    <li class="on-hover-item nav-menu__item has-submenu position-relative">
+                    <li class="on-hover-item nav-menu__item has-submenu position-relative d-lg-block d-none">
                         <button type="button" class="category-button d-flex align-items-center gap-8 text-white bg-main-600 px-16 py-12 rounded-6 hover-bg-main-700 transition-2" style="font-size: 14px;">
                             <span class="text-lg line-height-1"><i class="ph ph-squares-four"></i></span>
                             <span class="d-xl-inline d-none">Browse Categories</span>
@@ -96,7 +96,7 @@
                             <span class="line-height-1 icon transition-2"><i class="ph-bold ph-caret-down"></i></span>
                         </button>
                         <!-- Category Dropdown Start -->
-                        <div class="category-dropdown border border-main-200 shadow bg-white p-16 rounded-16 w-100 max-w-472 position-absolute inset-block-start-100 inset-inline-start-0 z-99 transition-2">
+                        <div class="category-dropdown border border-main-200 shadow bg-white p-16 rounded-16 w-100 max-w-472 position-absolute inset-block-start-100 inset-inline-start-0 z-99 transition-2 d-lg-block d-none">
                             <div class="d-grid grid-cols-3-repeat gap-4 max-h-350 overflow-y-auto">
                                 @forelse($headerCategories ?? [] as $category)
                                     <a href="{{ route('categories.show', $category->slug) }}" class="py-16 px-8 rounded-8 hover-bg-main-50 d-flex flex-column align-items-center text-center border border-white hover-border-main-100">

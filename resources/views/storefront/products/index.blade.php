@@ -4,9 +4,9 @@
 @section('description', 'Browse our complete collection of premium spirits, wines, and liquors')
 
 @section('content')
-<section class="shop py-80">
-    <div class="container container-lg">
-        <div class="row">
+<section class="shop pb-80" style="padding-top: 0 !important; margin-top: 0 !important;">
+    <div class="container container-lg" style="padding-top: 0 !important; margin-top: 0 !important;">
+        <div class="row" style="margin-top: 0 !important;">
             <!-- Sidebar Start -->
             <div class="col-lg-3">
                 <div class="shop-sidebar position-relative">
@@ -208,6 +208,79 @@
 
 @push('styles')
 <style>
+    /* Remove white space at top of products page */
+    main .shop {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }
+
+    .shop .container {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }
+
+    .shop .row {
+        margin-top: 0 !important;
+    }
+
+    /* Remove spacing from header on products page */
+    .header-middle {
+        margin-bottom: 0 !important;
+    }
+
+    main {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+
+    /* Ensure no gap between header and content */
+    .header-middle + main,
+    .header + main {
+        margin-top: 0 !important;
+    }
+
+    /* Remove any default spacing */
+    .shop {
+        position: relative;
+        top: 0;
+    }
+
+    /* Aggressive fix for mobile - remove all spacing */
+    @media (max-width: 991px) {
+        .shop {
+            margin-top: -30px !important;
+            padding-top: 0 !important;
+        }
+
+        .shop .container {
+            padding-top: 0 !important;
+            margin-top: 0 !important;
+        }
+
+        .shop .row {
+            margin-top: 0 !important;
+            padding-top: 0 !important;
+        }
+
+        /* Reduce header spacing on mobile */
+        .header-middle {
+            padding: 4px 0 !important;
+            margin-bottom: 0 !important;
+        }
+
+        .header-top {
+            padding: 4px 0 !important;
+        }
+    }
+
+    /* Desktop fix - minimal spacing */
+    @media (min-width: 992px) {
+        .shop {
+            margin-top: -10px !important;
+            padding-top: 0 !important;
+        }
+    }
+
     /* Ensure both slider handles are visible and draggable */
     .custom--range {
         position: relative;

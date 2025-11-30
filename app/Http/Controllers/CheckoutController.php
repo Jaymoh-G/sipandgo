@@ -70,13 +70,31 @@ class CheckoutController extends Controller
         }
 
         $formattedPhone = $this->formatPhoneNumber($validated['mpesa_number']);
-        $orderNumber = 'SIP' . now()->format('YmdHis') . rand(1000, 9999);
+
+        // Generate unique order number
+        do {
+            $orderNumber = 'SIP' . now()->format('YmdHis') . rand(1000, 9999);
+        } while (Order::where('order_number', $orderNumber)->exists());
 
         try {
             DB::beginTransaction();
 
             // Get or create customer
             $customer = $this->getOrCreateCustomer($formattedPhone, $validated['delivery_address'] ?? null);
+
+            // Prepare addresses (required JSON fields)
+            $billingAddress = [
+                'phone' => $formattedPhone,
+                'name' => trim($customer->first_name . ' ' . $customer->last_name),
+                'email' => $customer->email ?? null,
+            ];
+
+            $shippingAddress = [
+                'address' => $validated['delivery_address'] ?? 'Not provided',
+                'phone' => $formattedPhone,
+                'name' => trim($customer->first_name . ' ' . $customer->last_name),
+                'email' => $customer->email ?? null,
+            ];
 
             // Create order
             $order = Order::create([
@@ -92,24 +110,25 @@ class CheckoutController extends Controller
                 'payment_status' => 'pending',
                 'payment_method' => 'mpesa',
                 'notes' => $validated['delivery_address'] ?? null,
-                'billing_address' => [
-                    'phone' => $formattedPhone,
-                    'name' => $customer->first_name . ' ' . $customer->last_name,
-                ],
-                'shipping_address' => [
-                    'address' => $validated['delivery_address'] ?? null,
-                    'phone' => $formattedPhone,
-                    'name' => $customer->first_name . ' ' . $customer->last_name,
-                ],
+                'billing_address' => $billingAddress,
+                'shipping_address' => $shippingAddress,
             ]);
 
             // Create order items
             foreach ($items as $item) {
+                $product = $item['product'];
+                $sku = $product->sku;
+
+                // Ensure SKU is not empty (required field)
+                if (empty($sku)) {
+                    $sku = 'SKU-' . $product->id . '-' . time();
+                }
+
                 OrderItem::create([
                     'order_id' => $order->id,
-                    'product_id' => $item['product']->id,
-                    'product_name' => $item['product']->name,
-                    'product_sku' => $item['product']->sku ?? 'N/A',
+                    'product_id' => $product->id,
+                    'product_name' => $product->name,
+                    'product_sku' => $sku,
                     'quantity' => $item['quantity'],
                     'unit_price' => $item['unit_price'],
                     'total_price' => $item['total'],
@@ -143,10 +162,32 @@ class CheckoutController extends Controller
             throw $e; // Re-throw validation exceptions
         } catch (\Illuminate\Database\QueryException $e) {
             DB::rollBack();
-            Log::error('Checkout database error: ' . $e->getMessage(), [
+            $errorMessage = $e->getMessage();
+            $errorCode = $e->getCode();
+
+            Log::error('Checkout database error', [
+                'message' => $errorMessage,
+                'code' => $errorCode,
+                'sql' => $e->getSql() ?? 'N/A',
+                'bindings' => $e->getBindings() ?? [],
                 'trace' => $e->getTraceAsString(),
             ]);
-            return back()->withInput()->with('error', 'Database error occurred. Please try again or contact support.');
+
+            // Provide more specific error messages
+            if (str_contains($errorMessage, 'billing_address') || str_contains($errorMessage, 'shipping_address')) {
+                return back()->withInput()->with('error', 'Address information is invalid. Please check your delivery address.');
+            } elseif (str_contains($errorMessage, 'foreign key constraint')) {
+                return back()->withInput()->with('error', 'Data integrity error. Please refresh and try again.');
+            } elseif (str_contains($errorMessage, 'Duplicate entry')) {
+                return back()->withInput()->with('error', 'Order number already exists. Please try again.');
+            }
+
+            // For development, show the actual error; for production, show generic message
+            $displayError = config('app.debug')
+                ? 'Database error: ' . $errorMessage
+                : 'Database error occurred. Please try again or contact support.';
+
+            return back()->withInput()->with('error', $displayError);
         } catch (\RuntimeException $e) {
             DB::rollBack();
             Log::error('Checkout runtime error: ' . $e->getMessage());

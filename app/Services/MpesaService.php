@@ -59,22 +59,28 @@ class MpesaService
 
         $response = Http::withToken($accessToken)->post($endpoint, $payload);
 
-        if ($response->successful() && ($response['ResponseCode'] ?? null) === '0') {
+        $responseData = $response->json();
+
+        if ($response->successful() && ($responseData['ResponseCode'] ?? null) === '0') {
             return [
                 'success' => true,
-                'checkout_request_id' => $response['CheckoutRequestID'] ?? null,
-                'merchant_request_id' => $response['MerchantRequestID'] ?? null,
-                'customer_message' => $response['CustomerMessage'] ?? 'STK push sent successfully.',
+                'checkout_request_id' => $responseData['CheckoutRequestID'] ?? null,
+                'merchant_request_id' => $responseData['MerchantRequestID'] ?? null,
+                'customer_message' => $responseData['CustomerMessage'] ?? 'STK push sent successfully.',
             ];
         }
 
+        $errorMessage = $responseData['errorMessage'] ?? $responseData['ResponseDescription'] ?? 'Failed to initiate STK push.';
+
         Log::error('MPESA STK Push failed', [
-            'response' => $response->json(),
+            'response' => $responseData,
+            'status' => $response->status(),
+            'payload' => $payload,
         ]);
 
         return [
             'success' => false,
-            'message' => $response['errorMessage'] ?? 'Failed to initiate STK push.',
+            'message' => $errorMessage,
         ];
     }
 
@@ -85,11 +91,21 @@ class MpesaService
         $response = Http::withBasicAuth($this->consumerKey, $this->consumerSecret)->get($endpoint);
 
         if (!$response->successful()) {
-            Log::error('MPESA access token request failed', ['response' => $response->json()]);
-            throw new \RuntimeException('Unable to authenticate with MPESA API.');
+            $errorData = $response->json();
+            Log::error('MPESA access token request failed', [
+                'response' => $errorData,
+                'status' => $response->status(),
+            ]);
+            throw new \RuntimeException('Unable to authenticate with MPESA API: ' . ($errorData['error_description'] ?? 'Invalid credentials'));
         }
 
-        return $response['access_token'];
+        $tokenData = $response->json();
+        if (!isset($tokenData['access_token'])) {
+            Log::error('MPESA access token missing in response', ['response' => $tokenData]);
+            throw new \RuntimeException('Invalid response from MPESA API: Access token not found');
+        }
+
+        return $tokenData['access_token'];
     }
 
     protected function baseUrl(): string

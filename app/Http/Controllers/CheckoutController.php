@@ -64,6 +64,11 @@ class CheckoutController extends Controller
         $shippingAmount = 10.00;
         $totalAmount = round($subtotal + $taxAmount + $shippingAmount, 2);
 
+        // Validate minimum amount (M-Pesa requires at least 1 KES)
+        if ($totalAmount < 1) {
+            return back()->withInput()->with('error', 'Order total must be at least KES 1.00');
+        }
+
         $formattedPhone = $this->formatPhoneNumber($validated['mpesa_number']);
         $orderNumber = 'SIP' . now()->format('YmdHis') . rand(1000, 9999);
 
@@ -89,10 +94,12 @@ class CheckoutController extends Controller
                 'notes' => $validated['delivery_address'] ?? null,
                 'billing_address' => [
                     'phone' => $formattedPhone,
+                    'name' => $customer->first_name . ' ' . $customer->last_name,
                 ],
                 'shipping_address' => [
                     'address' => $validated['delivery_address'] ?? null,
                     'phone' => $formattedPhone,
+                    'name' => $customer->first_name . ' ' . $customer->last_name,
                 ],
             ]);
 
@@ -131,12 +138,27 @@ class CheckoutController extends Controller
             DB::commit();
 
             return redirect()->route('checkout')->with('success', $response['customer_message'] ?? 'STK push sent. Please complete payment on your phone.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            DB::rollBack();
+            throw $e; // Re-throw validation exceptions
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollBack();
+            Log::error('Checkout database error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return back()->withInput()->with('error', 'Database error occurred. Please try again or contact support.');
+        } catch (\RuntimeException $e) {
+            DB::rollBack();
+            Log::error('Checkout runtime error: ' . $e->getMessage());
+            return back()->withInput()->with('error', $e->getMessage());
         } catch (\Throwable $e) {
             DB::rollBack();
             Log::error('Checkout STK push error: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
             ]);
-            return back()->withInput()->with('error', 'Unable to initiate payment. Please try again.');
+            return back()->withInput()->with('error', 'Unable to initiate payment: ' . $e->getMessage());
         }
     }
 
@@ -235,11 +257,18 @@ class CheckoutController extends Controller
         $customer = Customer::where('phone', $phone)->first();
 
         if (!$customer) {
-            // Create guest customer
+            // Create guest customer with unique email
+            $email = 'guest_' . $phone . '_' . time() . '@sipandgo.local';
+
+            // Ensure email is unique
+            while (Customer::where('email', $email)->exists()) {
+                $email = 'guest_' . $phone . '_' . time() . '_' . rand(1000, 9999) . '@sipandgo.local';
+            }
+
             $customer = Customer::create([
                 'first_name' => 'Guest',
                 'last_name' => 'Customer',
-                'email' => 'guest_' . $phone . '@sipandgo.local',
+                'email' => $email,
                 'phone' => $phone,
                 'date_of_birth' => now()->subYears(18),
                 'age_verified' => true,

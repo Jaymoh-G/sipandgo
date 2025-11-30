@@ -51,12 +51,14 @@
     <div class="container container-lg">
         <nav class="header-inner flex-between gap-8">
             <!-- Logo Start -->
-            <div class="logo">
+            <div class="logo" style="flex-shrink: 0;">
                 <a href="{{ route('home') }}" class="link">
                     @if($siteLogo ?? null)
-                        <img src="{{ $siteLogo }}" alt="{{ $siteName ?? 'Logo' }}" style="max-height: 80px;">
+                        <img src="{{ $siteLogo }}" alt="{{ $siteName ?? 'Logo' }}" style="max-height: 60px; max-width: 150px; object-fit: contain;" class="d-xl-block d-none">
+                        <img src="{{ $siteLogo }}" alt="{{ $siteName ?? 'Logo' }}" style="max-height: 50px; max-width: 120px; object-fit: contain;" class="d-xl-none d-block">
                     @else
-                        <img src="{{ asset('assets/images/logo/sip-n-go-logo.png') }}" alt="{{ $siteName ?? 'Sip N Go Logo' }}" style="max-height: 80px;">
+                        <img src="{{ asset('assets/images/logo/sip-n-go-logo.png') }}" alt="{{ $siteName ?? 'Sip N Go Logo' }}" style="max-height: 60px; max-width: 150px; object-fit: contain;" class="d-xl-block d-none">
+                        <img src="{{ asset('assets/images/logo/sip-n-go-logo.png') }}" alt="{{ $siteName ?? 'Sip N Go Logo' }}" style="max-height: 50px; max-width: 120px; object-fit: contain;" class="d-xl-none d-block">
                     @endif
                 </a>
             </div>
@@ -65,15 +67,15 @@
             <!-- Menu Start  -->
             <div class="header-menu d-lg-block d-none" style="flex: 1; margin-right: 20px;">
                 <!-- Nav Menu Start -->
-                <ul class="nav-menu flex-align" style="gap: 24px;">
+                <ul class="nav-menu flex-align" style="gap: 12px;">
                     <li class="nav-menu__item">
-                        <a href="{{ route('home') }}" class="nav-menu__link text-heading-two {{ request()->routeIs('home') ? 'activePage' : '' }}" style="padding: 16px 16px; font-weight: 600; letter-spacing: 0.3px; transition: all 0.3s ease;">
-                            <i class="ph ph-house me-2" style="font-size: 18px;"></i>Home
+                        <a href="{{ route('home') }}" class="nav-menu__link text-heading-two {{ request()->routeIs('home') ? 'activePage' : '' }}" style="padding: 12px 12px; font-weight: 600; letter-spacing: 0.3px; transition: all 0.3s ease; font-size: 14px;">
+                            <i class="ph ph-house me-1" style="font-size: 16px;"></i><span class="d-md-inline d-none">Home</span>
                         </a>
                     </li>
                     <li class="on-hover-item nav-menu__item has-submenu {{ request()->routeIs('products.index') || request()->routeIs('categories.index') ? 'activePage' : '' }}">
-                        <a href="{{ route('products.index') }}" class="nav-menu__link text-heading-two" style="padding: 16px 16px; font-weight: 600; letter-spacing: 0.3px; transition: all 0.3s ease;">
-                            <i class="ph ph-shopping-bag me-2" style="font-size: 18px;"></i>Shop
+                        <a href="{{ route('products.index') }}" class="nav-menu__link text-heading-two" style="padding: 12px 12px; font-weight: 600; letter-spacing: 0.3px; transition: all 0.3s ease; font-size: 14px;">
+                            <i class="ph ph-shopping-bag me-1" style="font-size: 16px;"></i><span class="d-md-inline d-none">Shop</span>
                         </a>
                         <ul class="on-hover-dropdown common-dropdown nav-submenu scroll-sm">
                             <li class="common-dropdown__item nav-submenu__item {{ request()->routeIs('products.index') ? 'activePage' : '' }}">
@@ -87,9 +89,10 @@
 
 
                     <li class="on-hover-item nav-menu__item has-submenu position-relative">
-                        <button type="button" class="category-button d-flex align-items-center gap-12 text-white bg-main-600 px-20 py-16 rounded-6 hover-bg-main-700 transition-2">
-                            <span class="text-xl line-height-1"><i class="ph ph-squares-four"></i></span>
-                            <span class="">Browse Categories</span>
+                        <button type="button" class="category-button d-flex align-items-center gap-8 text-white bg-main-600 px-16 py-12 rounded-6 hover-bg-main-700 transition-2" style="font-size: 14px;">
+                            <span class="text-lg line-height-1"><i class="ph ph-squares-four"></i></span>
+                            <span class="d-xl-inline d-none">Browse Categories</span>
+                            <span class="d-xl-none">Categories</span>
                             <span class="line-height-1 icon transition-2"><i class="ph-bold ph-caret-down"></i></span>
                         </button>
                         <!-- Category Dropdown Start -->
@@ -121,11 +124,11 @@
             <!-- Menu End  -->
 
             <!-- form location Start -->
-            <form action="{{ route('products.index') }}" class="flex-align flex-wrap form-location-wrapper" method="GET" style="flex: 0 0 auto; margin-right: 20px;">
-                <div class="search-form d-sm-flex d-none text-heading-two text-sm" style="width: 300px;">
+            <form action="{{ route('products.index') }}" class="flex-align flex-wrap form-location-wrapper" method="GET" style="flex: 0 0 auto; margin-right: 12px;">
+                <div class="search-form d-xl-flex d-none text-heading-two text-sm" style="width: 280px; max-width: 100%;">
                     <div class="search-form__wrapper position-relative flex-grow-1">
-                        <input type="text" name="search" class="common-input border border-neutral-40 py-18 ps-16 pe-76 rounded-pill pe-44 placeholder-italic placeholder-text-sm" placeholder="Search for products or brands..." value="{{ request('search') }}">
-                        <button type="submit" class="w-64 h-44 bg-main-600 hover-bg-main-800 rounded-pill flex-center text-xl text-white position-absolute top-50 translate-middle-y inset-inline-end-0 me-6"><i class="ph ph-magnifying-glass"></i></button>
+                        <input type="text" name="search" class="common-input border border-neutral-40 py-14 ps-12 pe-64 rounded-pill pe-44 placeholder-italic placeholder-text-sm" placeholder="Search products..." value="{{ request('search') }}" style="font-size: 13px;">
+                        <button type="submit" class="w-56 h-40 bg-main-600 hover-bg-main-800 rounded-pill flex-center text-lg text-white position-absolute top-50 translate-middle-y inset-inline-end-0 me-4"><i class="ph ph-magnifying-glass"></i></button>
                     </div>
                 </div>
             </form>
@@ -133,7 +136,7 @@
 
             <!-- Header Middle Right start -->
             <div class="header-right flex-align flex-shrink-0">
-                <div class="flex-align gap-20">
+                <div class="flex-align gap-12">
                     <button type="button" class="search-icon flex-align d-lg-none d-flex gap-4 item-hover">
                         <span class="text-2xl text-gray-700 d-flex position-relative item-hover__text">
                             <i class="ph ph-magnifying-glass"></i>
@@ -144,14 +147,14 @@
                             <i class="ph ph-heart"></i>
                             <span class="w-16 h-16 flex-center rounded-circle bg-main-600 text-white text-xs position-absolute top-n6 end-n4 wishlist-count">{{ $wishlistCount ?? 0 }}</span>
                         </span>
-                        <span class="text-md text-heading-three item-hover__text d-none d-lg-flex">Wishlist</span>
+                        <span class="text-md text-heading-three item-hover__text d-none d-xl-flex">Wishlist</span>
                     </a>
                     <a href="{{ route('cart.index') }}" class="flex-align gap-4 item-hover">
                         <span class="text-xl text-gray-700 d-flex position-relative me-6 mt-6 item-hover__text">
                             <i class="ph ph-shopping-cart-simple"></i>
                             <span class="w-16 h-16 flex-center rounded-circle bg-main-600 text-white text-xs position-absolute top-n6 end-n4 cart-count">{{ $cartCount ?? 0 }}</span>
                         </span>
-                        <span class="text-md text-heading-three item-hover__text d-none d-lg-flex">Cart</span>
+                        <span class="text-md text-heading-three item-hover__text d-none d-xl-flex">Cart</span>
                     </a>
                     @auth('customer')
                         <div class="on-hover-item has-submenu position-relative">
@@ -159,7 +162,7 @@
                                 <span class="text-xl text-gray-700 d-flex position-relative item-hover__text">
                                     <i class="ph ph-user"></i>
                                 </span>
-                                <span class="text-md text-heading-three item-hover__text d-none d-lg-flex">My Account</span>
+                                <span class="text-md text-heading-three item-hover__text d-none d-xl-flex">My Account</span>
                             </a>
                             <!-- My Account Dropdown Start -->
                             <ul class="on-hover-dropdown common-dropdown nav-submenu scroll-sm position-absolute inset-block-start-100 inset-inline-end-0 z-99 mt-8 min-w-200 bg-white border border-gray-100 rounded-8 shadow-lg py-8">
@@ -204,17 +207,17 @@
                             <span class="text-xl text-gray-700 d-flex position-relative item-hover__text">
                                 <i class="ph ph-sign-in"></i>
                             </span>
-                            <span class="text-md text-heading-three item-hover__text d-none d-lg-flex">Login</span>
+                            <span class="text-md text-heading-three item-hover__text d-none d-xl-flex">Login</span>
                         </a>
                     @endauth
                     @if($settings->phone ?? null)
-                    <a href="tel:{{ $settings->phone }}" class="d-lg-flex align-items-center gap-12 d-none item-hover" style="border-left: 1px solid #e5e7eb; padding-left: 20px; margin-left: 8px;">
-                        <span class="d-flex text-2xl text-gray-700">
+                    <a href="tel:{{ $settings->phone }}" class="d-xl-flex align-items-center gap-8 d-none item-hover" style="border-left: 1px solid #e5e7eb; padding-left: 16px; margin-left: 8px;">
+                        <span class="d-flex text-xl text-gray-700">
                             <i class="ph ph-phone"></i>
                         </span>
-                        <span class="">
-                            <span class="d-block text-heading text-sm fw-medium">Need any Help! call Us</span>
-                            <span class="d-block fw-bold text-main-600 hover-text-decoration-underline text-sm">{{ $settings->phone }}</span>
+                        <span class="d-xl-block d-none">
+                            <span class="d-block text-heading text-xs fw-medium">Need Help?</span>
+                            <span class="d-block fw-bold text-main-600 hover-text-decoration-underline text-xs">{{ $settings->phone }}</span>
                         </span>
                     </a>
                     @endif

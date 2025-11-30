@@ -73,6 +73,53 @@
             color: hsl(var(--main)) !important;
         }
 
+        /* Responsive Navigation for Tablets and Small Laptops */
+        @media (max-width: 1399px) and (min-width: 992px) {
+            .header-inner {
+                flex-wrap: wrap;
+                gap: 12px !important;
+            }
+
+            .header-menu {
+                order: 3;
+                width: 100%;
+                margin-top: 8px;
+                margin-right: 0 !important;
+            }
+
+            .nav-menu {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .form-location-wrapper {
+                order: 2;
+                margin-right: 0 !important;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .header-right {
+                order: 1;
+            }
+        }
+
+        @media (max-width: 1199px) and (min-width: 992px) {
+            .header-menu {
+                margin-top: 12px;
+            }
+
+            .nav-menu__item .nav-menu__link {
+                padding: 10px 10px !important;
+                font-size: 13px !important;
+            }
+
+            .category-button {
+                padding: 10px 12px !important;
+                font-size: 13px !important;
+            }
+        }
+
         /* Floating WhatsApp Button */
         .whatsapp-float {
             position: fixed;
@@ -176,6 +223,91 @@
 <!--==================== Sidebar Overlay End ====================-->
 <div class="side-overlay"></div>
 <!--==================== Sidebar Overlay End ====================-->
+
+<!--==================== Mobile Menu Start ====================-->
+<aside class="mobile-menu">
+    <button type="button" class="close-button">
+        <i class="ph ph-x"></i>
+    </button>
+
+    <div class="mobile-menu__logo mb-24">
+        <a href="{{ route('home') }}">
+            @if($siteLogo ?? null)
+                <img src="{{ $siteLogo }}" alt="{{ $siteName ?? 'Logo' }}" style="max-height: 50px;">
+            @else
+                <img src="{{ asset('assets/images/logo/sip-n-go-logo.png') }}" alt="{{ $siteName ?? 'Sip N Go Logo' }}" style="max-height: 50px;">
+            @endif
+        </a>
+    </div>
+
+    <ul class="nav-menu nav-menu--mobile">
+        <li class="nav-menu__item">
+            <a href="{{ route('home') }}" class="nav-menu__link text-heading-two {{ request()->routeIs('home') ? 'activePage' : '' }}">
+                <i class="ph ph-house me-2"></i>Home
+            </a>
+        </li>
+        <li class="on-hover-item nav-menu__item has-submenu {{ request()->routeIs('products.index') || request()->routeIs('categories.index') ? 'activePage' : '' }}">
+            <a href="{{ route('products.index') }}" class="nav-menu__link text-heading-two">
+                <i class="ph ph-shopping-bag me-2"></i>Shop
+            </a>
+            <ul class="on-hover-dropdown common-dropdown nav-submenu scroll-sm">
+                <li class="common-dropdown__item nav-submenu__item {{ request()->routeIs('products.index') ? 'activePage' : '' }}">
+                    <a href="{{ route('products.index') }}" class="common-dropdown__link nav-submenu__link text-heading-two hover-bg-neutral-100">All Products</a>
+                </li>
+                <li class="common-dropdown__item nav-submenu__item {{ request()->routeIs('categories.index') ? 'activePage' : '' }}">
+                    <a href="{{ route('categories.index') }}" class="common-dropdown__link nav-submenu__link text-heading-two hover-bg-neutral-100">Categories</a>
+                </li>
+            </ul>
+        </li>
+        <li class="nav-menu__item">
+            <a href="{{ route('about') }}" class="nav-menu__link text-heading-two {{ request()->routeIs('about') ? 'activePage' : '' }}">
+                <i class="ph ph-info me-2"></i>About Us
+            </a>
+        </li>
+        <li class="nav-menu__item">
+            <a href="{{ route('contact') }}" class="nav-menu__link text-heading-two {{ request()->routeIs('contact') ? 'activePage' : '' }}">
+                <i class="ph ph-phone me-2"></i>Contact Us
+            </a>
+        </li>
+        <li class="nav-menu__item">
+            <a href="{{ route('order.tracking') }}" class="nav-menu__link text-heading-two {{ request()->routeIs('order.tracking') ? 'activePage' : '' }}">
+                <i class="ph ph-package me-2"></i>Order Tracking
+            </a>
+        </li>
+        @auth('customer')
+        <li class="nav-menu__item border-top border-gray-100 mt-16 pt-16">
+            <a href="{{ route('my-account.index') }}" class="nav-menu__link text-heading-two">
+                <i class="ph ph-user me-2"></i>My Account
+            </a>
+        </li>
+        <li class="nav-menu__item">
+            <a href="{{ route('wishlist.index') }}" class="nav-menu__link text-heading-two">
+                <i class="ph ph-heart me-2"></i>Wishlist
+            </a>
+        </li>
+        <li class="nav-menu__item">
+            <a href="{{ route('cart.index') }}" class="nav-menu__link text-heading-two">
+                <i class="ph ph-shopping-cart-simple me-2"></i>Cart
+            </a>
+        </li>
+        <li class="nav-menu__item border-top border-gray-100 mt-16 pt-16">
+            <form action="{{ route('logout') }}" method="POST" class="mb-0">
+                @csrf
+                <button type="submit" class="nav-menu__link text-heading-two w-100 text-start border-0 bg-transparent p-0">
+                    <i class="ph ph-sign-out me-2"></i>Logout
+                </button>
+            </form>
+        </li>
+        @else
+        <li class="nav-menu__item border-top border-gray-100 mt-16 pt-16">
+            <a href="{{ route('login') }}" class="nav-menu__link text-heading-two">
+                <i class="ph ph-sign-in me-2"></i>Login
+            </a>
+        </li>
+        @endauth
+    </ul>
+</aside>
+<!--==================== Mobile Menu End ====================-->
 
 <!-- ==================== Scroll to Top End Here ==================== -->
 <div class="progress-wrap">

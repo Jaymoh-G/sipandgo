@@ -306,11 +306,15 @@ class CheckoutController extends Controller
                 $email = 'guest_' . $phone . '_' . time() . '_' . rand(1000, 9999) . '@sipandgo.local';
             }
 
+            // Generate a random password for guest customers (they won't use it)
+            $password = bcrypt(uniqid('guest_', true) . rand(1000, 9999));
+
             $customer = Customer::create([
                 'first_name' => 'Guest',
                 'last_name' => 'Customer',
                 'email' => $email,
                 'phone' => $phone,
+                'password' => $password,
                 'date_of_birth' => now()->subYears(18),
                 'age_verified' => true,
                 'age_verified_at' => now(),

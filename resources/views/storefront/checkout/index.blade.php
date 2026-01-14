@@ -129,7 +129,7 @@
                                 <i class="ph ph-truck text-main-600 me-2"></i>Fast dispatch after payment
                             </li>
                             <li class="d-flex align-items-center">
-                                <i class="ph ph-shield-check text-main-600 me-2"></i>Secure checkout experience
+                                <i class="ph ph-shield-check text-main-600 me-2"></i>Verified Secure checkout experience
                             </li>
                         </ul>
                     </div>

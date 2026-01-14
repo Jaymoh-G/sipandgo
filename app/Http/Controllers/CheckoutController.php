@@ -145,7 +145,20 @@ class CheckoutController extends Controller
 
             if (!$response['success']) {
                 DB::rollBack();
-                return back()->withInput()->with('error', $response['message'] ?? 'Failed to initiate M-Pesa STK push.');
+
+                // Show more detailed error message in debug mode
+                $errorMsg = $response['message'] ?? 'Failed to initiate M-Pesa STK push.';
+                if (config('app.debug')) {
+                    $errorMsg .= ' Response Code: ' . ($response['response_code'] ?? 'N/A');
+                }
+
+                Log::error('Checkout STK push failed', [
+                    'response' => $response,
+                    'phone' => $formattedPhone,
+                    'amount' => $totalAmount,
+                ]);
+
+                return back()->withInput()->with('error', $errorMsg);
             }
 
             // Store checkout request ID in order notes for callback tracking

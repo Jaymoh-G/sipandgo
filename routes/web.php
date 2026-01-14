@@ -46,6 +46,9 @@ Route::prefix('wishlist')->group(function () {
     Route::post('/clear', [\App\Http\Controllers\WishlistController::class, 'clear'])->name('wishlist.clear');
 });
 
+// Review routes
+Route::post('/products/{product}/reviews', [\App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
+
 // Static pages
 Route::get('/about-us', [StoreController::class, 'about'])->name('about');
 Route::get('/contact-us', [StoreController::class, 'contact'])->name('contact');

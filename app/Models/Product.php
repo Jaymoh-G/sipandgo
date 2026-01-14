@@ -148,6 +148,30 @@ class Product extends Model
         return $this->hasMany(CartItem::class);
     }
 
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(ProductReview::class);
+    }
+
+    public function approvedReviews(): HasMany
+    {
+        return $this->hasMany(ProductReview::class)->where('is_approved', true);
+    }
+
+    public function getAverageRatingAttribute(): float
+    {
+        $reviews = $this->approvedReviews;
+        if ($reviews->count() === 0) {
+            return 0;
+        }
+        return round($reviews->avg('rating'), 1);
+    }
+
+    public function getTotalReviewsAttribute(): int
+    {
+        return $this->approvedReviews->count();
+    }
+
     public function getRouteKeyName(): string
     {
         return 'slug';

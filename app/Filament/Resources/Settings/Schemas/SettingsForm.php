@@ -89,6 +89,11 @@ class SettingsForm
                     ->maxLength(255)
                     ->default('Kenya')
                     ->columnSpan(1),
+                Textarea::make('store_hours')
+                    ->label('Store Hours')
+                    ->rows(4)
+                    ->helperText('Enter your store hours. Each line will be displayed on a new line. Example: Monday - Friday: 9:00 AM - 8:00 PM')
+                    ->columnSpanFull(),
 
                 // Social Media Links
                 TextInput::make('facebook_url')

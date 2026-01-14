@@ -60,6 +60,15 @@ class MpesaService
         $response = Http::withToken($accessToken)->post($endpoint, $payload);
 
         $responseData = $response->json();
+        $statusCode = $response->status();
+
+        // Log the full response for debugging
+        Log::info('MPESA STK Push Request', [
+            'endpoint' => $endpoint,
+            'status' => $statusCode,
+            'response' => $responseData,
+            'payload' => $payload,
+        ]);
 
         if ($response->successful() && ($responseData['ResponseCode'] ?? null) === '0') {
             return [
@@ -70,17 +79,38 @@ class MpesaService
             ];
         }
 
-        $errorMessage = $responseData['errorMessage'] ?? $responseData['ResponseDescription'] ?? 'Failed to initiate STK push.';
+        // Extract detailed error message
+        $errorMessage = 'Failed to initiate STK push.';
+
+        if (isset($responseData['errorMessage'])) {
+            $errorMessage = $responseData['errorMessage'];
+        } elseif (isset($responseData['ResponseDescription'])) {
+            $errorMessage = $responseData['ResponseDescription'];
+        } elseif (isset($responseData['error_description'])) {
+            $errorMessage = $responseData['error_description'];
+        } elseif (isset($responseData['error'])) {
+            $errorMessage = is_array($responseData['error'])
+                ? ($responseData['error']['message'] ?? json_encode($responseData['error']))
+                : $responseData['error'];
+        }
+
+        // Add status code to error message for debugging
+        if ($statusCode !== 200) {
+            $errorMessage .= " (HTTP {$statusCode})";
+        }
 
         Log::error('MPESA STK Push failed', [
             'response' => $responseData,
-            'status' => $response->status(),
+            'status' => $statusCode,
             'payload' => $payload,
+            'error_message' => $errorMessage,
         ]);
 
         return [
             'success' => false,
             'message' => $errorMessage,
+            'response_code' => $responseData['ResponseCode'] ?? null,
+            'status_code' => $statusCode,
         ];
     }
 

@@ -121,7 +121,7 @@ class StorefrontController extends Controller
     {
         $product = Product::where('slug', $slug)
             ->where('is_active', true)
-            ->with('category')
+            ->with(['category', 'approvedReviews'])
             ->firstOrFail();
 
         $relatedProducts = Product::where('category_id', $product->category_id)

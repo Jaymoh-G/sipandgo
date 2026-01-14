@@ -20,6 +20,7 @@ class Settings extends Model
         'state',
         'postal_code',
         'country',
+        'store_hours',
         'facebook_url',
         'twitter_url',
         'instagram_url',

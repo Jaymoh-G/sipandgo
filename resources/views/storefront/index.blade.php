@@ -151,7 +151,7 @@
 <section class="deal py-80 bg-gray-50">
     <div class="container container-lg">
         <div class="section-heading text-center mb-56">
-            <h2 class="text-heading-two mb-16">Deal of The Week</h2>
+            <h2 class="text-heading-two mb-16">Shop The Best Deals</h2>
             <p class="text-gray-600">Limited time offers on premium spirits</p>
         </div>
 

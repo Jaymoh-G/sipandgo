@@ -76,41 +76,50 @@
                 <p class="text-gray-600">What drives us every day</p>
             </div>
             <div class="row gy-4">
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-duration="400">
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-duration="400">
+                    <div class="product-card h-100 p-32 border border-gray-100 rounded-16 text-center transition-2 hover-border-main-600">
+                        <div class="w-80 h-80 bg-main-50 rounded-circle flex-center mx-auto mb-24">
+                            <i class="ph ph-truck text-4xl text-main-600"></i>
+                        </div>
+                        <h4 class="text-heading mb-16">Quick Delivery Across Nairobi & Countrywide</h4>
+                        <p class="text-gray-600">
+                            Fast and reliable delivery service covering Nairobi and the Coastline region.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-duration="600">
+                    <div class="product-card h-100 p-32 border border-gray-100 rounded-16 text-center transition-2 hover-border-main-600">
+                        <div class="w-80 h-80 bg-main-50 rounded-circle flex-center mx-auto mb-24">
+                            <i class="ph ph-device-mobile text-4xl text-main-600"></i>
+                        </div>
+                        <h4 class="text-heading mb-16">Easy Payment via M-Pesa</h4>
+                        <p class="text-gray-600">
+                            Multiple convenient payment options including M-Pesa.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-duration="800">
+                    <div class="product-card h-100 p-32 border border-gray-100 rounded-16 text-center transition-2 hover-border-main-600">
+                        <div class="w-80 h-80 bg-main-50 rounded-circle flex-center mx-auto mb-24">
+                            <i class="ph ph-wine text-4xl text-main-600"></i>
+                        </div>
+                        <h4 class="text-heading mb-16">Premium Selection Wines, Spirits, Beers</h4>
+                        <p class="text-gray-600">
+                            Curated collection of premium wines, spirits, and beers from around the world.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-duration="1000">
                     <div class="product-card h-100 p-32 border border-gray-100 rounded-16 text-center transition-2 hover-border-main-600">
                         <div class="w-80 h-80 bg-main-50 rounded-circle flex-center mx-auto mb-24">
                             <i class="ph ph-star text-4xl text-main-600"></i>
                         </div>
-                        <h4 class="text-heading mb-16">Quality First</h4>
+                        <h4 class="text-heading mb-16">Trusted by Hundreds of Happy Customers</h4>
                         <p class="text-gray-600">
-                            We carefully curate every product in our collection, ensuring only the finest spirits
-                            make it to our shelves.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-duration="600">
-                    <div class="product-card h-100 p-32 border border-gray-100 rounded-16 text-center transition-2 hover-border-main-600">
-                        <div class="w-80 h-80 bg-main-50 rounded-circle flex-center mx-auto mb-24">
-                            <i class="ph ph-users text-4xl text-main-600"></i>
-                        </div>
-                        <h4 class="text-heading mb-16">Customer Service</h4>
-                        <p class="text-gray-600">
-                            Our knowledgeable team is here to help you find the perfect spirit for any occasion
-                            or preference.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-duration="800">
-                    <div class="product-card h-100 p-32 border border-gray-100 rounded-16 text-center transition-2 hover-border-main-600">
-                        <div class="w-80 h-80 bg-main-50 rounded-circle flex-center mx-auto mb-24">
-                            <i class="ph ph-shield-check text-4xl text-main-600"></i>
-                        </div>
-                        <h4 class="text-heading mb-16">Responsible Service</h4>
-                        <p class="text-gray-600">
-                            We promote responsible consumption and ensure all customers meet legal age requirements
-                            for alcohol purchase.
+                            Join hundreds of satisfied customers who trust us for their premium beverage needs.
                         </p>
                     </div>
                 </div>

@@ -85,12 +85,23 @@
                             <div class="flex-align flex-wrap gap-12">
                                 <div class="flex-align gap-12 flex-wrap">
                                     <div class="flex-align gap-8">
-                                        @for($i = 0; $i < 5; $i++)
-                                        <span class="text-xs fw-medium text-warning-600 d-flex"><i class="ph-fill ph-star"></i></span>
+                                        @php
+                                            $avgRating = $product->average_rating;
+                                            $fullStars = floor($avgRating);
+                                            $hasHalfStar = ($avgRating - $fullStars) >= 0.5;
+                                        @endphp
+                                        @for($i = 1; $i <= 5; $i++)
+                                            @if($i <= $fullStars)
+                                                <span class="text-xs fw-medium text-warning-600 d-flex"><i class="ph-fill ph-star"></i></span>
+                                            @elseif($i == $fullStars + 1 && $hasHalfStar)
+                                                <span class="text-xs fw-medium text-warning-600 d-flex"><i class="ph-fill ph-star-half"></i></span>
+                                            @else
+                                                <span class="text-xs fw-medium text-gray-300 d-flex"><i class="ph ph-star"></i></span>
+                                            @endif
                                         @endfor
                                     </div>
-                                    <span class="text-sm fw-medium text-neutral-600">4.7 Star Rating</span>
-                                    <span class="text-sm fw-medium text-gray-500">({{ rand(100, 1000) }})</span>
+                                    <span class="text-sm fw-medium text-neutral-600">{{ $product->average_rating > 0 ? $product->average_rating : '0.0' }} Star Rating</span>
+                                    <span class="text-sm fw-medium text-gray-500">({{ $product->total_reviews }})</span>
                                 </div>
                                 <span class="text-sm fw-medium text-gray-500">|</span>
                                 <span class="text-gray-900"> <span class="text-gray-400">SKU:</span>{{ $product->sku }} </span>
@@ -280,22 +291,159 @@
                             <div class="row g-4">
                                 <div class="col-lg-6">
                                     <h6 class="mb-24">Product Reviews</h6>
-                                    <p class="text-gray-700">No reviews yet. Be the first to review this product!</p>
+
+                                    @if(session('success'))
+                                        <div class="alert alert-success mb-24 bg-green-50 border border-green-200 text-green-800 px-24 py-16 rounded-8">
+                                            <i class="ph ph-check-circle me-8"></i>{{ session('success') }}
+                                        </div>
+                                    @endif
+
+                                    @if(session('error'))
+                                        <div class="alert alert-danger mb-24 bg-red-50 border border-red-200 text-red-800 px-24 py-16 rounded-8">
+                                            <i class="ph ph-warning-circle me-8"></i>{{ session('error') }}
+                                        </div>
+                                    @endif
+
+                                    @if($product->approvedReviews->count() > 0)
+                                        <div class="d-flex flex-column gap-24 mb-32">
+                                            @foreach($product->approvedReviews->take(5) as $review)
+                                            <div class="border border-gray-100 rounded-16 p-24">
+                                                <div class="flex-between align-items-start mb-16">
+                                                    <div>
+                                                        <h6 class="text-heading mb-8">{{ $review->name }}</h6>
+                                                        <div class="flex-align gap-8 mb-8">
+                                                            @for($i = 1; $i <= 5; $i++)
+                                                                @if($i <= $review->rating)
+                                                                    <i class="ph-fill ph-star text-warning-600 text-sm"></i>
+                                                                @else
+                                                                    <i class="ph ph-star text-gray-300 text-sm"></i>
+                                                                @endif
+                                                            @endfor
+                                                        </div>
+                                                    </div>
+                                                    <span class="text-sm text-gray-500">{{ $review->created_at->format('M d, Y') }}</span>
+                                                </div>
+                                                @if($review->review)
+                                                    <p class="text-gray-700 mb-0">{{ $review->review }}</p>
+                                                @endif
+                                            </div>
+                                            @endforeach
+                                        </div>
+                                    @else
+                                        <p class="text-gray-700 mb-32">No reviews yet. Be the first to review this product!</p>
+                                    @endif
+
+                                    <!-- Review Form -->
+                                    <div class="border border-gray-100 rounded-16 p-32">
+                                        <h6 class="mb-24">Write a Review</h6>
+                                        <form action="{{ route('reviews.store', $product) }}" method="POST">
+                                            @csrf
+                                            <div class="mb-24">
+                                                <label class="form-label text-gray-900 fw-medium mb-8">Your Name *</label>
+                                                <input type="text" name="name" class="form-control common-input px-16 py-12 border border-gray-100 rounded-8 focus-border-main-600" value="{{ old('name') }}" required>
+                                                @error('name')
+                                                    <span class="text-danger text-sm">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+
+                                            <div class="mb-24">
+                                                <label class="form-label text-gray-900 fw-medium mb-8">Your Email *</label>
+                                                <input type="email" name="email" class="form-control common-input px-16 py-12 border border-gray-100 rounded-8 focus-border-main-600" value="{{ old('email') }}" required>
+                                                @error('email')
+                                                    <span class="text-danger text-sm">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+
+                                            <div class="mb-24">
+                                                <label class="form-label text-gray-900 fw-medium mb-8">Rating *</label>
+                                                <div class="d-flex gap-8 align-items-center">
+                                                    @for($i = 1; $i <= 5; $i++)
+                                                        <label class="cursor-pointer">
+                                                            <input type="radio" name="rating" value="{{ $i }}" {{ old('rating') == $i ? 'checked' : ($i == 5 ? 'checked' : '') }} class="d-none rating-input">
+                                                            <i class="ph ph-star text-2xl text-gray-300 hover-text-warning-600 transition-2 rating-star" data-rating="{{ $i }}"></i>
+                                                        </label>
+                                                    @endfor
+                                                    <span class="text-sm text-gray-600 ms-8 rating-text">Select rating</span>
+                                                </div>
+                                                @error('rating')
+                                                    <span class="text-danger text-sm d-block mt-8">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+
+                                            <div class="mb-24">
+                                                <label class="form-label text-gray-900 fw-medium mb-8">Your Review</label>
+                                                <textarea name="review" rows="4" class="form-control common-input px-16 py-12 border border-gray-100 rounded-8 focus-border-main-600" placeholder="Share your experience with this product...">{{ old('review') }}</textarea>
+                                                @error('review')
+                                                    <span class="text-danger text-sm">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+
+                                            <button type="submit" class="btn btn-main rounded-pill px-48">
+                                                Submit Review
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="ms-xxl-5">
                                         <h6 class="mb-24">Customers Feedback</h6>
                                         <div class="d-flex flex-wrap gap-44">
                                             <div class="border border-gray-100 rounded-8 px-40 py-52 flex-center flex-column flex-shrink-0 text-center">
-                                                <h2 class="mb-6 text-main-600">4.8</h2>
+                                                <h2 class="mb-6 text-main-600">{{ $product->average_rating > 0 ? $product->average_rating : '0.0' }}</h2>
                                                 <div class="flex-center gap-8">
-                                                    @for($i = 0; $i < 5; $i++)
-                                                    <span class="text-xs fw-medium text-warning-600 d-flex"><i class="ph-fill ph-star"></i></span>
+                                                    @php
+                                                        $avgRating = $product->average_rating;
+                                                        $fullStars = floor($avgRating);
+                                                        $hasHalfStar = ($avgRating - $fullStars) >= 0.5;
+                                                    @endphp
+                                                    @for($i = 1; $i <= 5; $i++)
+                                                        @if($i <= $fullStars)
+                                                            <span class="text-xs fw-medium text-warning-600 d-flex"><i class="ph-fill ph-star"></i></span>
+                                                        @elseif($i == $fullStars + 1 && $hasHalfStar)
+                                                            <span class="text-xs fw-medium text-warning-600 d-flex"><i class="ph-fill ph-star-half"></i></span>
+                                                        @else
+                                                            <span class="text-xs fw-medium text-gray-300 d-flex"><i class="ph ph-star"></i></span>
+                                                        @endif
                                                     @endfor
                                                 </div>
                                                 <span class="mt-16 text-gray-500">Average Product Rating</span>
+                                                <span class="mt-8 text-sm text-gray-600">Based on {{ $product->total_reviews }} {{ Str::plural('review', $product->total_reviews) }}</span>
                                             </div>
                                         </div>
+
+                                        @if($product->approvedReviews->count() > 0)
+                                        <div class="mt-40">
+                                            <h6 class="mb-24">Rating Distribution</h6>
+                                            @php
+                                                $ratingCounts = [];
+                                                for($i = 5; $i >= 1; $i--) {
+                                                    $ratingCounts[$i] = $product->approvedReviews->where('rating', $i)->count();
+                                                }
+                                                $totalReviews = $product->approvedReviews->count();
+                                            @endphp
+                                            <div class="d-flex flex-column gap-16">
+                                                @for($i = 5; $i >= 1; $i--)
+                                                    @php
+                                                        $count = $ratingCounts[$i];
+                                                        $percentage = $totalReviews > 0 ? ($count / $totalReviews) * 100 : 0;
+                                                    @endphp
+                                                    <div class="d-flex align-items-center gap-16">
+                                                        <div class="text-sm fw-medium text-gray-700" style="min-width: 60px;">
+                                                            {{ $i }} <i class="ph-fill ph-star text-warning-600 text-xs"></i>
+                                                        </div>
+                                                        <div class="flex-grow-1">
+                                                            <div class="progress bg-gray-100 rounded-pill" style="height: 8px;">
+                                                                <div class="progress-bar bg-warning-600 rounded-pill" style="width: {{ $percentage }}%"></div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="text-sm text-gray-600" style="min-width: 40px;">
+                                                            {{ $count }}
+                                                        </div>
+                                                    </div>
+                                                @endfor
+                                            </div>
+                                        </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -423,6 +571,75 @@ document.addEventListener('DOMContentLoaded', function() {
                 quantityInput.value = currentValue + 1;
             }
         });
+    }
+
+    // Star rating interaction
+    const ratingStars = document.querySelectorAll('.rating-star');
+    const ratingInputs = document.querySelectorAll('.rating-input');
+    const ratingText = document.querySelector('.rating-text');
+
+    const ratingLabels = {
+        1: 'Poor',
+        2: 'Fair',
+        3: 'Good',
+        4: 'Very Good',
+        5: 'Excellent'
+    };
+
+    ratingStars.forEach(star => {
+        star.addEventListener('click', function() {
+            const rating = parseInt(this.getAttribute('data-rating'));
+            const input = document.querySelector(`input[value="${rating}"]`);
+            if (input) {
+                input.checked = true;
+                updateStarDisplay(rating);
+            }
+        });
+
+        star.addEventListener('mouseenter', function() {
+            const rating = parseInt(this.getAttribute('data-rating'));
+            highlightStars(rating);
+        });
+    });
+
+    // Highlight stars on hover
+    const starContainer = document.querySelector('.d-flex.gap-8.align-items-center');
+    if (starContainer) {
+        starContainer.addEventListener('mouseleave', function() {
+            const checkedInput = document.querySelector('.rating-input:checked');
+            if (checkedInput) {
+                const rating = parseInt(checkedInput.value);
+                highlightStars(rating);
+            } else {
+                highlightStars(0);
+            }
+        });
+    }
+
+    function highlightStars(rating) {
+        ratingStars.forEach((star, index) => {
+            const starRating = index + 1;
+            if (starRating <= rating) {
+                star.classList.remove('ph-star', 'text-gray-300');
+                star.classList.add('ph-fill', 'ph-star', 'text-warning-600');
+            } else {
+                star.classList.remove('ph-fill', 'ph-star', 'text-warning-600');
+                star.classList.add('ph-star', 'text-gray-300');
+            }
+        });
+        if (ratingText && rating > 0) {
+            ratingText.textContent = ratingLabels[rating];
+        }
+    }
+
+    function updateStarDisplay(rating) {
+        highlightStars(rating);
+    }
+
+    // Initialize with default rating (5)
+    const defaultInput = document.querySelector('.rating-input[value="5"]');
+    if (defaultInput && defaultInput.checked) {
+        updateStarDisplay(5);
     }
 });
 </script>

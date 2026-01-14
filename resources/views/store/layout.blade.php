@@ -215,7 +215,7 @@
                 <div class="">
                     <button type="button" class="category-button d-flex align-items-center gap-12 text-white bg-success-600 px-20 py-16 rounded-6 hover-bg-success-700 transition-2">
                         <span class="text-xl line-height-1"><i class="ph ph-squares-four"></i></span>
-                        <span class="">Browse Categories</span>
+                        <span class="">Products</span>
                         <span class="line-height-1 icon transition-2"><i class="ph-bold ph-caret-down"></i></span>
                     </button>
 

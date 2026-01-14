@@ -91,7 +91,7 @@
                     <li class="on-hover-item nav-menu__item has-submenu position-relative d-lg-block d-none">
                         <button type="button" class="category-button d-flex align-items-center gap-8 text-white bg-main-600 px-16 py-12 rounded-6 hover-bg-main-700 transition-2" style="font-size: 14px;">
                             <span class="text-lg line-height-1"><i class="ph ph-squares-four"></i></span>
-                            <span class="d-xl-inline d-none">Browse Categories</span>
+                            <span class="d-xl-inline d-none">Products</span>
                             <span class="d-xl-none">Categories</span>
                             <span class="line-height-1 icon transition-2"><i class="ph-bold ph-caret-down"></i></span>
                         </button>

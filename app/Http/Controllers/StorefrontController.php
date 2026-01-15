@@ -121,15 +121,25 @@ class StorefrontController extends Controller
     {
         $product = Product::where('slug', $slug)
             ->where('is_active', true)
-            ->with(['category', 'approvedReviews'])
+            ->with(['category', 'approvedReviews', 'relatedProducts'])
             ->firstOrFail();
 
-        $relatedProducts = Product::where('category_id', $product->category_id)
-            ->where('id', '!=', $product->id)
+        // Get manually selected related products
+        $relatedProducts = $product->relatedProducts()
             ->where('is_active', true)
             ->with('category')
             ->limit(4)
             ->get();
+
+        // If no manually selected related products, fallback to category-based
+        if ($relatedProducts->isEmpty() && $product->category_id) {
+            $relatedProducts = Product::where('category_id', $product->category_id)
+                ->where('id', '!=', $product->id)
+                ->where('is_active', true)
+                ->with('category')
+                ->limit(4)
+                ->get();
+        }
 
         return view('storefront.products.show', compact('product', 'relatedProducts'));
     }

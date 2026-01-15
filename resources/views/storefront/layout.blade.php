@@ -27,19 +27,19 @@
     <!-- Main css -->
     <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
 
-    <!-- Theme Color Override - Ensure Golden/Tan colors are applied -->
+    <!-- Theme Color Override - New Brand Colors -->
     <style>
         :root {
-            /* template main color - Golden/Tan #e1a743 */
-            --main-h: 38 !important;
+            /* template main color - Dark Blue #0a1d3e */
+            --main-h: 218 !important;
             --main-s: 72% !important;
-            --main-l: 57% !important;
+            --main-l: 14% !important;
             --main: var(--main-h) var(--main-s) var(--main-l) !important;
 
-            /* template main color - Darker golden for secondary */
-            --main-two-h: 38 !important;
-            --main-two-s: 72% !important;
-            --main-two-l: 45% !important;
+            /* template secondary color - Light Blue #a6d1f1 */
+            --main-two-h: 207 !important;
+            --main-two-s: 75% !important;
+            --main-two-l: 80% !important;
             --main-two: var(--main-two-h) var(--main-two-s) var(--main-two-l) !important;
 
             /* Red accent color #c90207 */
@@ -60,12 +60,12 @@
 
         .nav-menu__item:first-child .nav-menu__link:hover,
         .nav-menu__item:nth-child(2) .nav-menu__link:hover {
-            background-color: rgba(225, 167, 67, 0.1);
+            background-color: rgba(10, 29, 62, 0.1);
             transform: translateY(-2px);
         }
 
         .nav-menu__item.activePage .nav-menu__link {
-            background-color: rgba(225, 167, 67, 0.15);
+            background-color: rgba(10, 29, 62, 0.15);
             color: hsl(var(--main)) !important;
         }
 

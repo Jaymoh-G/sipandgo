@@ -1,5 +1,5 @@
 <!-- ==================== Footer Two Start Here ==================== -->
-<footer class="footer py-80 overflow-hidden" style="background-color: #070705;">
+<footer class="footer py-80 overflow-hidden" style="background-color: #0a1d3e;">
     <div class="container container-lg">
         <div class="row g-4">
             <div class="col-12 col-md-6 col-lg-3 footer-item" data-aos="fade-up" data-aos-duration="200">
@@ -147,7 +147,7 @@
 </footer>
 
 <!-- bottom Footer -->
-<div class="bottom-footer py-8" style="background-color: #e1a743;">
+<div class="bottom-footer py-8" style="background-color: #a6d1f1;">
     <div class="container container-lg">
         <div class="bottom-footer__inner flex-between flex-wrap gap-16 py-16">
             <p class="bottom-footer__text wow fadeInLeftBig text-gray-900">{{ $siteName ?? 'Sip & Go' }} eCommerce &copy; {{ date('Y') }}. All Rights Reserved. Must be 18+ to purchase alcohol.</p>

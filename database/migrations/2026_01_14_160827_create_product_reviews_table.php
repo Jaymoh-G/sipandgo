@@ -68,12 +68,25 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('product_reviews', function (Blueprint $table) {
-            $table->dropForeign('product_reviews_product_id_foreign');
-            if (Schema::hasTable('customers')) {
-                $table->dropForeign('product_reviews_customer_id_foreign');
+        if (Schema::hasTable('product_reviews')) {
+            // Drop foreign keys if they exist
+            $foreignKeys = DB::select(
+                "SELECT CONSTRAINT_NAME
+                 FROM information_schema.KEY_COLUMN_USAGE
+                 WHERE TABLE_SCHEMA = DATABASE()
+                 AND TABLE_NAME = 'product_reviews'
+                 AND CONSTRAINT_NAME IN ('product_reviews_product_id_foreign', 'product_reviews_customer_id_foreign')"
+            );
+
+            foreach ($foreignKeys as $fk) {
+                try {
+                    DB::statement("ALTER TABLE product_reviews DROP FOREIGN KEY {$fk->CONSTRAINT_NAME}");
+                } catch (\Exception $e) {
+                    // Continue if drop fails
+                }
             }
-        });
-        Schema::dropIfExists('product_reviews');
+
+            Schema::dropIfExists('product_reviews');
+        }
     }
 };

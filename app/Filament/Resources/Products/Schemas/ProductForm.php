@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Products\Schemas;
 
+use App\Models\Category;
+use App\Models\Product;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
@@ -180,6 +182,49 @@ class ProductForm
                     ->default(0)
                     ->required()
                     ->helperText('Lower numbers appear first'),
+
+                // Related Products
+                Select::make('relatedProducts')
+                    ->label('Related Products')
+                    ->options(function ($record) {
+                        $categories = Category::where('is_active', true)
+                            ->with(['products' => function ($query) use ($record) {
+                                $query->where('is_active', true)
+                                    ->when($record?->id, fn ($q) => $q->where('id', '!=', $record->id))
+                                    ->orderBy('name');
+                            }])
+                            ->whereHas('products', function ($query) use ($record) {
+                                $query->where('is_active', true)
+                                    ->when($record?->id, fn ($q) => $q->where('id', '!=', $record->id));
+                            })
+                            ->orderBy('name')
+                            ->get();
+
+                        $options = [];
+                        foreach ($categories as $category) {
+                            if ($category->products->isNotEmpty()) {
+                                $productOptions = [];
+                                foreach ($category->products as $product) {
+                                    $productOptions[$product->id] = '    ' . $product->name; // 4 spaces indentation
+                                }
+                                $options[$category->name] = $productOptions;
+                            }
+                        }
+                        return $options;
+                    })
+                    ->default(function ($record) {
+                        // Load existing related products when editing
+                        if ($record) {
+                            return $record->relatedProducts->pluck('id')->toArray();
+                        }
+                        return [];
+                    })
+                    ->multiple()
+                    ->searchable()
+                    ->preload()
+                    ->dehydrated(true) // Keep in form data
+                    ->columnSpanFull()
+                    ->helperText('Select related products to show in "You Might Also Like" section (e.g., chasers, mixers, complementary items). If none selected, products from the same category will be shown.'),
             ])
             ->columns(3);
     }

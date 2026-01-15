@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
@@ -170,6 +171,14 @@ class Product extends Model
     public function getTotalReviewsAttribute(): int
     {
         return $this->approvedReviews->count();
+    }
+
+    public function relatedProducts(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'product_related_products', 'product_id', 'related_product_id')
+            ->withPivot('sort_order')
+            ->withTimestamps()
+            ->orderBy('product_related_products.sort_order');
     }
 
     public function getRouteKeyName(): string

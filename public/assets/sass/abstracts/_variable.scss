@@ -217,16 +217,16 @@ $font-sizes: (
   --display-one: clamp(2.5rem, -0.0733rem + 6.3692vw, 7.5rem); // Min:40px - Max:120px
   /* Font Size End */
 
-  /* template main color - Golden/Tan #e1a743 */
-  --main-h: 38;
+  /* template main color - Dark Blue #0a1d3e */
+  --main-h: 218;
   --main-s: 72%;
-  --main-l: 57%;
+  --main-l: 14%;
   --main: var(--main-h) var(--main-s) var(--main-l);
 
-  /* template main color - Darker golden for secondary */
-  --main-two-h: 38;
-  --main-two-s: 72%;
-  --main-two-l: 45%;
+  /* template secondary color - Light Blue #a6d1f1 */
+  --main-two-h: 207;
+  --main-two-s: 75%;
+  --main-two-l: 80%;
   --main-two: var(--main-two-h) var(--main-two-s) var(--main-two-l);
 
    /* White Color */

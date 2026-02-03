@@ -332,17 +332,7 @@
 <section class="features py-80 bg-white">
     <div class="container container-lg">
         <div class="row gy-4">
-            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-duration="400">
-                <div class="text-center">
-                    <div class="w-80 h-80 bg-main-50 rounded-circle flex-center mx-auto mb-24">
-                        <i class="ph ph-truck text-3xl text-main-600"></i>
-                    </div>
-                    <h4 class="text-heading mb-12">Free Shipping</h4>
-                    <p class="text-gray-600 mb-0">Free shipping all over the US</p>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-duration="600">
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-duration="400">
                 <div class="text-center">
                     <div class="w-80 h-80 bg-main-50 rounded-circle flex-center mx-auto mb-24">
                         <i class="ph ph-check-circle text-3xl text-main-600"></i>
@@ -352,7 +342,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-duration="800">
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-duration="600">
                 <div class="text-center">
                     <div class="w-80 h-80 bg-main-50 rounded-circle flex-center mx-auto mb-24">
                         <i class="ph ph-shield-check text-3xl text-main-600"></i>
@@ -362,7 +352,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-duration="1000">
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-duration="800">
                 <div class="text-center">
                     <div class="w-80 h-80 bg-main-50 rounded-circle flex-center mx-auto mb-24">
                         <i class="ph ph-headphones text-3xl text-main-600"></i>

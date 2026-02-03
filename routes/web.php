@@ -35,9 +35,6 @@ Route::prefix('checkout')->group(function () {
     Route::get('/success/{orderNumber}', [\App\Http\Controllers\CheckoutController::class, 'success'])->name('checkout.success');
 });
 
-// M-Pesa callback route (no CSRF protection needed for webhooks)
-Route::post('/mpesa/callback', [\App\Http\Controllers\CheckoutController::class, 'callback'])->name('mpesa.callback');
-
 // Wishlist routes
 Route::prefix('wishlist')->group(function () {
     Route::get('/', [\App\Http\Controllers\WishlistController::class, 'index'])->name('wishlist.index');

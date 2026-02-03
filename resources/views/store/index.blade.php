@@ -421,19 +421,7 @@
 <!-- Features Section -->
 <section class="py-16 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div class="text-center">
-                <div
-                    class="bg-amber-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
-                >
-                    <i class="fas fa-shipping-fast text-2xl text-amber-600"></i>
-                </div>
-                <h3 class="text-xl font-semibold text-gray-900 mb-2">
-                    Free Shipping
-                </h3>
-                <p class="text-gray-600">Free shipping all over the US</p>
-            </div>
-
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div class="text-center">
                 <div
                     class="bg-amber-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"

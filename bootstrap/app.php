@@ -11,10 +11,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // Exclude M-Pesa callback from CSRF verification
-        $middleware->validateCsrfTokens(except: [
-            'mpesa/callback',
-        ]);
+        //
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

@@ -6,7 +6,6 @@ use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Services\CartService;
-use App\Services\MpesaService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -15,12 +14,10 @@ use Illuminate\Support\Facades\Log;
 class CheckoutController extends Controller
 {
     protected $cartService;
-    protected $mpesaService;
 
-    public function __construct(CartService $cartService, MpesaService $mpesaService)
+    public function __construct(CartService $cartService)
     {
         $this->cartService = $cartService;
-        $this->mpesaService = $mpesaService;
     }
 
     /**
@@ -55,7 +52,7 @@ class CheckoutController extends Controller
         }
 
         $validated = $request->validate([
-            'mpesa_number' => ['required', 'string', 'regex:/^(?:\+?254|0)?7\d{8}$/'],
+            'phone' => ['required', 'string', 'regex:/^(?:\+?254|0)?7\d{8}$/'],
             'delivery_address' => ['nullable', 'string', 'max:500'],
         ]);
 
@@ -64,12 +61,7 @@ class CheckoutController extends Controller
         $shippingAmount = 10.00;
         $totalAmount = round($subtotal + $taxAmount + $shippingAmount, 2);
 
-        // Validate minimum amount (M-Pesa requires at least 1 KES)
-        if ($totalAmount < 1) {
-            return back()->withInput()->with('error', 'Order total must be at least KES 1.00');
-        }
-
-        $formattedPhone = $this->formatPhoneNumber($validated['mpesa_number']);
+        $formattedPhone = $this->formatPhoneNumber($validated['phone']);
 
         // Generate unique order number
         do {
@@ -108,7 +100,7 @@ class CheckoutController extends Controller
                 'total_amount' => $totalAmount,
                 'currency' => 'KES',
                 'payment_status' => 'pending',
-                'payment_method' => 'mpesa',
+                'payment_method' => 'pending',
                 'notes' => $validated['delivery_address'] ?? null,
                 'billing_address' => $billingAddress,
                 'shipping_address' => $shippingAddress,
@@ -135,41 +127,11 @@ class CheckoutController extends Controller
                 ]);
             }
 
-            // Send STK push
-            $response = $this->mpesaService->stkPush(
-                $formattedPhone,
-                $totalAmount,
-                $orderNumber,
-                $validated['delivery_address'] ?? null
-            );
-
-            if (!$response['success']) {
-                DB::rollBack();
-
-                // Show more detailed error message in debug mode
-                $errorMsg = $response['message'] ?? 'Failed to initiate M-Pesa STK push.';
-                if (config('app.debug')) {
-                    $errorMsg .= ' Response Code: ' . ($response['response_code'] ?? 'N/A');
-                }
-
-                Log::error('Checkout STK push failed', [
-                    'response' => $response,
-                    'phone' => $formattedPhone,
-                    'amount' => $totalAmount,
-                ]);
-
-                return back()->withInput()->with('error', $errorMsg);
-            }
-
-            // Store checkout request ID in order notes for callback tracking
-            $order->update([
-                'notes' => ($order->notes ? $order->notes . "\n" : '') .
-                          "CheckoutRequestID: " . ($response['checkout_request_id'] ?? 'N/A'),
-            ]);
+            $this->cartService->clear();
 
             DB::commit();
 
-            return redirect()->route('checkout')->with('success', $response['customer_message'] ?? 'STK push sent. Please complete payment on your phone.');
+            return redirect()->route('checkout.success', $orderNumber)->with('success', 'Order placed successfully. We will contact you to confirm.');
         } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollBack();
             throw $e; // Re-throw validation exceptions
@@ -207,93 +169,12 @@ class CheckoutController extends Controller
             return back()->withInput()->with('error', $e->getMessage());
         } catch (\Throwable $e) {
             DB::rollBack();
-            Log::error('Checkout STK push error: ' . $e->getMessage(), [
+            Log::error('Checkout error: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
             ]);
-            return back()->withInput()->with('error', 'Unable to initiate payment: ' . $e->getMessage());
-        }
-    }
-
-    /**
-     * Handle M-Pesa callback
-     */
-    public function callback(Request $request)
-    {
-        try {
-            $data = $request->json()->all();
-
-            Log::info('M-Pesa Callback received', ['data' => $data]);
-
-            if (!isset($data['Body']['stkCallback'])) {
-                Log::warning('Invalid M-Pesa callback structure', ['data' => $data]);
-                return response()->json(['ResultCode' => 1, 'ResultDesc' => 'Invalid callback structure'], 400);
-            }
-
-            $callback = $data['Body']['stkCallback'];
-            $checkoutRequestId = $callback['CheckoutRequestID'] ?? null;
-            $resultCode = $callback['ResultCode'] ?? null;
-            $resultDesc = $callback['ResultDesc'] ?? '';
-
-            // Find order by checkout request ID from notes
-            $order = null;
-            if ($checkoutRequestId) {
-                // Search orders by checkout request ID in notes
-                $order = Order::where('notes', 'like', "%CheckoutRequestID: {$checkoutRequestId}%")
-                    ->where('payment_status', 'pending')
-                    ->first();
-            }
-
-            if (!$order) {
-                Log::warning('Order not found for checkout request', ['checkout_request_id' => $checkoutRequestId]);
-                return response()->json(['ResultCode' => 1, 'ResultDesc' => 'Order not found'], 404);
-            }
-
-            if ($resultCode == 0) {
-                // Payment successful
-                $callbackMetadata = $callback['CallbackMetadata']['Item'] ?? [];
-                $metadata = [];
-                foreach ($callbackMetadata as $item) {
-                    $metadata[$item['Name']] = $item['Value'] ?? null;
-                }
-
-                $order->update([
-                    'payment_status' => 'paid',
-                    'status' => 'processing',
-                    'notes' => ($order->notes ? $order->notes . "\n" : '') .
-                              "M-Pesa Receipt: " . ($metadata['MpesaReceiptNumber'] ?? 'N/A') . "\n" .
-                              "Transaction Date: " . ($metadata['TransactionDate'] ?? 'N/A'),
-                ]);
-
-                // Clear cart
-                $this->cartService->clear();
-
-                Log::info('Payment successful', [
-                    'order_id' => $order->id,
-                    'receipt' => $metadata['MpesaReceiptNumber'] ?? null,
-                ]);
-            } else {
-                // Payment failed
-                $order->update([
-                    'payment_status' => 'failed',
-                    'notes' => ($order->notes ? $order->notes . "\n" : '') .
-                              "Payment Failed: " . $resultDesc,
-                ]);
-
-                Log::warning('Payment failed', [
-                    'order_id' => $order->id,
-                    'result_code' => $resultCode,
-                    'result_desc' => $resultDesc,
-                ]);
-            }
-
-            return response()->json(['ResultCode' => 0, 'ResultDesc' => 'Callback processed successfully']);
-        } catch (\Throwable $e) {
-            Log::error('M-Pesa callback error: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return response()->json(['ResultCode' => 1, 'ResultDesc' => 'Callback processing failed'], 500);
+            return back()->withInput()->with('error', 'Unable to place order: ' . $e->getMessage());
         }
     }
 

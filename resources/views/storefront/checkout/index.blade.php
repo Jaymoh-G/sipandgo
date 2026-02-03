@@ -49,27 +49,27 @@
             <div class="row gy-4 align-items-start">
                 <div class="col-lg-6">
                     <div class="bg-white border border-gray-100 rounded-16 shadow-sm p-32">
-                        <h5 class="mb-12 text-gray-900">Pay with M-Pesa</h5>
+                        <h5 class="mb-12 text-gray-900">Delivery details</h5>
                         <p class="text-sm text-gray-600 mb-24">
-                            Enter the M-Pesa number to receive the STK push. Delivery address is optional.
+                            Enter your contact phone and delivery address to place your order.
                         </p>
                         <div class="mb-20">
-                            <label class="form-label text-sm text-gray-500">M-Pesa Number *</label>
+                            <label class="form-label text-sm text-gray-500">Phone number *</label>
                             <input
                                 type="tel"
-                                id="mpesa_number"
-                                name="mpesa_number"
-                                value="{{ old('mpesa_number') }}"
+                                id="phone"
+                                name="phone"
+                                value="{{ old('phone') }}"
                                 required
-                                class="common-input @error('mpesa_number') border-danger-500 @enderror"
+                                class="common-input @error('phone') border-danger-500 @enderror"
                                 placeholder="e.g. 0712 345678"
                             >
-                            @error('mpesa_number')
+                            @error('phone')
                             <p class="text-danger-500 text-sm mt-8">{{ $message }}</p>
                             @enderror
                         </div>
                         <div class="mb-24">
-                            <label class="form-label text-sm text-gray-500">Delivery Address (optional)</label>
+                            <label class="form-label text-sm text-gray-500">Delivery address (optional)</label>
                             <textarea
                                 id="delivery_address"
                                 name="delivery_address"
@@ -82,11 +82,8 @@
                             @enderror
                         </div>
                         <button type="submit" class="btn btn-main w-100 py-12 rounded-pill fw-semibold">
-                            <i class="ph ph-lightning me-2"></i>Send STK Push
+                            <i class="ph ph-check me-2"></i>Place order
                         </button>
-                        <p class="text-xs text-gray-500 text-center mt-12 mb-0">
-                            You’ll receive an M-Pesa prompt on your phone to complete the payment.
-                        </p>
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -123,13 +120,10 @@
                         </div>
                         <ul class="list-unstyled mt-24 text-sm text-gray-600">
                             <li class="d-flex align-items-center mb-8">
-                                <i class="ph ph-check-circle text-main-600 me-2"></i>M-Pesa STK push for instant payment
-                            </li>
-                            <li class="d-flex align-items-center mb-8">
-                                <i class="ph ph-truck text-main-600 me-2"></i>Fast dispatch after payment
+                                <i class="ph ph-truck text-main-600 me-2"></i>Fast dispatch
                             </li>
                             <li class="d-flex align-items-center">
-                                <i class="ph ph-shield-check text-main-600 me-2"></i>Verified Secure checkout experience
+                                <i class="ph ph-shield-check text-main-600 me-2"></i>Secure checkout
                             </li>
                         </ul>
                     </div>

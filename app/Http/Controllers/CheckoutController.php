@@ -82,9 +82,14 @@ class CheckoutController extends Controller
             ];
 
             $shippingAddress = [
-                'address' => $validated['delivery_address'] ?? 'Not provided',
-                'phone' => $formattedPhone,
                 'name' => trim($customer->first_name . ' ' . $customer->last_name),
+                'address_line_1' => $validated['delivery_address'] ?? 'Not provided',
+                'address_line_2' => null,
+                'city' => 'Nairobi',
+                'state' => 'Nairobi',
+                'postal_code' => null,
+                'country' => 'Kenya',
+                'phone' => $formattedPhone,
                 'email' => $customer->email ?? null,
             ];
 

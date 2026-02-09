@@ -123,13 +123,38 @@
                     <h2 class="text-heading mb-24">Shipping Address</h2>
                     <div class="bg-color-three rounded-8 p-24">
                         <p class="text-gray-700 mb-0">
-                            <span class="fw-semibold text-gray-900">{{ $order->shipping_address['name'] }}</span><br>
-                            {{ $order->shipping_address['address_line_1'] }}<br>
-                            @if($order->shipping_address['address_line_2'])
+                            @if(isset($order->shipping_address['name']))
+                                <span class="fw-semibold text-gray-900">{{ $order->shipping_address['name'] }}</span><br>
+                            @endif
+                            @if(isset($order->shipping_address['address_line_1']))
+                                {{ $order->shipping_address['address_line_1'] }}<br>
+                            @elseif(isset($order->shipping_address['address']))
+                                {{ $order->shipping_address['address'] }}<br>
+                            @endif
+                            @if(isset($order->shipping_address['address_line_2']) && $order->shipping_address['address_line_2'])
                                 {{ $order->shipping_address['address_line_2'] }}<br>
                             @endif
-                            {{ $order->shipping_address['city'] }}, {{ $order->shipping_address['state'] }} {{ $order->shipping_address['postal_code'] }}<br>
-                            {{ $order->shipping_address['country'] }}
+                            @if(isset($order->shipping_address['phone']))
+                                Phone: {{ $order->shipping_address['phone'] }}<br>
+                            @endif
+                            @if(isset($order->shipping_address['city']) || isset($order->shipping_address['state']) || isset($order->shipping_address['postal_code']))
+                                @php
+                                    $parts = array_filter([
+                                        $order->shipping_address['city'] ?? null,
+                                        $order->shipping_address['state'] ?? null,
+                                        $order->shipping_address['postal_code'] ?? null
+                                    ]);
+                                @endphp
+                                @if(!empty($parts))
+                                    {{ implode(', ', $parts) }}<br>
+                                @endif
+                            @endif
+                            @if(isset($order->shipping_address['country']))
+                                {{ $order->shipping_address['country'] }}
+                            @endif
+                            @if(!isset($order->shipping_address['address_line_1']) && !isset($order->shipping_address['address']) && !isset($order->shipping_address['city']))
+                                <span class="text-gray-500">Delivery address not provided</span>
+                            @endif
                         </p>
                     </div>
                 </div>

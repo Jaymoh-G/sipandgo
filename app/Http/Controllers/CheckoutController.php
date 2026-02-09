@@ -74,7 +74,7 @@ class CheckoutController extends Controller
             DB::beginTransaction();
 
             // Get or create customer
-            $customer = $this->getOrCreateCustomer($formattedPhone, $validated['delivery_address'] ?? null);
+            $customer = $this->getOrCreateCustomer($formattedPhone, $validated['email'], $validated['delivery_address'] ?? null);
 
             // Prepare addresses (required JSON fields)
             $billingAddress = [
@@ -138,9 +138,9 @@ class CheckoutController extends Controller
 
             DB::commit();
 
-            // Send order confirmation email
+            // Send order confirmation email (only if it's a real email address)
             try {
-                if ($order->customer->email) {
+                if ($order->customer->email && !str_ends_with($order->customer->email, '@sipandgo.local')) {
                     Mail::to($order->customer->email)->send(new OrderConfirmation($order));
                 }
             } catch (\Exception $e) {
@@ -201,25 +201,19 @@ class CheckoutController extends Controller
     /**
      * Get or create customer for checkout
      */
-    protected function getOrCreateCustomer(string $phone, ?string $address = null)
+    protected function getOrCreateCustomer(string $phone, string $email, ?string $address = null)
     {
         // If user is authenticated, use their customer record
         if (Auth::guard('customer')->check()) {
             return Auth::guard('customer')->user();
         }
 
-        // For guest checkout, create or find a customer by phone
-        $customer = Customer::where('phone', $phone)->first();
+        // For guest checkout, create or find a customer by phone or email
+        $customer = Customer::where('phone', $phone)
+            ->orWhere('email', $email)
+            ->first();
 
         if (!$customer) {
-            // Create guest customer with unique email
-            $email = 'guest_' . $phone . '_' . time() . '@sipandgo.local';
-
-            // Ensure email is unique
-            while (Customer::where('email', $email)->exists()) {
-                $email = 'guest_' . $phone . '_' . time() . '_' . rand(1000, 9999) . '@sipandgo.local';
-            }
-
             // Generate a random password for guest customers (they won't use it)
             $password = bcrypt(uniqid('guest_', true) . rand(1000, 9999));
 
@@ -236,6 +230,11 @@ class CheckoutController extends Controller
                 'email_verified' => false,
                 'address_line_1' => $address,
             ]);
+        } else {
+            // Update email if it was a fake guest email
+            if (str_ends_with($customer->email, '@sipandgo.local')) {
+                $customer->update(['email' => $email]);
+            }
         }
 
         return $customer;

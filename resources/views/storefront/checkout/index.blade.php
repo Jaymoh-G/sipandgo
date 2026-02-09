@@ -68,6 +68,22 @@
                             <p class="text-danger-500 text-sm mt-8">{{ $message }}</p>
                             @enderror
                         </div>
+                        <div class="mb-20">
+                            <label class="form-label text-sm text-gray-500">Email address *</label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                value="{{ old('email', auth('customer')->check() ? auth('customer')->user()->email : '') }}"
+                                required
+                                class="common-input @error('email') border-danger-500 @enderror"
+                                placeholder="your.email@example.com"
+                            >
+                            @error('email')
+                            <p class="text-danger-500 text-sm mt-8">{{ $message }}</p>
+                            @enderror
+                            <p class="text-xs text-gray-500 mt-8 mb-0">We'll send your order confirmation to this email</p>
+                        </div>
                         <div class="mb-24">
                             <label class="form-label text-sm text-gray-500">Delivery address (optional)</label>
                             <textarea

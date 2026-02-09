@@ -44,7 +44,14 @@
                 <i class="ph ph-check-circle text-6xl text-success-600"></i>
             </div>
             <h1 class="text-heading-two mb-16">Order Confirmed!</h1>
-            <p class="text-lg text-gray-600">Thank you for your order. We've sent a confirmation email to <span class="fw-semibold text-gray-900">{{ $order->customer->email }}</span></p>
+            <p class="text-lg text-gray-600">
+                Thank you for your order.
+                @if($order->customer->email && !str_ends_with($order->customer->email, '@sipandgo.local'))
+                    We've sent a confirmation email to <span class="fw-semibold text-gray-900">{{ $order->customer->email }}</span>
+                @else
+                    We'll contact you shortly to confirm your order.
+                @endif
+            </p>
         </div>
 
         <div class="row gy-4">

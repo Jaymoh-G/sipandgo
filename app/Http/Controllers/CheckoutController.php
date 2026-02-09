@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\OrderConfirmation;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -10,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class CheckoutController extends Controller
 {
@@ -135,6 +137,19 @@ class CheckoutController extends Controller
             $this->cartService->clear();
 
             DB::commit();
+
+            // Send order confirmation email
+            try {
+                if ($order->customer->email) {
+                    Mail::to($order->customer->email)->send(new OrderConfirmation($order));
+                }
+            } catch (\Exception $e) {
+                // Log email error but don't fail the order
+                Log::error('Failed to send order confirmation email', [
+                    'order_id' => $order->id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
 
             return redirect()->route('checkout.success', $orderNumber)->with('success', 'Order placed successfully. We will contact you to confirm.');
         } catch (\Illuminate\Validation\ValidationException $e) {

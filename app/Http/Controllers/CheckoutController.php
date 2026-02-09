@@ -142,13 +142,33 @@ class CheckoutController extends Controller
             // Send order confirmation email (only if it's a real email address)
             try {
                 if ($order->customer->email && !str_ends_with($order->customer->email, '@sipandgo.local')) {
+                    Log::info('Attempting to send order confirmation email', [
+                        'order_id' => $order->id,
+                        'order_number' => $order->order_number,
+                        'email' => $order->customer->email,
+                    ]);
+                    
                     Mail::to($order->customer->email)->send(new OrderConfirmation($order));
+                    
+                    Log::info('Order confirmation email sent successfully', [
+                        'order_id' => $order->id,
+                        'order_number' => $order->order_number,
+                        'email' => $order->customer->email,
+                    ]);
+                } else {
+                    Log::info('Skipping email send - invalid or guest email', [
+                        'order_id' => $order->id,
+                        'email' => $order->customer->email ?? 'null',
+                    ]);
                 }
             } catch (\Exception $e) {
                 // Log email error but don't fail the order
                 Log::error('Failed to send order confirmation email', [
                     'order_id' => $order->id,
+                    'order_number' => $order->order_number,
+                    'email' => $order->customer->email,
                     'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString(),
                 ]);
             }
 

@@ -57,7 +57,7 @@
                     <tr style="border-bottom: 1px solid #e5e7eb;">
                         <td style="padding: 10px; color: #1f2937;">{{ $item->product_name }}</td>
                         <td style="text-align: center; padding: 10px; color: #1f2937;">{{ $item->quantity }}</td>
-                        <td style="text-align: right; padding: 10px; color: #1f2937;">${{ number_format($item->total_price, 2) }}</td>
+                        <td style="text-align: right; padding: 10px; color: #1f2937;">Ksh {{ number_format($item->total_price, 2) }}</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -72,19 +72,19 @@
             <table style="width: 100%;">
                 <tr>
                     <td style="padding: 8px 0; color: #6b7280;">Subtotal:</td>
-                    <td style="text-align: right; padding: 8px 0; color: #1f2937;">${{ number_format($order->subtotal, 2) }}</td>
+                    <td style="text-align: right; padding: 8px 0; color: #1f2937;">Ksh {{ number_format($order->subtotal, 2) }}</td>
                 </tr>
                 <tr>
                     <td style="padding: 8px 0; color: #6b7280;">Tax:</td>
-                    <td style="text-align: right; padding: 8px 0; color: #1f2937;">${{ number_format($order->tax_amount, 2) }}</td>
+                    <td style="text-align: right; padding: 8px 0; color: #1f2937;">Ksh {{ number_format($order->tax_amount, 2) }}</td>
                 </tr>
                 <tr>
                     <td style="padding: 8px 0; color: #6b7280;">Shipping:</td>
-                    <td style="text-align: right; padding: 8px 0; color: #1f2937;">${{ number_format($order->shipping_amount, 2) }}</td>
+                    <td style="text-align: right; padding: 8px 0; color: #1f2937;">Ksh {{ number_format($order->shipping_amount, 2) }}</td>
                 </tr>
                 <tr style="border-top: 2px solid #e5e7eb; margin-top: 10px;">
                     <td style="padding: 12px 0; font-weight: bold; font-size: 18px; color: #1f2937;">Total:</td>
-                    <td style="text-align: right; padding: 12px 0; font-weight: bold; font-size: 18px; color: #f59e0b;">${{ number_format($order->total_amount, 2) }}</td>
+                    <td style="text-align: right; padding: 12px 0; font-weight: bold; font-size: 18px; color: #f59e0b;">Ksh {{ number_format($order->total_amount, 2) }}</td>
                 </tr>
             </table>
         </div>
@@ -95,13 +95,35 @@
             </h2>
 
             <p style="color: #1f2937; margin: 0; line-height: 1.8;">
-                {{ $order->shipping_address['name'] }}<br>
-                {{ $order->shipping_address['address_line_1'] }}<br>
-                @if($order->shipping_address['address_line_2'])
+                @if(isset($order->shipping_address['name']))
+                    {{ $order->shipping_address['name'] }}<br>
+                @endif
+                @if(isset($order->shipping_address['address_line_1']))
+                    {{ $order->shipping_address['address_line_1'] }}<br>
+                @elseif(isset($order->shipping_address['address']))
+                    {{ $order->shipping_address['address'] }}<br>
+                @endif
+                @if(isset($order->shipping_address['address_line_2']) && $order->shipping_address['address_line_2'])
                     {{ $order->shipping_address['address_line_2'] }}<br>
                 @endif
-                {{ $order->shipping_address['city'] }}, {{ $order->shipping_address['state'] }} {{ $order->shipping_address['postal_code'] }}<br>
-                {{ $order->shipping_address['country'] }}
+                @if(isset($order->shipping_address['phone']))
+                    Phone: {{ $order->shipping_address['phone'] }}<br>
+                @endif
+                @if(isset($order->shipping_address['city']) || isset($order->shipping_address['state']))
+                    @php
+                        $parts = array_filter([
+                            $order->shipping_address['city'] ?? null,
+                            $order->shipping_address['state'] ?? null,
+                            $order->shipping_address['postal_code'] ?? null
+                        ]);
+                    @endphp
+                    @if(!empty($parts))
+                        {{ implode(', ', $parts) }}<br>
+                    @endif
+                @endif
+                @if(isset($order->shipping_address['country']))
+                    {{ $order->shipping_address['country'] }}
+                @endif
             </p>
         </div>
 
@@ -114,7 +136,7 @@
 
         <p style="font-size: 16px; margin-bottom: 20px;">
             We'll send you another email when your order ships. If you have any questions,
-            please contact us at <a href="mailto:support@sipandgo.com" style="color: #f59e0b;">support@sipandgo.com</a>.
+            please contact us at <a href="mailto:info@sip-and-go.co.ke" style="color: #f59e0b;">info@sip-and-go.co.ke</a>.
         </p>
 
         <p style="font-size: 16px; margin-bottom: 0;">

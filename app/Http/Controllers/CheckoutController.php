@@ -55,6 +55,7 @@ class CheckoutController extends Controller
 
         $validated = $request->validate([
             'phone' => ['required', 'string', 'regex:/^(?:\+?254|0)?7\d{8}$/'],
+            'email' => ['required', 'email', 'max:255'],
             'delivery_address' => ['nullable', 'string', 'max:500'],
         ]);
 

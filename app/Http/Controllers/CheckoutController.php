@@ -273,6 +273,33 @@ class CheckoutController extends Controller
         return view('storefront.checkout.success', compact('order'));
     }
 
+    /**
+     * Resend order confirmation email (e.g. for testing or if customer didn't receive it).
+     */
+    public function resendConfirmationEmail(string $orderNumber)
+    {
+        $order = Order::where('order_number', $orderNumber)
+            ->with(['customer', 'items'])
+            ->firstOrFail();
+
+        $email = $order->customer->email;
+        if (!$email || str_ends_with($email, '@sipandgo.local')) {
+            return back()->with('error', 'No valid email address for this order.');
+        }
+
+        try {
+            Mail::to($email)->send(new OrderConfirmation($order));
+            return back()->with('success', 'Confirmation email sent again to ' . $email);
+        } catch (\Exception $e) {
+            Log::error('Resend order confirmation failed', [
+                'order_number' => $orderNumber,
+                'email' => $email,
+                'error' => $e->getMessage(),
+            ]);
+            return back()->with('error', 'Could not send email: ' . $e->getMessage());
+        }
+    }
+
     protected function formatPhoneNumber(string $number): string
     {
         $digits = preg_replace('/\D+/', '', $number);

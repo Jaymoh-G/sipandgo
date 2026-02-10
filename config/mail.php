@@ -41,7 +41,7 @@ return [
             'transport' => 'smtp',
             'host' => env('MAIL_HOST', 'sip-and-go.co.ke'),
             'port' => env('MAIL_PORT', 587),
-            'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+            'encryption' => env('MAIL_ENCRYPTION', 'tls'), // tls, ssl, or empty for Mailtrap sandbox (port 2525)
             'username' => env('MAIL_USERNAME'),
             'password' => env('MAIL_PASSWORD'),
             'timeout' => null,

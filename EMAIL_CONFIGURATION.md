@@ -2,9 +2,32 @@
 
 This document contains the email configuration settings for Sip & Go.
 
-## SMTP Settings
+## Mailtrap Sandbox (testing – emails go to Mailtrap, not real inboxes)
 
-Add the following to your `.env` file:
+Use this when developing or testing so emails appear in [Mailtrap](https://mailtrap.io) instead of being sent to real addresses.
+
+1. In Mailtrap: **Email Testing → Sandboxes → your sandbox → Integration → SMTP**
+2. Copy **Host**, **Port**, **Username**, and **Password** from the Integration tab.
+3. Put them in your `.env`:
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=sandbox.smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=your_mailtrap_username
+MAIL_PASSWORD=your_mailtrap_password
+MAIL_ENCRYPTION=
+MAIL_FROM_ADDRESS=info@sip-and-go.co.ke
+MAIL_FROM_NAME="Sip & Go"
+```
+
+Leave `MAIL_ENCRYPTION=` empty for port 2525. If your Mailtrap integration shows port 587, use `MAIL_PORT=587` and `MAIL_ENCRYPTION=tls`.
+
+After changing `.env`, run: `php artisan config:clear`. Then place an order or use **“Resend confirmation email”** on the order success page; the email should appear in your Mailtrap sandbox.
+
+## Production (Sip & Go SMTP)
+
+For real delivery to customers:
 
 ```env
 MAIL_MAILER=smtp

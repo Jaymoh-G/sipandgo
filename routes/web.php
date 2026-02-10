@@ -33,6 +33,7 @@ Route::prefix('checkout')->group(function () {
     Route::get('/', [\App\Http\Controllers\CheckoutController::class, 'index'])->name('checkout');
     Route::post('/', [\App\Http\Controllers\CheckoutController::class, 'store'])->name('checkout.store');
     Route::get('/success/{orderNumber}', [\App\Http\Controllers\CheckoutController::class, 'success'])->name('checkout.success');
+    Route::post('/success/{orderNumber}/resend-email', [\App\Http\Controllers\CheckoutController::class, 'resendConfirmationEmail'])->name('checkout.resend-email');
 });
 
 // Wishlist routes

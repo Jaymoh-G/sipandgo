@@ -37,6 +37,11 @@
             <i class="ph ph-check-circle me-8"></i>{{ session('success') }}
         </div>
         @endif
+        @if(session('error'))
+        <div class="alert alert-danger mb-32 bg-danger-50 border border-danger-200 text-danger-800 px-24 py-16 rounded-8">
+            <i class="ph ph-warning-circle me-8"></i>{{ session('error') }}
+        </div>
+        @endif
 
         <!-- Success Header -->
         <div class="text-center mb-48" data-aos="fade-up" data-aos-duration="400">
@@ -211,6 +216,14 @@
 
                 <!-- Actions -->
                 <div class="d-flex flex-column gap-16" data-aos="fade-up" data-aos-duration="800">
+                    @if($order->customer->email && !str_ends_with($order->customer->email, '@sipandgo.local'))
+                    <form action="{{ route('checkout.resend-email', $order->order_number) }}" method="POST" class="w-100">
+                        @csrf
+                        <button type="submit" class="btn bg-gray-100 text-gray-900 hover-bg-gray-200 w-100 py-18 rounded-8 d-flex align-items-center justify-content-center gap-8">
+                            <i class="ph ph-envelope-simple"></i> Resend confirmation email
+                        </button>
+                    </form>
+                    @endif
                     <a href="{{ route('products.index') }}" class="btn btn-main w-100 py-18 rounded-8 d-flex align-items-center justify-content-center gap-8">
                         <i class="ph ph-shopping-bag"></i> Continue Shopping
                     </a>

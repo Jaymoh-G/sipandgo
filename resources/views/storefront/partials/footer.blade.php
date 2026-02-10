@@ -123,23 +123,45 @@
                 <h6 class="footer-item__title text-white mb-24">Contact Us</h6>
                 @if($settings->phone ?? null)
                 <div class="flex-align gap-16 mb-16">
-                    <span class="w-32 h-32 flex-center rounded-circle border border-gray-600 text-main-600 text-md flex-shrink-0"><i class="ph-fill ph-phone-call"></i></span>
+                    <span class="w-32 h-32 flex-center rounded-circle border border-gray-600 text-gray-100 text-md flex-shrink-0">
+                        <i class="ph-fill ph-phone-call"></i>
+                    </span>
                     <a href="tel:{{ $settings->phone }}" class="text-md text-gray-300 hover-text-main-600">{{ $settings->phone }}</a>
                 </div>
                 @endif
                 @if($settings->email ?? null)
                 <div class="flex-align gap-16 mb-16">
-                    <span class="w-32 h-32 flex-center rounded-circle border border-gray-600 text-main-600 text-md flex-shrink-0"><i class="ph-fill ph-envelope"></i></span>
+                    <span class="w-32 h-32 flex-center rounded-circle border border-gray-600 text-gray-100 text-md flex-shrink-0">
+                        <i class="ph-fill ph-envelope"></i>
+                    </span>
                     <a href="mailto:{{ $settings->email }}" class="text-md text-gray-300 hover-text-main-600">{{ $settings->email }}</a>
                 </div>
                 @endif
                 @if($settings->address ?? null || $settings->city ?? null || $settings->country ?? null)
-                <div class="flex-align gap-16 mb-16">
-                    <span class="w-32 h-32 flex-center rounded-circle border border-gray-600 text-main-600 text-md flex-shrink-0"><i class="ph-fill ph-map-pin"></i></span>
-                    <span class="text-md text-gray-300">
-                        {{ $settings->address ?? '' }}{{ $settings->address && ($settings->city || $settings->country) ? ', ' : '' }}{{ $settings->city ?? '' }}{{ $settings->city && $settings->country ? ', ' : '' }}{{ $settings->country ?? '' }}
-                    </span>
-                </div>
+                    @php
+                        $locationText = trim(
+                            ($settings->address ?? '') . ' ' .
+                            ($settings->city ?? '') . ' ' .
+                            ($settings->country ?? '')
+                        );
+                    @endphp
+                    @if(!empty($locationText))
+                    <div class="flex-align gap-16 mb-16">
+                        <span class="w-32 h-32 flex-center rounded-circle border border-gray-600 text-gray-100 text-md flex-shrink-0">
+                            <i class="ph-fill ph-map-pin"></i>
+                        </span>
+                        <span class="text-md text-gray-300">
+                            <a
+                                href="https://www.google.com/maps/search/?api=1&query={{ urlencode($locationText) }}"
+                                target="_blank"
+                                rel="noopener"
+                                class="text-md text-gray-300 hover-text-main-600 text-decoration-underline"
+                            >
+                                {{ $settings->address ?? '' }}{{ $settings->address && ($settings->city || $settings->country) ? ', ' : '' }}{{ $settings->city ?? '' }}{{ $settings->city && $settings->country ? ', ' : '' }}{{ $settings->country ?? '' }}
+                            </a>
+                        </span>
+                    </div>
+                    @endif
                 @endif
             </div>
         </div>

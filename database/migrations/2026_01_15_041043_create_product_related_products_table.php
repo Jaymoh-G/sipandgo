@@ -13,8 +13,11 @@ return new class extends Migration
     {
         Schema::create('product_related_products', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id')->constrained()->onDelete('cascade');
-            $table->foreignId('related_product_id')->constrained('products')->onDelete('cascade');
+            // Use plain integer columns without foreign key constraints to avoid
+            // issues when the existing `products` table uses a different key type
+            // or engine in some environments (e.g. production).
+            $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('related_product_id');
             $table->integer('sort_order')->default(0);
             $table->timestamps();
 

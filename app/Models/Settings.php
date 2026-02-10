@@ -16,6 +16,7 @@ class Settings extends Model
         'phone',
         'mobile',
         'address',
+        'map_link',
         'city',
         'state',
         'postal_code',

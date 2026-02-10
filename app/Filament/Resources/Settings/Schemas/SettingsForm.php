@@ -72,6 +72,13 @@ class SettingsForm
                     ->label('Address')
                     ->rows(2)
                     ->columnSpan(1),
+                TextInput::make('map_link')
+                    ->label('Map Link (Google Maps URL)')
+                    ->url()
+                    ->maxLength(255)
+                    ->placeholder('https://maps.google.com/...')
+                    ->helperText('Optional: paste a full Google Maps link for your store location. Used in the footer.')
+                    ->columnSpan(1),
                 TextInput::make('city')
                     ->label('City')
                     ->maxLength(255)

@@ -158,15 +158,20 @@
                             ($settings->city ?? '') . ' ' .
                             ($settings->country ?? '')
                         );
+                        $mapUrl = $settings->map_link
+                            ? $settings->map_link
+                            : (!empty($locationText)
+                                ? 'https://www.google.com/maps/search/?api=1&query=' . urlencode($locationText)
+                                : null);
                     @endphp
-                    @if(!empty($locationText))
+                    @if($mapUrl)
                     <div class="flex-align gap-16 mb-16">
                         <span class="w-32 h-32 flex-center rounded-circle border border-gray-600 text-gray-100 text-md flex-shrink-0">
                             <i class="ph-fill ph-map-pin"></i>
                         </span>
                         <span class="text-md text-gray-300">
                             <a
-                                href="https://www.google.com/maps/search/?api=1&query={{ urlencode($locationText) }}"
+                                href="{{ $mapUrl }}"
                                 target="_blank"
                                 rel="noopener"
                                 class="text-md text-gray-300 text-decoration-underline"

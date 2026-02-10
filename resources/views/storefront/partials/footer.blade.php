@@ -126,7 +126,14 @@
                     <span class="w-32 h-32 flex-center rounded-circle border border-gray-600 text-gray-100 text-md flex-shrink-0">
                         <i class="ph-fill ph-phone-call"></i>
                     </span>
-                    <a href="tel:{{ $settings->phone }}" class="text-md text-gray-300 hover-text-main-600">{{ $settings->phone }}</a>
+                    <a
+                        href="tel:{{ $settings->phone }}"
+                        class="text-md text-gray-300"
+                        onmouseover="this.style.color='#a6d1f1'"
+                        onmouseout="this.style.color='#D1D5DB'"
+                    >
+                        {{ $settings->phone }}
+                    </a>
                 </div>
                 @endif
                 @if($settings->email ?? null)
@@ -134,7 +141,14 @@
                     <span class="w-32 h-32 flex-center rounded-circle border border-gray-600 text-gray-100 text-md flex-shrink-0">
                         <i class="ph-fill ph-envelope"></i>
                     </span>
-                    <a href="mailto:{{ $settings->email }}" class="text-md text-gray-300 hover-text-main-600">{{ $settings->email }}</a>
+                    <a
+                        href="mailto:{{ $settings->email }}"
+                        class="text-md text-gray-300"
+                        onmouseover="this.style.color='#a6d1f1'"
+                        onmouseout="this.style.color='#D1D5DB'"
+                    >
+                        {{ $settings->email }}
+                    </a>
                 </div>
                 @endif
                 @if($settings->address ?? null || $settings->city ?? null || $settings->country ?? null)
@@ -155,7 +169,9 @@
                                 href="https://www.google.com/maps/search/?api=1&query={{ urlencode($locationText) }}"
                                 target="_blank"
                                 rel="noopener"
-                                class="text-md text-gray-300 hover-text-main-600 text-decoration-underline"
+                                class="text-md text-gray-300 text-decoration-underline"
+                                onmouseover="this.style.color='#a6d1f1'"
+                                onmouseout="this.style.color='#D1D5DB'"
                             >
                                 {{ $settings->address ?? '' }}{{ $settings->address && ($settings->city || $settings->country) ? ', ' : '' }}{{ $settings->city ?? '' }}{{ $settings->city && $settings->country ? ', ' : '' }}{{ $settings->country ?? '' }}
                             </a>
